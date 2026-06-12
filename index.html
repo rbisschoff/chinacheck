@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JPJ7VKS451"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JPJ7VKS451');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -678,6 +686,12 @@ function runCheck() {
     else values[d.field] = sel.value;
   });
   if (!allAnswered) { alert('Please rate all six dimensions before running ChinaCheck.'); return; }
+
+  // GA4 completion event
+  gtag('event', 'china_check_completed', {
+    'event_category': 'engagement',
+    'event_label': 'ChinaCheck assessment completed'
+  });
 
   // Preparation score (0–100)
   let totalWeight=0, totalScore=0;
