@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ChinaCheck — China Readiness Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@700&display=swap');
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --red:#D92B1A; --amber:#C97B0A; --green:#1A7A3C;
+    --ink:#0A0A0F; --ink2:#2C2C3A; --muted:#7A7A8C; --muted2:#ADADBE;
+    --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.05);
+    --bg:#F2F2F7; --card:#FFFFFF; --card2:#F9F9FB;
+    --china-red:#C9190B; --gold:#B8860B; --gold-bright:#F5C842;
+    --green-light:#F0FDF4; --red-light:#FFF1F0;
+    --r16:16px; --r12:12px; --r10:10px;
+    --shadow:0 2px 12px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg:0 8px 30px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06);
+  }
+  html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  body {
+    font-family:-apple-system,'Inter',sans-serif;
+    background:var(--bg); color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background:rgba(8,8,14,0.94);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+    padding:12px 20px;
+    padding-top:calc(12px + env(safe-area-inset-top));
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:200;
+    border-bottom:0.5px solid rgba(255,255,255,0.08);
+  }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-mark {
+    width:36px; height:36px;
+    background:linear-gradient(145deg,#D92B1A 0%,#7A0000 100%);
+    border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Noto Serif SC',serif; font-size:17px; color:#F5C842; font-weight:700;
+    box-shadow:0 2px 10px rgba(201,25,11,0.5);
+    flex-shrink:0;
+  }
+  .logo-text-wrap { display:flex; flex-direction:column; }
+  .logo-name { color:#fff; font-size:15px; font-weight:700; letter-spacing:-0.3px; line-height:1.2; }
+  .logo-sub  { color:rgba(255,255,255,0.35); font-size:9px; text-transform:uppercase; letter-spacing:1px; margin-top:1px; }
+  .stage-badge {
+    background:rgba(184,134,11,0.15); border:0.5px solid rgba(184,134,11,0.4);
+    color:#D4A017; font-size:10px; font-weight:700;
+    padding:4px 10px; border-radius:20px; letter-spacing:0.6px; text-transform:uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background:linear-gradient(170deg,#08080E 0%,#160808 55%,#08080E 100%);
+    padding:40px 20px 36px; text-align:center; position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(201,25,11,0.15) 0%,transparent 65%);
+    pointer-events:none;
+  }
+  .hero-eyebrow {
+    display:inline-block;
+    background:rgba(255,255,255,0.06); border:0.5px solid rgba(255,255,255,0.12);
+    color:rgba(255,255,255,0.45); font-size:10px; font-weight:600; letter-spacing:1px;
+    text-transform:uppercase; padding:5px 12px; border-radius:20px; margin-bottom:16px;
+  }
+  .hero h1 {
+    color:#fff; font-size:clamp(24px,7vw,40px);
+    font-weight:800; letter-spacing:-0.8px; line-height:1.15; margin-bottom:12px;
+  }
+  .hero h1 em { font-style:normal; color:#C9190B; }
+  .hero p { color:rgba(255,255,255,0.38); font-size:14px; max-width:420px; margin:0 auto; line-height:1.65; }
+
+  /* ── CONTAINER ── */
+  .container { max-width:680px; margin:0 auto; padding:24px 16px 72px; }
+
+  /* ── STEP LABEL ── */
+  .step-label { display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:28px; }
+  .step-label:first-child { margin-top:0; }
+  .step-num {
+    width:20px; height:20px; border-radius:50%;
+    background:var(--ink2); color:#fff;
+    font-size:10px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .step-text { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.9px; color:var(--muted); }
+
+  /* ── iOS GROUPED LIST STYLE ── */
+  .ios-group { background:var(--card); border-radius:var(--r16); overflow:hidden; margin-bottom:10px; box-shadow:var(--shadow); }
+  .ios-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:13px 16px; border-bottom:0.5px solid var(--border);
+    gap:12px;
+  }
+  .ios-row:last-child { border-bottom:none; }
+  .ios-row-label { font-size:15px; font-weight:500; color:var(--ink); }
+  .ios-row select, .ios-row input {
+    border:none; outline:none; background:transparent;
+    font-size:15px; font-family:-apple-system,'Inter',sans-serif;
+    color:var(--muted); text-align:right;
+    -webkit-appearance:none; appearance:none;
+    flex:1; min-width:0;
+  }
+  .ios-row input { color:var(--ink2); }
+  .ios-row input::placeholder { color:var(--muted2); }
+  .ios-row-prefix { font-size:15px; color:var(--muted); margin-right:2px; }
+
+  /* ── DEMAND CARD ── */
+  .demand-card {
+    display:none; border-radius:var(--r16); overflow:hidden;
+    margin-top:12px; margin-bottom:2px;
+    background:var(--card); box-shadow:var(--shadow);
+    border:0.5px solid var(--border);
+  }
+  .demand-card.visible { display:block; }
+  .demand-card-header { padding:16px 16px 12px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .demand-tier-badge {
+    font-size:11px; font-weight:700; padding:4px 10px;
+    border-radius:20px; text-transform:uppercase; letter-spacing:0.5px;
+    white-space:nowrap; flex-shrink:0;
+  }
+  .tier-top      { background:#FFFBEB; color:#92600A; border:0.5px solid #FCD34D; }
+  .tier-strong   { background:var(--green-light); color:#166534; border:0.5px solid #86EFAC; }
+  .tier-emerging { background:#EFF6FF; color:#1D4ED8; border:0.5px solid #BFDBFE; }
+  .tier-low      { background:#F9FAFB; color:var(--muted); border:0.5px solid var(--border); }
+  .demand-city-name { font-size:19px; font-weight:800; color:var(--ink); letter-spacing:-0.3px; }
+  .demand-country-name { font-size:12px; color:var(--muted); margin-top:2px; }
+  .demand-bar-wrap { padding:0 16px 6px; }
+  .demand-bar-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:6px; }
+  .demand-bar-label span:last-child { font-weight:700; color:var(--ink2); font-size:12px; }
+  .demand-bar-track { height:8px; background:var(--bg); border-radius:20px; overflow:hidden; }
+  .demand-bar-fill { height:100%; border-radius:20px; transition:width 0.9s cubic-bezier(0.4,0,0.2,1); }
+  .fill-top      { background:linear-gradient(90deg,#1A7A3C,#34C759); }
+  .fill-strong   { background:linear-gradient(90deg,#1A7A3C,#34C759); }
+  .fill-emerging { background:linear-gradient(90deg,#C97B0A,#FF9F0A); }
+  .fill-low      { background:linear-gradient(90deg,#D92B1A,#FF453A); }
+  .demand-insight {
+    padding:12px 16px 16px; font-size:13px; color:var(--ink2);
+    line-height:1.65; background:var(--card2);
+    border-top:0.5px solid var(--border);
+  }
+  .demand-insight strong { color:var(--china-red); font-weight:600; }
+
+  /* ── ASSESSMENT ── */
+  .assessment-section { display:none; }
+  .assessment-section.visible { display:block; }
+
+  /* ── DIMENSION CARDS ── */
+  .dimension-card {
+    background:var(--card); border-radius:var(--r16);
+    padding:16px; margin-bottom:10px;
+    box-shadow:var(--shadow);
+    border:0.5px solid var(--border);
+  }
+  .dim-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:14px; }
+  .dim-title-wrap { flex:1; }
+  .dim-title { font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-0.1px; }
+  .dim-desc  { font-size:12px; color:var(--muted); margin-top:3px; line-height:1.5; }
+  .dim-weight {
+    font-size:9px; font-weight:600; color:var(--muted2);
+    background:var(--bg); border:0.5px solid var(--border);
+    border-radius:20px; padding:3px 8px; white-space:nowrap; flex-shrink:0;
+    letter-spacing:0.3px; text-transform:uppercase;
+  }
+
+  /* ── RADIO ── */
+  .radio-group { display:flex; gap:6px; width:100%; align-items:stretch; }
+  .radio-option { flex:1; min-width:0; display:flex; }
+  .radio-option input[type="radio"] { display:none; }
+  .radio-option label {
+    display:flex; align-items:center; justify-content:center;
+    width:100%; min-height:44px;
+    text-align:center; padding:8px 4px;
+    border-radius:var(--r10); border:1px solid var(--border);
+    font-size:12px; font-weight:500; cursor:pointer;
+    transition:all 0.15s; color:var(--muted); user-select:none;
+    line-height:1.3; word-break:break-word;
+    background:var(--card2);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .radio-option label:active { opacity:0.7; }
+  .radio-option input[type="radio"]:checked + label.red   { background:#FFF1F0; border-color:#FF6B6B; color:#C0392B; font-weight:600; }
+  .radio-option input[type="radio"]:checked + label.amber { background:#FFFBEB; border-color:#FCD34D; color:#92600A; font-weight:600; }
+  .radio-option input[type="radio"]:checked + label.green { background:var(--green-light); border-color:#34C759; color:#1A7A3C; font-weight:600; }
+
+  /* ── RUN BUTTON ── */
+  .run-btn {
+    display:block; width:100%; margin-top:28px; padding:16px;
+    background:linear-gradient(145deg,#D92B1A 0%,#A01008 100%);
+    color:#fff; font-size:16px; font-weight:700;
+    border:none; border-radius:var(--r16); cursor:pointer;
+    letter-spacing:-0.1px; transition:all 0.2s;
+    box-shadow:0 4px 18px rgba(201,25,11,0.4);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .run-btn:active { transform:scale(0.98); opacity:0.9; }
+
+  /* ── RESULT PANEL ── */
+  .result-panel {
+    display:none; margin-top:28px;
+    background:var(--card); border-radius:var(--r16);
+    border:0.5px solid var(--border); overflow:hidden;
+    box-shadow:var(--shadow-lg);
+  }
+  .result-panel.visible { display:block; }
+
+  .result-header { padding:18px 16px 14px; background:var(--card); border-bottom:0.5px solid var(--border); }
+  .result-eyebrow { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
+  .vs-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:400px){ .vs-grid{grid-template-columns:1fr;} }
+  .vs-card { border-radius:var(--r12); padding:14px 16px; }
+  .vs-card-potential {
+    background:linear-gradient(145deg,#08080E 0%,#160404 100%);
+    border:0.5px solid rgba(255,255,255,0.06);
+  }
+  .vs-card-preparation { background:var(--card2); border:0.5px solid var(--border); }
+  .vs-card-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px; }
+  .vs-card-potential .vs-card-label { color:rgba(255,255,255,0.3); }
+  .vs-card-preparation .vs-card-label { color:var(--muted); }
+  .vs-card-city { font-size:11px; margin-bottom:10px; }
+  .vs-card-potential .vs-card-city { color:rgba(255,255,255,0.3); }
+  .vs-card-preparation .vs-card-city { color:var(--muted2); }
+  .vs-score { font-size:38px; font-weight:800; letter-spacing:-1.5px; line-height:1; }
+  .vs-card-potential .vs-score { color:var(--gold-bright); }
+  .vs-score-unit { font-size:13px; font-weight:400; letter-spacing:0; color:rgba(255,255,255,0.25); margin-left:1px; }
+  .vs-verdict {
+    display:inline-block; font-size:10px; font-weight:700;
+    padding:3px 9px; border-radius:20px; margin-top:8px;
+    text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .verdict-red   { background:#FFF1F0; color:#C0392B; border:0.5px solid #FFCCC7; }
+  .verdict-amber { background:#FFFBEB; color:#92600A; border:0.5px solid #FDE68A; }
+  .verdict-green { background:var(--green-light); color:#1A7A3C; border:0.5px solid #BBF7D0; }
+
+  /* GAP BAR */
+  .gap-bar-wrap { padding:14px 16px 8px; background:var(--card); border-bottom:0.5px solid var(--border); }
+  .gap-bar-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:7px; }
+  .gap-bar-label span:last-child { font-weight:700; color:var(--ink2); font-size:11px; }
+  .gap-bar-track { position:relative; height:10px; background:var(--bg); border-radius:20px; overflow:hidden; }
+  .gap-bar-potential { position:absolute; top:0; left:0; height:100%; border-radius:20px; background:rgba(184,134,11,0.15); transition:width 0.6s; }
+  .gap-bar-preparation { position:absolute; top:0; left:0; height:100%; border-radius:20px; transition:width 0.9s cubic-bezier(0.4,0,0.2,1) 0.1s; }
+  .gap-color-red   { background:linear-gradient(90deg,#D92B1A,#FF453A); }
+  .gap-color-amber { background:linear-gradient(90deg,#C97B0A,#FF9F0A); }
+  .gap-color-green { background:linear-gradient(90deg,#1A7A3C,#34C759); }
+  .gap-summary { padding:8px 16px 12px; font-size:12px; color:var(--muted); line-height:1.6; font-style:italic; border-bottom:0.5px solid var(--border); }
+
+  /* BIZ SECTION */
+  .biz-section { padding:16px; background:var(--card); border-bottom:0.5px solid var(--border); }
+  .biz-header { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
+  .biz-potential-card {
+    background:linear-gradient(145deg,#08080E 0%,#160404 100%);
+    border-radius:var(--r12); padding:16px 18px;
+  }
+  .biz-potential-card .biz-card-label { font-size:12px; color:rgba(255,255,255,0.35); line-height:1.5; margin-bottom:10px; }
+  .biz-potential-card .biz-card-value { font-size:34px; font-weight:800; letter-spacing:-1px; color:var(--gold-bright); }
+  .biz-note { font-size:11px; color:var(--muted2); line-height:1.65; margin-top:12px; }
+
+  /* DIM RESULTS */
+  .dim-results { padding:14px 16px; background:var(--card); }
+  .dim-results-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
+  .dim-result-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 0; border-bottom:0.5px solid var(--border2); gap:10px;
+  }
+  .dim-result-row:last-child { border-bottom:none; }
+  .dim-result-name { font-size:13px; font-weight:500; color:var(--ink2); flex:1; }
+  .dim-result-pill {
+    font-size:10px; font-weight:700; padding:3px 10px;
+    border-radius:20px; text-transform:uppercase; letter-spacing:0.4px;
+  }
+  .pill-red   { background:#FFF1F0; color:#C0392B; }
+  .pill-amber { background:#FFFBEB; color:#92600A; }
+  .pill-green { background:var(--green-light); color:#1A7A3C; }
+
+  /* RESULT NOTE */
+  .result-note { padding:12px 16px 18px; font-size:13px; color:var(--muted); line-height:1.65; background:var(--card2); }
+
+  /* FOOTER */
+  footer {
+    text-align:center; padding:24px 20px;
+    padding-bottom:calc(24px + env(safe-area-inset-bottom));
+    font-size:12px; color:var(--muted2);
+    border-top:0.5px solid var(--border);
+  }
+  footer a { color:var(--china-red); text-decoration:none; font-weight:500; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">中</div>
+    <div class="logo-text-wrap">
+      <span class="logo-name">ChinaCheck</span>
+      <span class="logo-sub">China Readiness Tool</span>
+    </div>
+  </div>
+  <div class="stage-badge">Stage 1</div>
+</header>
+
+<div class="hero">
+  <h1>Is your property<br><span>ready for Chinese guests?</span></h1>
+  <p>Start with your location. Find out how much Chinese traveller demand you are sitting on — then see how ready your operation is to capture it.</p>
+</div>
+
+<div class="container">
+
+  <div class="step-label" style="margin-top:0"><div class="step-num">1</div><div class="step-text">Your location</div></div>
+
+  <div class="ios-group">
+    <div class="ios-row">
+      <div class="ios-row-label">Country</div>
+      <select id="sel-country" onchange="onCountryChange()">
+        <option value="">Select...</option>
+        <option value="italy">Italy</option>
+        <option value="france">France</option>
+        <option value="germany">Germany</option>
+        <option value="spain">Spain</option>
+        <option value="netherlands">Netherlands</option>
+        <option value="switzerland">Switzerland</option>
+        <option value="austria">Austria</option>
+        <option value="uk">United Kingdom</option>
+        <option value="portugal">Portugal</option>
+      </select>
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">City</div>
+      <select id="sel-city" onchange="onCityChange()" disabled>
+        <option value="">Select country first...</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="demand-card" id="demand-card">
+    <div class="demand-card-header">
+      <div>
+        <div class="demand-city-name" id="dc-city"></div>
+        <div class="demand-country-name" id="dc-country"></div>
+      </div>
+      <div class="demand-tier-badge" id="dc-badge"></div>
+    </div>
+    <div class="demand-bar-wrap">
+      <div class="demand-bar-label">
+        <span>Chinese traveller demand index</span>
+        <span id="dc-score-label"></span>
+      </div>
+      <div class="demand-bar-track">
+        <div class="demand-bar-fill" id="dc-bar"></div>
+      </div>
+    </div>
+    <div class="demand-insight" id="dc-insight"></div>
+  </div>
+
+  <div class="assessment-section" id="assessment-section">
+
+    <div class="step-label"><div class="step-num">2</div><div class="step-text">Your property</div></div>
+
+    <div class="ios-group">
+      <div class="ios-row">
+        <div class="ios-row-label">Type</div>
+        <select id="prop-type">
+          <option value="">Select...</option>
+          <option value="serviced">Serviced apartments</option>
+          <option value="apart-hotel">Apart-hotel</option>
+          <option value="boutique">Boutique hotel</option>
+          <option value="vacation">Vacation rental / STR</option>
+          <option value="resort">Resort</option>
+          <option value="villa">Villa</option>
+        </select>
+      </div>
+      <div class="ios-row">
+        <div class="ios-row-label">Units / rooms</div>
+        <input type="number" id="prop-units" placeholder="e.g. 24" min="1" max="2000">
+      </div>
+      <div class="ios-row">
+        <div class="ios-row-label">Avg. nightly rate</div>
+        <div style="display:flex;align-items:center;gap:2px;flex:1;justify-content:flex-end;">
+          <span class="ios-row-prefix">€</span>
+          <input type="number" id="prop-rate" placeholder="120" min="1" max="10000" style="max-width:90px;text-align:right;">
+        </div>
+      </div>
+    </div>
+
+    <div class="step-label"><div class="step-num">3</div><div class="step-text">Rate your readiness</div></div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
+          <div class="dim-title">OTA Visibility</div>
+          <div class="dim-desc">Listed and active on Ctrip, Fliggy, or Meituan — the platforms Chinese travellers actually use to book.</div>
+        </div>
+        <div class="dim-weight">Weight: high</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="ota" id="ota-r" value="red"><label for="ota-r" class="red">Not listed</label></div>
+        <div class="radio-option"><input type="radio" name="ota" id="ota-g" value="green"><label for="ota-g" class="green">Active</label></div>
+      </div>
+    </div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
+          <div class="dim-title">Payment Acceptance</div>
+          <div class="dim-desc">WeChat Pay and/or Alipay accepted — at property or through your booking system.</div>
+        </div>
+        <div class="dim-weight">Weight: high</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="payment" id="pay-r" value="red"><label for="pay-r" class="red">No</label></div>
+        <div class="radio-option"><input type="radio" name="payment" id="pay-g" value="green"><label for="pay-g" class="green">Yes</label></div>
+      </div>
+    </div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
+          <div class="dim-title">Chinese OTA Reviews</div>
+          <div class="dim-desc">Reviews from Chinese guests on Ctrip, Fliggy, or Meituan. Zero reviews is a conversion killer regardless of listing quality.</div>
+        </div>
+        <div class="dim-weight">Weight: medium</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="reviews" id="rev-r" value="red"><label for="rev-r" class="red">No reviews</label></div>
+        <div class="radio-option"><input type="radio" name="reviews" id="rev-a" value="amber"><label for="rev-a" class="amber">Some, unmanaged</label></div>
+        <div class="radio-option"><input type="radio" name="reviews" id="rev-g" value="green"><label for="rev-g" class="green">Actively managed</label></div>
+      </div>
+    </div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
+          <div class="dim-title">Language &amp; Communication</div>
+          <div class="dim-desc">Mandarin content in listings, welcome materials, or staff communication capability.</div>
+        </div>
+        <div class="dim-weight">Weight: medium</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="language" id="lang-r" value="red"><label for="lang-r" class="red">English only</label></div>
+        <div class="radio-option"><input type="radio" name="language" id="lang-a" value="amber"><label for="lang-a" class="amber">Basic Mandarin</label></div>
+        <div class="radio-option"><input type="radio" name="language" id="lang-g" value="green"><label for="lang-g" class="green">Full Mandarin</label></div>
+      </div>
+    </div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
+          <div class="dim-title">On-property Experience</div>
+          <div class="dim-desc">Practical touches that matter: kettle, instant noodles, slippers, electricity converter, Mandarin check-in instructions.</div>
+        </div>
+        <div class="dim-weight">Weight: low</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="onprop" id="op-r" value="red"><label for="op-r" class="red">Western only</label></div>
+        <div class="radio-option"><input type="radio" name="onprop" id="op-a" value="amber"><label for="op-a" class="amber">Some basics</label></div>
+        <div class="radio-option"><input type="radio" name="onprop" id="op-g" value="green"><label for="op-g" class="green">China-adapted</label></div>
+      </div>
+    </div>
+
+    <button class="run-btn" onclick="runCheck()">Run ChinaCheck &rarr;</button>
+
+    <div class="result-panel" id="result-panel">
+      <div class="result-header">
+        <div class="result-eyebrow">ChinaCheck Result</div>
+        <div class="result-property-name-row" id="result-property-name"></div>
+        <div class="vs-grid">
+          <div class="vs-card vs-card-potential">
+            <div class="vs-card-label">Market potential</div>
+            <div class="vs-card-city" id="rp-city"></div>
+            <div class="vs-score" id="rp-potential-score"></div><div class="vs-score-unit">/ 100</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">out of 100</div>
+          </div>
+          <div class="vs-card vs-card-preparation">
+            <div class="vs-card-label">Your preparation</div>
+            <div class="vs-card-city">Based on your answers</div>
+            <div class="vs-score" id="rp-prep-score"></div>
+            <div class="vs-verdict" id="rp-verdict"></div>
+          </div>
+        </div>
+      </div>
+      <div class="gap-bar-wrap">
+        <div class="gap-bar-label">
+          <span>Potential captured</span>
+          <span id="gap-label-right"></span>
+        </div>
+        <div class="gap-bar-track">
+          <div class="gap-bar-potential" id="gap-bar-potential"></div>
+          <div class="gap-bar-preparation" id="gap-bar-preparation"></div>
+        </div>
+      </div>
+      <div class="gap-summary" id="gap-summary"></div>
+      <div class="biz-section" id="biz-section" style="display:none">
+        <div class="biz-header">What this means for your business</div>
+        <div class="biz-potential-card">
+          <div class="biz-card-label">Revenue potential from Chinese guests / year<br><span style="font-size:10px;opacity:0.7">(same property, fully China-ready)</span></div>
+          <div class="biz-card-value" id="biz-potential"></div>
+        </div>
+        <div class="biz-gap-line" style="display:none" id="biz-gap-line"></div>
+        <div class="biz-note" id="biz-note"></div>
+      </div>
+      <div class="dim-results"><div class="dim-results-label">Dimension breakdown</div><div id="dim-results-list"></div></div>
+      <div class="result-note" id="result-note"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>ChinaCheck — built by <a href="#">Roger Bisschoff</a> &middot; Stage 1 prototype</footer>
+
+<script>
+const locationData = {
+  italy:{ label:'Italy', cities:{
+    milan:{label:'Milan',tier:'top',score:95,insight:'<strong>Milan is Italy\'s primary gateway for Chinese travellers.</strong> Consistently top-3 in Ctrip European city searches, driven by fashion, design, and business tourism. Operators here who are not on Ctrip are leaving significant revenue on the table.'},
+    rome:{label:'Rome',tier:'top',score:93,insight:'<strong>Rome ranks among the highest-demand Chinese destinations in Europe.</strong> Cultural heritage tourism drives enormous group and FIT volumes. Peak seasons extend well beyond European summer.'},
+    venice:{label:'Venice',tier:'top',score:88,insight:'<strong>Venice is a bucket-list destination for Chinese travellers.</strong> Ctrip demand is heavily seasonal but very high at peak. The concentration of visitors makes OTA visibility particularly competitive — and particularly rewarding.'},
+    florence:{label:'Florence',tier:'top',score:87,insight:'<strong>Florence is a core stop on the classic Italy circuit</strong> for Chinese tour groups and FIT travellers. Art, fashion outlets, and food tourism all drive demand. Strong Ctrip and Fliggy search volumes for the historic centre.'},
+    naples:{label:'Naples',tier:'strong',score:68,insight:'<strong>Naples is a growing destination for Chinese travellers</strong>, driven largely by Amalfi Coast and Pompeii excursions. Properties here have a first-mover advantage — competition on Ctrip is still thin.'},
+    turin:{label:'Turin',tier:'strong',score:58,insight:'<strong>Turin attracts moderate Chinese visitor volumes</strong>, mostly linked to business travel and automotive/design tourism. Ctrip presence generates measurable bookings for well-positioned properties.'},
+    countryside:{label:'Italian countryside / other',tier:'emerging',score:30,insight:'<strong>Rural Italy attracts a growing segment of Chinese FIT travellers</strong> looking beyond the main circuit. Agriturismo and countryside properties are appearing on Ctrip itineraries, though volumes remain modest.'}
+  }},
+  france:{ label:'France', cities:{
+    paris:{label:'Paris',tier:'top',score:98,insight:'<strong>Paris is the single most-searched European city on Ctrip.</strong> Chinese visitor volumes are the highest on the continent. Any property not on Ctrip here is missing the largest Chinese inbound market in Europe.'},
+    nice:{label:'Nice',tier:'strong',score:72,insight:'<strong>Nice and the Cote d\'Azur have strong Chinese leisure appeal</strong>, linked to luxury and aspirational travel. Solid Ctrip search volumes, particularly for summer. Less competitive than Paris on OTA listings.'},
+    bordeaux:{label:'Bordeaux',tier:'strong',score:63,insight:'<strong>Bordeaux has distinct appeal for Chinese wine tourism</strong>, a strong and growing niche. Ctrip bookings linked to chateau visits and wine routes are meaningful for well-positioned properties.'},
+    lyon:{label:'Lyon',tier:'strong',score:60,insight:'<strong>Lyon draws Chinese food and culture tourists</strong> as a secondary destination on France itineraries. Moderate but consistent demand on Ctrip.'},
+    marseille:{label:'Marseille',tier:'emerging',score:40,insight:'<strong>Marseille is emerging on Chinese travel itineraries</strong> linked to Provence and the south. Demand is growing from a low base.'},
+    strasbourg:{label:'Strasbourg',tier:'emerging',score:38,insight:'<strong>Strasbourg features on Alsace and Christmas market itineraries</strong> for Chinese FIT travellers. Modest but real demand.'},
+    countryside:{label:'French countryside / other',tier:'emerging',score:33,insight:'<strong>Provence, the Loire Valley, and other rural France destinations are attracting Chinese FIT travellers</strong> at a growing rate. Chateaux and wine tourism are the primary drivers.'}
+  }},
+  germany:{ label:'Germany', cities:{
+    munich:{label:'Munich',tier:'top',score:87,insight:'<strong>Munich is Germany\'s top Chinese tourism destination</strong>, fuelled by Oktoberfest, Neuschwanstein day trips, and luxury shopping. Ctrip search volumes are among the highest in German-speaking Europe.'},
+    berlin:{label:'Berlin',tier:'top',score:85,insight:'<strong>Berlin is the leading Chinese cultural destination in Germany</strong>, driven by history and city tourism. Strong Ctrip presence with consistent year-round demand.'},
+    frankfurt:{label:'Frankfurt',tier:'strong',score:74,insight:'<strong>Frankfurt is Germany\'s primary Chinese business travel hub</strong> and a major air gateway. Strong corporate and transit demand on Chinese OTAs.'},
+    dusseldorf:{label:'Dusseldorf',tier:'strong',score:65,insight:'<strong>Dusseldorf has one of Germany\'s largest Chinese communities</strong> and a strong trade fair calendar. Meaningful Chinese OTA demand, particularly during Messe periods.'},
+    hamburg:{label:'Hamburg',tier:'strong',score:62,insight:'<strong>Hamburg attracts solid Chinese leisure and business traffic</strong>. Port city heritage and Chinese trade links make it a consistent Ctrip destination.'},
+    cologne:{label:'Cologne',tier:'strong',score:58,insight:'<strong>Cologne draws Chinese visitors</strong> for the cathedral, trade fairs, and Rhine valley tourism. Moderate but consistent Ctrip demand.'},
+    countryside:{label:'German countryside / other',tier:'emerging',score:28,insight:'<strong>The Romantic Road, Rhine Valley, and Bavarian Alps</strong> all feature on Chinese FIT itineraries. Rural properties near major attractions can capture meaningful Ctrip traffic.'}
+  }},
+  spain:{ label:'Spain', cities:{
+    barcelona:{label:'Barcelona',tier:'top',score:90,insight:'<strong>Barcelona is Spain\'s top Chinese destination by a wide margin</strong> — Gaudi, beaches, and city tourism drive enormous Ctrip volumes. One of the highest-demand cities in Southern Europe.'},
+    madrid:{label:'Madrid',tier:'top',score:84,insight:'<strong>Madrid ranks strongly on Ctrip for Spain</strong>, driven by art tourism, shopping, and its position as an air hub. Strong year-round demand from both FIT and group travellers.'},
+    seville:{label:'Seville',tier:'strong',score:62,insight:'<strong>Seville is a growing Chinese destination</strong> on the Andalusia circuit. Flamenco and Moorish architecture drive consistent interest on Chinese travel platforms.'},
+    granada:{label:'Granada',tier:'strong',score:60,insight:'<strong>Granada\'s Alhambra is a must-see on Chinese Andalusia itineraries.</strong> Strong group and FIT demand concentrated around the historic site.'},
+    valencia:{label:'Valencia',tier:'strong',score:55,insight:'<strong>Valencia is on the Ctrip radar</strong> for paella, architecture, and its growing profile as a city break destination. Moderate and consistent Chinese demand.'},
+    palma:{label:'Palma (Mallorca)',tier:'strong',score:56,insight:'<strong>Mallorca is establishing itself as a Chinese luxury beach destination</strong>. Ctrip searches are growing, particularly for high-end accommodation.'},
+    countryside:{label:'Spanish countryside / other',tier:'emerging',score:30,insight:'<strong>Rural Spain — Camino de Santiago, wine regions, rural Andalusia</strong> — is attracting a growing niche of Chinese experiential travellers. OTA competition is very low.'}
+  }},
+  netherlands:{ label:'Netherlands', cities:{
+    amsterdam:{label:'Amsterdam',tier:'top',score:88,insight:'<strong>Amsterdam is the Netherlands\' dominant Chinese inbound destination</strong> and one of the top European city-break choices on Ctrip. Canals, museums, and tulip season drive very strong demand.'},
+    rotterdam:{label:'Rotterdam',tier:'strong',score:58,insight:'<strong>Rotterdam draws Chinese architecture and design tourists</strong>, plus port city heritage interest. Moderate but consistent Ctrip demand, less competitive than Amsterdam.'},
+    the_hague:{label:'The Hague',tier:'emerging',score:40,insight:'<strong>The Hague attracts Chinese visitors</strong> via government institutions and nearby Delft and Madurodam. Solid day-trip traffic that converts to accommodation demand.'},
+    utrecht:{label:'Utrecht',tier:'emerging',score:38,insight:'<strong>Utrecht features as a day-trip from Amsterdam</strong> on Chinese itineraries. Growing independent visitor profile.'},
+    delft:{label:'Delft',tier:'emerging',score:35,insight:'<strong>Delft\'s blue pottery heritage has strong recognition among Chinese travellers.</strong> Day-trip demand is high; conversion to overnight stays is the opportunity.'},
+    eindhoven:{label:'Eindhoven',tier:'emerging',score:32,insight:'<strong>Eindhoven\'s design and tech profile</strong> attracts Chinese business and design travellers. Philips Museum and Dutch Design Week are anchor attractions.'},
+    countryside:{label:'Dutch countryside / other',tier:'emerging',score:25,insight:'<strong>Tulip fields, windmills, and cheese markets</strong> attract Chinese tourists on seasonal itineraries. Keukenhof season (spring) drives meaningful short-stay demand.'}
+  }},
+  switzerland:{ label:'Switzerland', cities:{
+    lucerne:{label:'Lucerne',tier:'top',score:89,insight:'<strong>Lucerne is the single most popular Swiss destination for Chinese travellers</strong> — lake, mountains, and the Chapel Bridge are bucket-list items. Extremely strong Ctrip demand, particularly for group tours.'},
+    zurich:{label:'Zurich',tier:'top',score:86,insight:'<strong>Zurich is Switzerland\'s primary Chinese business and luxury travel destination.</strong> Strong Ctrip demand year-round, driven by finance, luxury shopping, and proximity to the Alps.'},
+    interlaken:{label:'Interlaken',tier:'top',score:85,insight:'<strong>Interlaken is a Chinese tourism hotspot</strong> driven by Jungfrau excursions and adventure tourism. One of the highest Chinese visitor concentration points in Europe relative to city size.'},
+    zermatt:{label:'Zermatt',tier:'top',score:83,insight:'<strong>Zermatt and the Matterhorn are iconic for Chinese travellers.</strong> Strong seasonal demand and a high-value guest profile. Ctrip search volumes spike significantly in summer and winter.'},
+    geneva:{label:'Geneva',tier:'top',score:82,insight:'<strong>Geneva attracts high-spending Chinese travellers</strong> for watches, luxury goods, and lake scenery. Consistent Ctrip demand with a premium guest profile.'},
+    bern:{label:'Bern',tier:'strong',score:62,insight:'<strong>Bern draws Chinese visitors as the federal capital</strong> and a UNESCO old town. Solid Ctrip presence, less competitive than Lucerne or Zurich.'},
+    countryside:{label:'Swiss countryside / other',tier:'strong',score:65,insight:'<strong>Swiss mountain and lake destinations are disproportionately popular with Chinese FIT travellers.</strong> Properties in scenic rural locations benefit from strong Ctrip demand tied to nature and ski tourism.'}
+  }},
+  austria:{ label:'Austria', cities:{
+    vienna:{label:'Vienna',tier:'top',score:85,insight:'<strong>Vienna is Austria\'s dominant Chinese tourism destination</strong> — classical music, imperial history, and cafe culture resonate strongly. Consistent and high-volume Ctrip demand year-round.'},
+    salzburg:{label:'Salzburg',tier:'top',score:80,insight:'<strong>Salzburg ranks very highly on Chinese European itineraries</strong>, driven by Mozart heritage and Sound of Music tourism. Strong Ctrip demand, particularly for group tours.'},
+    hallstatt:{label:'Hallstatt',tier:'top',score:78,insight:'<strong>Hallstatt has become one of the most viral Chinese tourism destinations in Europe</strong> — the village was even replicated in China. Ctrip interest is enormous relative to its size.'},
+    innsbruck:{label:'Innsbruck',tier:'strong',score:65,insight:'<strong>Innsbruck draws Chinese ski and alpine tourists</strong> and benefits from proximity to Bavaria. Solid winter and summer demand.'},
+    graz:{label:'Graz',tier:'emerging',score:42,insight:'<strong>Graz is an emerging destination for Chinese cultural travellers</strong>. UNESCO old town and design scene are growing draws. Less competitive than Vienna on Chinese OTAs.'},
+    linz:{label:'Linz',tier:'emerging',score:35,insight:'<strong>Linz draws modest Chinese visitor numbers</strong>, mainly linked to the Danube route and Ars Electronica festival.'},
+    countryside:{label:'Austrian countryside / other',tier:'strong',score:60,insight:'<strong>The Austrian Alps, Salzkammergut lake district, and wine regions</strong> all appear on Chinese FIT itineraries. Rural properties near scenic landmarks can capture strong Ctrip demand.'}
+  }},
+  uk:{ label:'United Kingdom', cities:{
+    london:{label:'London',tier:'top',score:97,insight:'<strong>London is the top Chinese inbound destination in the UK and one of the highest in Europe.</strong> Ctrip search volumes are matched only by Paris. Chinese visitors come for culture, shopping, education, and finance — demand is year-round and high-value.'},
+    edinburgh:{label:'Edinburgh',tier:'strong',score:70,insight:'<strong>Edinburgh is Scotland\'s primary Chinese tourist destination</strong>, driven by castle and whisky tourism. Ctrip demand is strong, particularly in August during the Fringe.'},
+    oxford:{label:'Oxford',tier:'strong',score:68,insight:'<strong>Oxford has an extremely strong Chinese education and cultural tourism draw.</strong> University visits from Chinese families are a major source of demand — often converting to premium accommodation bookings.'},
+    cambridge:{label:'Cambridge',tier:'strong',score:65,insight:'<strong>Cambridge mirrors Oxford\'s Chinese tourism profile</strong> — university visits, punting, and academic tourism drive consistent Ctrip demand.'},
+    manchester:{label:'Manchester',tier:'strong',score:65,insight:'<strong>Manchester draws Chinese visitors via its large student community</strong> and football tourism. Meaningful Ctrip demand with less competition than London.'},
+    bath:{label:'Bath',tier:'strong',score:60,insight:'<strong>Bath is a popular short-break destination for Chinese travellers</strong> based in London. Roman Baths and Georgian architecture are the primary draws.'},
+    countryside:{label:'UK countryside / other',tier:'emerging',score:35,insight:'<strong>The Cotswolds, Scottish Highlands, and Lake District</strong> all feature on premium Chinese FIT itineraries. Rural properties in iconic landscapes can build strong Ctrip profiles.'}
+  }},
+  portugal:{ label:'Portugal', cities:{
+    lisbon:{label:'Lisbon',tier:'strong',score:72,insight:'<strong>Lisbon is Southern Europe\'s fastest-growing Chinese tourism destination.</strong> Ctrip search volumes have risen sharply since 2022. Properties here are still relatively under-represented on Chinese OTAs — a real opportunity.'},
+    porto:{label:'Porto',tier:'strong',score:65,insight:'<strong>Porto is growing fast on the Chinese travel radar</strong>, driven by wine tourism and its distinctive architecture. Less competitive on Ctrip than Lisbon — a genuine first-mover opportunity.'},
+    sintra:{label:'Sintra',tier:'strong',score:60,insight:'<strong>Sintra\'s fairy-tale palaces are a recognised attraction on Chinese Portugal itineraries.</strong> Day-trip demand from Lisbon is very high; overnight stays are growing.'},
+    algarve:{label:'Algarve',tier:'emerging',score:45,insight:'<strong>The Algarve is emerging as a Chinese beach and golf destination.</strong> Demand is growing from a low base, with strong upside for early-listed properties.'},
+    coimbra:{label:'Coimbra',tier:'emerging',score:35,insight:'<strong>Coimbra features on Chinese cultural itineraries</strong> linked to its ancient university. Modest but growing Ctrip presence.'},
+    aveiro:{label:'Aveiro',tier:'emerging',score:32,insight:'<strong>Aveiro\'s canal boats and Art Nouveau architecture</strong> have gained traction on Chinese social travel platforms. A niche but growing opportunity.'},
+    countryside:{label:'Portuguese countryside / other',tier:'emerging',score:30,insight:'<strong>The Douro Valley wine region and Alentejo</strong> are attracting Chinese experiential travellers. Rural properties here have an early-mover advantage on Chinese OTAs.'}
+  }}
+};
+
+const tierConfig = {
+  top:      {label:'Top destination', badgeCls:'tier-top',      fillCls:'fill-top'},
+  strong:   {label:'Strong market',   badgeCls:'tier-strong',   fillCls:'fill-strong'},
+  emerging: {label:'Emerging market', badgeCls:'tier-emerging', fillCls:'fill-emerging'},
+  low:      {label:'Low demand',      badgeCls:'tier-low',      fillCls:'fill-low'},
+};
+
+function onCountryChange() {
+  const country = document.getElementById('sel-country').value;
+  const citySelect = document.getElementById('sel-city');
+  citySelect.innerHTML = '';
+  document.getElementById('demand-card').classList.remove('visible');
+  document.getElementById('assessment-section').classList.remove('visible');
+  if (!country || !locationData[country]) {
+    citySelect.innerHTML = '<option value="">Select country first...</option>';
+    citySelect.disabled = true;
+    return;
+  }
+  citySelect.disabled = false;
+  citySelect.innerHTML = '<option value="">Select city...</option>';
+  const cities = locationData[country].cities;
+  Object.keys(cities).forEach(key => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = cities[key].label;
+    citySelect.appendChild(opt);
+  });
+}
+
+function onCityChange() {
+  const country = document.getElementById('sel-country').value;
+  const city = document.getElementById('sel-city').value;
+  document.getElementById('demand-card').classList.remove('visible');
+  document.getElementById('assessment-section').classList.remove('visible');
+  if (!country || !city) return;
+  const cityData = locationData[country].cities[city];
+  if (!cityData) return;
+  const tier = tierConfig[cityData.tier];
+  document.getElementById('dc-city').textContent = cityData.label;
+  document.getElementById('dc-country').textContent = locationData[country].label;
+  document.getElementById('dc-badge').textContent = tier.label;
+  document.getElementById('dc-badge').className = 'demand-tier-badge ' + tier.badgeCls;
+  document.getElementById('dc-score-label').textContent = cityData.score + ' / 100';
+  document.getElementById('dc-insight').innerHTML = cityData.insight;
+  const bar = document.getElementById('dc-bar');
+  const barFillCls = cityData.score > 80 ? 'fill-strong' : cityData.score >= 40 ? 'fill-emerging' : 'fill-low';
+  bar.className = 'demand-bar-fill ' + barFillCls;
+  bar.style.width = '0%';
+  setTimeout(() => { bar.style.width = cityData.score + '%'; }, 50);
+  document.getElementById('demand-card').classList.add('visible');
+  document.getElementById('assessment-section').classList.add('visible');
+}
+
+const dimensions = [
+  {name:'OTA Visibility',           field:'ota',      weight:3},
+  {name:'Payment Acceptance',       field:'payment',  weight:3},
+  {name:'Chinese OTA Reviews',      field:'reviews',  weight:2},
+  {name:'Language & Communication', field:'language', weight:2},
+  {name:'On-property Experience',   field:'onprop',   weight:1},
+];
+const valueMap = {red:0,amber:1,green:2};
+const labelMap = {
+  red:{text:'Not ready',cls:'pill-red'},
+  amber:{text:'In progress',cls:'pill-amber'},
+  green:{text:'Good',cls:'pill-green'},
+};
+
+function runCheck() {
+  const values = {};
+  let allAnswered = true;
+  dimensions.forEach(d => {
+    const sel = document.querySelector('input[name="'+d.field+'"]:checked');
+    if (!sel) allAnswered = false;
+    else values[d.field] = sel.value;
+  });
+  if (!allAnswered) { alert('Please rate all six dimensions before running ChinaCheck.'); return; }
+
+  // Preparation score (0–100)
+  let totalWeight=0, totalScore=0;
+  dimensions.forEach(d => { totalWeight+=d.weight; totalScore+=valueMap[values[d.field]]*d.weight; });
+  const prepPct = Math.round((totalScore/(totalWeight*2))*100);
+
+  // Colour thresholds: red <40, amber 40-80, green >80
+  const verdictKey = prepPct > 80 ? 'green' : prepPct >= 40 ? 'amber' : 'red';
+  const prepColor  = prepPct > 80 ? 'var(--green)' : prepPct >= 40 ? 'var(--amber)' : 'var(--red)';
+  const gapColorCls = prepPct > 80 ? 'gap-color-green' : prepPct >= 40 ? 'gap-color-amber' : 'gap-color-red';
+
+  const verdictLabels = {
+    green: {text:'Well prepared', cls:'verdict-green'},
+    amber: {text:'Needs work',    cls:'verdict-amber'},
+    red:   {text:'Not ready',     cls:'verdict-red'},
+  };
+
+  // Get market potential score from location selection
+  const country = document.getElementById('sel-country').value;
+  const city    = document.getElementById('sel-city').value;
+  const potentialScore = (country && city && locationData[country] && locationData[country].cities[city])
+    ? locationData[country].cities[city].score : null;
+  const cityLabel = (potentialScore !== null) ? locationData[country].cities[city].label : '';
+
+  // Gap text
+  const gap = potentialScore !== null ? potentialScore - prepPct : null;
+  let gapSummary = '';
+  if (gap !== null) {
+    if (gap <= 0) {
+      gapSummary = 'Your preparation matches or exceeds what this market demands. You are well-positioned to capture Chinese traveller demand here.';
+    } else if (gap <= 20) {
+      gapSummary = 'You are close to capturing the full potential of this market. A few targeted improvements will close the gap.';
+    } else if (gap <= 50) {
+      gapSummary = 'There is a significant gap between what this market offers and your current preparation. The opportunity is real — but you are not yet set up to capture it.';
+    } else {
+      gapSummary = 'This market has very high Chinese traveller demand, but your operation is currently leaving most of it on the table. The upside of getting ready here is substantial.';
+    }
+  }
+
+  const notes = {
+    green: 'Your operation covers the core requirements for Chinese travellers. Focus next on content quality on Chinese OTAs and actively building reviews.',
+    amber: 'You have a foundation but gaps that will cost you bookings. Prioritise OTA listing and payment first — those two moves drive the most impact.',
+    red:   'You are effectively invisible to Chinese travellers right now. Start with a Ctrip listing and WeChat Pay — those two steps alone change the picture significantly.',
+  };
+
+  // Render
+  document.getElementById('result-property-name').textContent = '';
+
+  // Potential card
+  document.getElementById('rp-city').textContent = cityLabel;
+  document.getElementById('rp-potential-score').textContent = potentialScore !== null ? potentialScore : '—';
+
+  // Preparation card
+  const prepScoreEl = document.getElementById('rp-prep-score');
+  prepScoreEl.textContent = prepPct + '%';
+  prepScoreEl.style.color = prepColor;
+  const verdictEl = document.getElementById('rp-verdict');
+  verdictEl.textContent = verdictLabels[verdictKey].text;
+  verdictEl.className = 'vs-verdict ' + verdictLabels[verdictKey].cls;
+
+  // Gap bar
+  if (potentialScore !== null) {
+    document.getElementById('gap-bar-potential').style.width = potentialScore + '%';
+    document.getElementById('gap-bar-preparation').style.width = '0%';
+    setTimeout(() => {
+      document.getElementById('gap-bar-preparation').style.width = prepPct + '%';
+      document.getElementById('gap-bar-preparation').className = 'gap-bar-preparation ' + gapColorCls;
+    }, 80);
+    document.getElementById('gap-label-right').textContent = prepPct + '% of ' + potentialScore + ' point opportunity';
+  }
+  document.getElementById('gap-summary').textContent = gapSummary;
+
+  // Dimension rows
+  const listEl = document.getElementById('dim-results-list');
+  listEl.innerHTML = '';
+  dimensions.forEach(d => {
+    const v = values[d.field];
+    const row = document.createElement('div');
+    row.className = 'dim-result-row';
+    row.innerHTML = '<div class="dim-result-name">'+d.name+'</div><div class="dim-result-pill '+labelMap[v].cls+'">'+labelMap[v].text+'</div>';
+    listEl.appendChild(row);
+  });
+
+  document.getElementById('result-note').textContent = notes[verdictKey];
+
+  // ── BUSINESS IMPACT CALCULATION ──
+  const units = parseFloat(document.getElementById('prop-units').value);
+  const rate  = parseFloat(document.getElementById('prop-rate').value);
+  const bizSection = document.getElementById('biz-section');
+
+  if (units > 0 && rate > 0 && potentialScore !== null) {
+    const demandScore = potentialScore;
+    const baseChineseShare = demandScore > 80 ? 0.08 : demandScore >= 60 ? 0.05 : demandScore >= 40 ? 0.025 : 0.01;
+    const occupiedNights    = units * 365 * 0.68;
+    const chineseNightsFull = Math.round(occupiedNights * baseChineseShare);
+    const revPotential      = Math.round(chineseNightsFull * rate);
+    const prepRatio         = prepPct / 100;
+    const revGap            = Math.round(revPotential * (1 - prepRatio));
+    const fmt = (n) => '€' + n.toLocaleString('de-DE');
+
+    document.getElementById('biz-potential').textContent = fmt(revPotential);
+    document.getElementById('biz-note').textContent =
+      'How this is calculated: ' + units + ' units × 365 nights × 68% occupancy = ' +
+      Math.round(occupiedNights) + ' occupied nights/year. At ' +
+      Math.round(baseChineseShare*100) + '% Chinese guest share for this market = ' +
+      chineseNightsFull + ' Chinese guest nights at full readiness × ' + fmt(rate) +
+      '/night = ' + fmt(revPotential) + ' annual potential. Your preparation score (' +
+      prepPct + '%) implies ' + fmt(revGap) + ' of that is currently uncaptured. ' +
+      'Figures are indicative — actual results depend on listing quality, pricing, and seasonality.';
+
+    bizSection.style.display = 'block';
+  } else {
+    bizSection.style.display = 'none';
+  }
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
