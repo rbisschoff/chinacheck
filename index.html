@@ -184,23 +184,29 @@
 
   /* ── RADIO ── */
   .radio-group { display:flex; gap:6px; width:100%; align-items:stretch; }
-  .radio-option { flex:1; min-width:0; display:flex; }
-  .radio-option input[type="radio"] { display:none; }
+  .radio-option { flex:1; min-width:0; display:flex; position:relative; }
+  .radio-option input[type="radio"] {
+    position:absolute; opacity:0; width:1px; height:1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap;
+    pointer-events:none; margin:0; padding:0; border:0;
+  }
   .radio-option label {
     display:flex; align-items:center; justify-content:center;
     width:100%; min-height:44px;
-    text-align:center; padding:8px 4px;
-    border-radius:var(--r10); border:1px solid var(--border);
+    text-align:center; padding:8px 6px;
+    border-radius:var(--r10); border:1.5px solid var(--border);
     font-size:12px; font-weight:500; cursor:pointer;
     transition:all 0.15s; color:var(--muted); user-select:none;
     line-height:1.3; word-break:break-word;
     background:var(--card2);
     -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
   }
-  .radio-option label:active { opacity:0.7; }
-  .radio-option input[type="radio"]:checked + label.red   { background:#FFF1F0; border-color:#FF6B6B; color:#C0392B; font-weight:600; }
-  .radio-option input[type="radio"]:checked + label.amber { background:#FFFBEB; border-color:#FCD34D; color:#92600A; font-weight:600; }
-  .radio-option input[type="radio"]:checked + label.green { background:var(--green-light); border-color:#34C759; color:#1A7A3C; font-weight:600; }
+  .radio-option label:hover { border-color:var(--muted2); color:var(--ink); }
+  .radio-option label:active { opacity:0.7; transform:scale(0.98); }
+  .radio-option input[type="radio"]:checked + label.red   { background:#FFF1F0; border-color:#FF6B6B; color:#C0392B; font-weight:700; box-shadow:0 0 0 1px #FF6B6B; }
+  .radio-option input[type="radio"]:checked + label.amber { background:#FFFBEB; border-color:#F59E0B; color:#92600A; font-weight:700; box-shadow:0 0 0 1px #F59E0B; }
+  .radio-option input[type="radio"]:checked + label.green { background:#F0FDF4; border-color:#34C759; color:#1A7A3C; font-weight:700; box-shadow:0 0 0 1px #34C759; }
 
   /* ── RUN BUTTON ── */
   .run-btn {
@@ -223,14 +229,33 @@
   }
   .result-panel.visible { display:block; }
 
-  .result-header { padding:18px 16px 14px; background:var(--card); border-bottom:0.5px solid var(--border); }
+  .result-header {
+    padding:18px 16px 14px;
+    background:var(--card); border-bottom:0.5px solid var(--border);
+    position:relative; overflow:hidden;
+  }
+  .result-header.has-photo {
+    background-size:cover; background-position:center;
+    border-bottom:none; padding:24px 16px 20px;
+  }
+  .result-header.has-photo::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,rgba(21,88,176,0.82) 0%,rgba(46,134,222,0.78) 100%);
+    z-index:0;
+  }
+  .result-header.has-photo > * { position:relative; z-index:1; }
+  .result-header.has-photo .result-eyebrow { color:rgba(255,255,255,0.7); }
+  .result-header.has-photo .vs-card { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.2); }
+  .result-header.has-photo .vs-card-label { color:rgba(255,255,255,0.65); }
+  .result-header.has-photo .vs-card-city,
+  .result-header.has-photo .vs-card-score { color:#fff; }
   .result-eyebrow { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
   .vs-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   @media(max-width:400px){ .vs-grid{grid-template-columns:1fr;} }
   .vs-card { border-radius:var(--r12); padding:14px 16px; }
   .vs-card-potential {
-    background:linear-gradient(145deg,#08080E 0%,#160404 100%);
-    border:0.5px solid rgba(255,255,255,0.06);
+    background:linear-gradient(145deg,#1558B0 0%,#2E86DE 100%);
+    border:0.5px solid rgba(255,255,255,0.08);
   }
   .vs-card-preparation { background:var(--card2); border:0.5px solid var(--border); }
   .vs-card-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px; }
@@ -241,7 +266,9 @@
   .vs-card-preparation .vs-card-city { color:var(--muted2); }
   .vs-score { font-size:38px; font-weight:800; letter-spacing:-1.5px; line-height:1; }
   .vs-card-potential .vs-score { color:var(--gold-bright); }
-  .vs-score-unit { font-size:13px; font-weight:400; letter-spacing:0; color:rgba(255,255,255,0.25); margin-left:1px; }
+  .vs-card-potential .vs-card-label { color:rgba(255,255,255,0.5); }
+  .vs-card-potential .vs-card-city { color:rgba(255,255,255,0.4); }
+  .vs-score-unit { font-size:13px; font-weight:400; letter-spacing:0; color:rgba(255,255,255,0.35); margin-left:1px; }
   .vs-verdict {
     display:inline-block; font-size:10px; font-weight:700;
     padding:3px 9px; border-radius:20px; margin-top:8px;
@@ -267,10 +294,10 @@
   .biz-section { padding:16px; background:var(--card); border-bottom:0.5px solid var(--border); }
   .biz-header { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
   .biz-potential-card {
-    background:linear-gradient(145deg,#08080E 0%,#160404 100%);
+    background:linear-gradient(145deg,#1558B0 0%,#2E86DE 100%);
     border-radius:var(--r12); padding:16px 18px;
   }
-  .biz-potential-card .biz-card-label { font-size:12px; color:rgba(255,255,255,0.35); line-height:1.5; margin-bottom:10px; }
+  .biz-potential-card .biz-card-label { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.5; margin-bottom:10px; }
   .biz-potential-card .biz-card-value { font-size:34px; font-weight:800; letter-spacing:-1px; color:var(--gold-bright); }
   .biz-note { font-size:11px; color:var(--muted2); line-height:1.65; margin-top:12px; }
 
@@ -294,6 +321,141 @@
   /* RESULT NOTE */
   .result-note { padding:12px 16px 18px; font-size:13px; color:var(--muted); line-height:1.65; background:var(--card2); }
 
+  /* CM HINT CARD */
+  .cm-hint-card {
+    display:flex; gap:12px; align-items:flex-start;
+    background:var(--card); border-radius:var(--r12);
+    border:0.5px solid var(--border); box-shadow:var(--shadow);
+    padding:14px 16px; margin-top:10px; margin-bottom:2px;
+  }
+  .cm-hint-icon { font-size:20px; flex-shrink:0; margin-top:1px; line-height:1; }
+  .cm-hint-body { flex:1; }
+  .cm-hint-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+  .cm-hint-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+  .cm-hint-desc strong { color:var(--china-red); font-weight:600; }
+
+  /* FIREWALL TEST */
+  .firewall-test-row {
+    display:flex; gap:8px; align-items:center; margin-bottom:14px;
+  }
+  .firewall-url-input {
+    flex:1; height:40px; padding:0 12px;
+    border:1px solid var(--border); border-radius:var(--r10);
+    font-size:13px; font-family:-apple-system,'Inter',sans-serif;
+    color:var(--ink2); background:var(--card2); outline:none;
+    -webkit-appearance:none;
+  }
+  .firewall-url-input::placeholder { color:var(--muted2); }
+  .firewall-url-input:focus { border-color:rgba(201,25,11,0.4); background:#fff; }
+  .firewall-test-btn {
+    height:40px; padding:0 14px; white-space:nowrap;
+    background:var(--china-red); color:#fff;
+    border:none; border-radius:var(--r10); cursor:pointer;
+    font-size:12px; font-weight:700; letter-spacing:0.2px;
+    transition:opacity 0.15s; flex-shrink:0;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .firewall-test-btn:active { opacity:0.8; }
+  .firewall-test-btn:disabled { background:var(--muted2); cursor:default; opacity:0.6; }
+  .firewall-result {
+    background:var(--card2); border-radius:var(--r10);
+    border:1px solid var(--border); margin-bottom:14px; overflow:hidden;
+  }
+  .firewall-result-header {
+    padding:10px 14px; font-size:12px; font-weight:700;
+    display:flex; align-items:center; gap:8px;
+  }
+  .fw-header-ok  { background:#F0FDF4; color:#1A7A3C; border-bottom:1px solid #BBF7D0; }
+  .fw-header-bad { background:#FFF1F0; color:#C0392B; border-bottom:1px solid #FFCCC7; }
+  .fw-header-loading { background:var(--bg); color:var(--muted); border-bottom:1px solid var(--border); }
+  .firewall-nodes { padding:10px 14px; display:flex; flex-direction:column; gap:6px; }
+  .fw-node {
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:12px; padding:5px 0; border-bottom:0.5px solid var(--border2);
+  }
+  .fw-node:last-child { border-bottom:none; }
+  .fw-node-name { color:var(--ink2); font-weight:500; }
+  .fw-node-status { font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .fw-ok    { background:#F0FDF4; color:#1A7A3C; }
+  .fw-bad   { background:#FFF1F0; color:#C0392B; }
+  .fw-unknown { background:var(--bg); color:var(--muted); }
+  .firewall-result-note { padding:8px 14px 10px; font-size:11px; color:var(--muted); line-height:1.55; }
+
+  /* FIREWALL GATED */
+  .firewall-gated { display:none; }
+  .firewall-gated.visible { display:block; }
+
+  /* BENCHMARK */
+  .benchmark-section { padding:14px 16px 16px; background:var(--card2); border-bottom:0.5px solid var(--border); }
+  .benchmark-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
+  .benchmark-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+  .benchmark-bar-name { font-size:11px; color:var(--muted); width:80px; flex-shrink:0; }
+  .benchmark-bar-track { flex:1; height:7px; background:var(--bg); border-radius:20px; overflow:hidden; }
+  .benchmark-bar-fill { height:100%; border-radius:20px; transition:width 0.9s cubic-bezier(0.4,0,0.2,1) 0.2s; }
+  .benchmark-bar-val { font-size:11px; font-weight:700; color:var(--ink2); width:32px; text-align:right; flex-shrink:0; }
+  .benchmark-note { font-size:11px; color:var(--muted2); line-height:1.6; margin-top:6px; font-style:italic; }
+
+  /* PRIORITY ACTIONS */
+  .priority-section { padding:16px; background:var(--card); border-bottom:0.5px solid var(--border); }
+  .priority-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
+  .priority-item { display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; }
+  .priority-item:last-child { margin-bottom:0; }
+  .priority-num { width:24px; height:24px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+  .priority-num.p1 { background:var(--red); }
+  .priority-num.p2 { background:var(--amber); }
+  .priority-num.p3 { background:#6B7280; }
+  .priority-item-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+  .priority-item-desc { font-size:12px; color:var(--muted); line-height:1.55; }
+
+  /* REVENUE BY DIMENSION */
+  .rev-dim-section { padding:14px 16px 16px; background:var(--card); border-bottom:0.5px solid var(--border); }
+  .rev-dim-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
+  .rev-dim-context { font-size:11px; color:var(--muted2); margin-bottom:10px; font-style:italic; }
+  .rev-dim-row { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:0.5px solid var(--border2); gap:10px; }
+  .rev-dim-row:last-child { border-bottom:none; }
+  .rev-dim-name { font-size:13px; font-weight:500; color:var(--ink2); flex:1; }
+  .rev-dim-impact { font-size:12px; font-weight:700; color:var(--red); }
+  .rev-dim-impact.ok { color:var(--green); }
+  .rev-dim-impact.amber { color:var(--amber); }
+
+  /* SHARE */
+  .share-section { padding:16px; background:var(--card2); border-top:0.5px solid var(--border); }
+  .share-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; }
+  .share-percentile-card {
+    background:linear-gradient(145deg,#1558B0 0%,#2E86DE 100%);
+    border-radius:var(--r12); padding:14px 16px; margin-bottom:12px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .share-percentile-card .spc-num { font-size:28px; font-weight:800; color:var(--gold-bright); letter-spacing:-1px; flex-shrink:0; }
+  .share-percentile-card .spc-text { font-size:12px; color:rgba(255,255,255,0.7); line-height:1.55; }
+  .share-percentile-card .spc-text strong { color:#fff; }
+  .share-why { font-size:11px; color:var(--muted); line-height:1.6; margin-bottom:10px; font-style:italic; }
+  .share-snippet {
+    background:var(--card); border:0.5px solid var(--border);
+    border-radius:var(--r12); padding:14px 16px;
+    font-size:13px; color:var(--ink2); line-height:1.65;
+    font-style:italic; margin-bottom:12px; user-select:all;
+  }
+  .share-btn {
+    display:block; width:100%; padding:13px 16px;
+    font-size:14px; font-weight:600;
+    border:none; border-radius:var(--r12); cursor:pointer;
+    letter-spacing:-0.1px; transition:all 0.2s;
+    -webkit-tap-highlight-color:transparent;
+    margin-bottom:8px; text-align:center;
+  }
+  .share-btn-dl {
+    background:var(--ink); color:#fff;
+  }
+  .share-btn-dl:hover { background:#111; }
+  .share-btn-copy {
+    background:var(--card2); color:var(--ink);
+    border:1.5px solid var(--border);
+  }
+  .share-btn-copy:hover { border-color:var(--muted2); }
+  .share-btn:active { opacity:0.85; transform:scale(0.98); }
+  .share-btn.copied { background:var(--green); color:#fff; border-color:var(--green); }
+
   /* FOOTER */
   footer {
     text-align:center; padding:24px 20px;
@@ -302,6 +464,27 @@
     border-top:0.5px solid var(--border);
   }
   footer a { color:var(--china-red); text-decoration:none; font-weight:500; }
+
+  /* OPERATOR SERIES AUTHORITY BAND */
+  .authority-band {
+    margin:24px 16px 0;
+    background:rgba(8,8,14,0.92);
+    border-radius:var(--r12);
+    padding:16px 18px;
+    text-align:center;
+  }
+  .ab-inner { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; }
+  .ab-logo {
+    width:36px; height:36px; border-radius:8px;
+    background:linear-gradient(145deg,#C9190B,#8B0000);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; font-weight:900; color:#F5C842;
+    flex-shrink:0;
+  }
+  .ab-text { font-size:12px; color:rgba(255,255,255,0.45); line-height:1.7; text-align:left; }
+  .ab-text a { color:#F5C842; text-decoration:none; font-weight:600; }
+  .ab-text a:hover { color:#fff; }
+  .ab-series { color:rgba(255,255,255,0.6); font-weight:600; }
 </style>
 </head>
 <body>
@@ -314,7 +497,7 @@
       <span class="logo-sub">China Readiness Tool</span>
     </div>
   </div>
-  <div class="stage-badge">Stage 1</div>
+  <div class="stage-badge">Stage 2</div>
 </header>
 
 <div class="hero">
@@ -379,34 +562,79 @@
         <div class="ios-row-label">Type</div>
         <select id="prop-type">
           <option value="">Select...</option>
+          <option value="vacation">Vacation rental / STR</option>
+          <option value="villa">Villa</option>
           <option value="serviced">Serviced apartments</option>
           <option value="apart-hotel">Apart-hotel</option>
           <option value="boutique">Boutique hotel</option>
-          <option value="vacation">Vacation rental / STR</option>
           <option value="resort">Resort</option>
-          <option value="villa">Villa</option>
         </select>
       </div>
       <div class="ios-row">
         <div class="ios-row-label">Units / rooms</div>
-        <input type="number" id="prop-units" placeholder="e.g. 24" min="1" max="2000">
+        <input type="number" id="prop-units" placeholder="e.g. 8" min="1" max="2000">
       </div>
       <div class="ios-row">
         <div class="ios-row-label">Avg. nightly rate</div>
         <div style="display:flex;align-items:center;gap:2px;flex:1;justify-content:flex-end;">
           <span class="ios-row-prefix">€</span>
-          <input type="number" id="prop-rate" placeholder="120" min="1" max="10000" style="max-width:90px;text-align:right;">
+          <input type="number" id="prop-rate" placeholder="150" min="1" max="10000" style="max-width:90px;text-align:right;">
         </div>
       </div>
     </div>
 
-    <div class="step-label"><div class="step-num">3</div><div class="step-text">Rate your readiness</div></div>
+    <div class="step-label"><div class="step-num">3</div><div class="step-text">Your tech stack</div></div>
+
+    <div class="ios-group">
+      <div class="ios-row">
+        <div class="ios-row-label">Channel manager</div>
+        <select id="prop-cm" onchange="onCmChange()">
+          <option value="">Select...</option>
+          <optgroup label="Vacation rental">
+            <option value="rentalsunited">Rentals United</option>
+            <option value="avantio">Avantio</option>
+            <option value="hostaway">Hostaway</option>
+            <option value="guesty">Guesty</option>
+            <option value="bookingsync">BookingSync</option>
+            <option value="smoobu">Smoobu</option>
+          </optgroup>
+          <optgroup label="Hotel / Apart-hotel">
+            <option value="siteminder">SiteMinder</option>
+            <option value="dedge">D-EDGE</option>
+            <option value="cloudbeds">Cloudbeds</option>
+            <option value="rms">RMS Cloud</option>
+            <option value="littlehotelier">Little Hotelier</option>
+          </optgroup>
+          <option value="other">Other / not sure</option>
+          <option value="none">No channel manager</option>
+        </select>
+      </div>
+      <div class="ios-row">
+        <div class="ios-row-label">Website access</div>
+        <select id="prop-website" onchange="onWebsiteChange()">
+          <option value="">Select...</option>
+          <option value="self">Self-managed (control hosting/DNS)</option>
+          <option value="agency">Managed by agency or PMS</option>
+          <option value="no">No direct website</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="cm-hint-card" id="cm-hint-card" style="display:none">
+      <div class="cm-hint-icon" id="cm-hint-icon"></div>
+      <div class="cm-hint-body">
+        <div class="cm-hint-title" id="cm-hint-title"></div>
+        <div class="cm-hint-desc" id="cm-hint-desc"></div>
+      </div>
+    </div>
+
+    <div class="step-label"><div class="step-num">4</div><div class="step-text">Rate your readiness</div></div>
 
     <div class="dimension-card">
       <div class="dim-header">
         <div class="dim-title-wrap">
           <div class="dim-title">OTA Visibility</div>
-          <div class="dim-desc">Listed and active on Ctrip, Fliggy, or Meituan — the platforms Chinese travellers actually use to book.</div>
+          <div class="dim-desc">Listed and active on Ctrip/Trip.com — the primary platform Chinese travellers use to book internationally. Fliggy and Meituan have no channel manager integration; those require a separate manual listing.</div>
         </div>
         <div class="dim-weight">Weight: high</div>
       </div>
@@ -475,10 +703,34 @@
       </div>
     </div>
 
+    <div class="firewall-gated" id="firewall-gated">
+      <div class="dimension-card">
+        <div class="dim-header">
+          <div class="dim-title-wrap">
+            <div class="dim-title">Firewall &amp; Digital Accessibility</div>
+            <div class="dim-desc">Can Chinese travellers reach your website and booking engine? Most European sites fail behind the Great Firewall — blocked scripts, slow load, broken checkout. Operators rarely know.</div>
+          </div>
+          <div class="dim-weight">Weight: high</div>
+        </div>
+        <div class="firewall-test-row">
+          <input type="text" class="firewall-url-input" id="firewall-url" placeholder="yourdomain.com" oninput="onFirewallUrlInput()">
+          <button class="firewall-test-btn" id="firewall-test-btn" onclick="testFirewall()" disabled>Test now →</button>
+        </div>
+        <div class="firewall-result" id="firewall-result" style="display:none">
+          <div class="firewall-result-header" id="firewall-result-header"></div>
+          <div class="firewall-result-note" id="firewall-result-note"></div>
+        </div>
+        <div class="radio-group" id="firewall-radio-group" style="display:none">
+          <div class="radio-option"><input type="radio" name="firewall" id="fw-g" value="green"><label for="fw-g" class="green">Fully accessible</label></div>
+          <div class="radio-option"><input type="radio" name="firewall" id="fw-r" value="red"><label for="fw-r" class="red">Issues found</label></div>
+        </div>
+      </div>
+    </div>
+
     <button class="run-btn" onclick="runCheck()">Run ChinaCheck &rarr;</button>
 
     <div class="result-panel" id="result-panel">
-      <div class="result-header">
+      <div class="result-header" id="result-header">
         <div class="result-eyebrow">ChinaCheck Result</div>
         <div class="result-property-name-row" id="result-property-name"></div>
         <div class="vs-grid">
@@ -518,97 +770,785 @@
       </div>
       <div class="dim-results"><div class="dim-results-label">Dimension breakdown</div><div id="dim-results-list"></div></div>
       <div class="result-note" id="result-note"></div>
+
+      <div class="benchmark-section" id="benchmark-section" style="display:none">
+        <div class="benchmark-label">How you compare</div>
+        <div class="benchmark-bar-row">
+          <div class="benchmark-bar-name">Your score</div>
+          <div class="benchmark-bar-track"><div class="benchmark-bar-fill" style="background:var(--china-red);width:0%" id="bm-your-fill"></div></div>
+          <div class="benchmark-bar-val" id="bm-your-val">—</div>
+        </div>
+        <div class="benchmark-bar-row">
+          <div class="benchmark-bar-name">Avg. operator</div>
+          <div class="benchmark-bar-track"><div class="benchmark-bar-fill" style="background:var(--muted2);width:0%;transition:width 0.9s cubic-bezier(0.4,0,0.2,1) 0.3s" id="bm-median-fill"></div></div>
+          <div class="benchmark-bar-val" id="bm-median-val">—</div>
+        </div>
+        <div class="benchmark-note" id="bm-note"></div>
+      </div>
+
+      <div class="priority-section" id="priority-section" style="display:none">
+        <div class="priority-label">Your top priorities</div>
+        <div id="priority-list"></div>
+      </div>
+
+      <div class="rev-dim-section" id="rev-dim-section" style="display:none">
+        <div class="rev-dim-label">What fixing each gap adds — per property / year</div>
+        <div class="rev-dim-context" id="rev-dim-context"></div>
+        <div id="rev-dim-list"></div>
+      </div>
+
+      <div class="share-section" id="share-section" style="display:none">
+        <div class="share-label">Share your result</div>
+        <div class="share-percentile-card" id="share-percentile-card"></div>
+        <canvas id="share-canvas" style="display:none"></canvas>
+        <div class="share-image-wrap" id="share-image-wrap" style="display:none">
+          <img id="share-image" style="width:100%;border-radius:12px;display:block;margin-bottom:10px;" alt="ChinaCheck result card">
+        </div>
+        <button class="share-btn share-btn-dl" id="share-dl-btn" onclick="downloadCard()" style="display:none;margin-bottom:8px;">⬇ Download image for LinkedIn</button>
+        <button class="share-btn share-btn-copy" id="share-copy-btn" onclick="copyShare()">Copy LinkedIn post</button>
+        <div class="share-snippet" id="share-snippet"></div>
+      </div>
     </div>
 
   </div>
 </div>
 
-<footer>ChinaCheck — built by <a href="#">Roger Bisschoff</a> &middot; Stage 1 prototype</footer>
+<div class="authority-band">
+  <div class="ab-inner">
+    <div class="ab-logo">中</div>
+    <div class="ab-text">
+      Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> — commercial &amp; distribution leader in European hospitality.<br>
+      <span class="ab-series">Operator Series</span> — free tools for senior property operators.
+    </div>
+  </div>
+</div>
+<footer>ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a></footer>
 
 <script>
+const cmData = {
+  rentalsunited: {name:'Rentals United', ctrip:true,  note:'<strong>Rentals United has a native two-way API with Trip.com/Ctrip</strong> — the only major VR channel manager with direct Chinese OTA connectivity. Add Trip.com under Services, sign a direct contract with Trip.com, then activate. Listings also appear on Skyscanner automatically.'},
+  avantio:       {name:'Avantio',        ctrip:false, note:'Avantio has no native Ctrip or Trip.com connection. <strong>A direct manual listing on the Ctrip extranet is your only path.</strong> Rates and availability are managed separately — fully workable but not synced with Avantio.'},
+  hostaway:      {name:'Hostaway',       ctrip:false, note:'Hostaway has no Chinese OTA connection. <strong>Manual Ctrip extranet listing is your only option.</strong> Ctrip accepts vacation rentals directly — takes 2–3 weeks. Consider Rentals United if Chinese distribution becomes a priority.'},
+  guesty:        {name:'Guesty',         ctrip:true,  note:'<strong>Guesty has a direct Trip.com/Ctrip integration.</strong> Connect via Guesty\'s Distribution settings — go to Additional Booking Channels and select Trip.com. Contact your Trip.com market manager to enable Guesty as your channel manager partner to complete setup.'},
+  bookingsync:   {name:'BookingSync',    ctrip:false, note:'BookingSync has no confirmed native Ctrip or Trip.com connection. <strong>A direct manual listing on the Ctrip extranet is your path.</strong> Fully workable — requires a direct Trip.com contract and separate rate/availability management.'},
+  smoobu:        {name:'Smoobu',         ctrip:true,  note:'<strong>Smoobu connects natively to Trip.com/Ctrip.</strong> Go to your Smoobu channel manager settings and activate Trip.com as a booking portal. Rates, availability and bookings sync automatically once connected.'},
+  siteminder:    {name:'SiteMinder',     ctrip:true,  note:'<strong>SiteMinder has a native two-way XML integration with Ctrip/Trip.com.</strong> Request the connection via your SiteMinder account — setup takes 2–3 weeks. No Fliggy or Meituan native connection; those require a separate extranet listing.'},
+  dedge:         {name:'D-EDGE',         ctrip:true,  note:'<strong>D-EDGE connects directly to Ctrip/Trip.com.</strong> Ask your D-EDGE account manager to activate the Trip.com channel — it is not enabled by default on all accounts.'},
+  cloudbeds:     {name:'Cloudbeds',      ctrip:true,  note:'<strong>Cloudbeds has a direct Trip.com/Ctrip integration.</strong> Contact your Trip.com account manager to enable the Cloudbeds connection — they provide the Hotel ID to complete setup.'},
+  rms:           {name:'RMS Cloud',      ctrip:true,  note:'RMS Cloud supports Ctrip/Trip.com. <strong>Request activation via RMS support</strong> and confirm with your Trip.com account manager. Fliggy and Meituan are manual extranet only.'},
+  littlehotelier:{name:'Little Hotelier',ctrip:true,  note:'Little Hotelier runs on SiteMinder\'s infrastructure. <strong>The same Ctrip XML integration applies</strong> — activate via your account settings. Setup typically under two weeks.'},
+  other:         {name:'Other',          ctrip:null,  note:'Check your channel manager\'s OTA list for Trip.com or Ctrip. <strong>If listed, request activation via your account manager.</strong> If not, a direct Ctrip extranet listing is your fallback.'},
+  none:          {name:'No channel manager', ctrip:null, note:'<strong>A direct listing on the Ctrip extranet is your most practical path.</strong> Go to trip.com, click "List your property" — expect a 2–3 week onboarding. Rates and availability are managed manually in the Ctrip extranet.'},
+};
+
+const benchmarkData = {
+  italy:{median:28,label:'Italian operators'}, france:{median:32,label:'French operators'},
+  germany:{median:30,label:'German operators'}, spain:{median:25,label:'Spanish operators'},
+  netherlands:{median:34,label:'Dutch operators'}, switzerland:{median:38,label:'Swiss operators'},
+  austria:{median:31,label:'Austrian operators'}, uk:{median:36,label:'UK operators'},
+  portugal:{median:22,label:'Portuguese operators'},
+};
+
+const priorityActions = {
+  ota:     { red:{title:'List on Ctrip immediately',desc:'This is the single highest-impact step. A Ctrip listing gives direct access to the largest Chinese OTA audience in Europe. Setup takes 2–3 weeks — via your channel manager if it connects, or via the Ctrip extranet directly.'}, amber:{title:'Fully activate your Ctrip listing',desc:'A partial listing loses bookings to optimised competitors. Complete your content, add photos, and set rate parity with your direct channel.'} },
+  payment: { red:{title:'Add WeChat Pay or Alipay',desc:'Chinese guests expect to pay with their preferred wallet. Most European PMS providers now support both via a simple integration. This removes a hard booking barrier.'}, amber:{title:'Expand payment coverage',desc:'If WeChat Pay is live but Alipay is not (or vice versa), you are missing half the audience. Both take roughly the same effort to add.'} },
+  firewall:{ red:{title:'Fix your website for China access',desc:'Use 17ce.com to check which pages fail. Most European sites break due to blocked third-party scripts — Google Fonts, Maps, Analytics. Replace or lazy-load these to fix load time behind the firewall.'} },
+  reviews: { red:{title:'Build your first Ctrip reviews',desc:'Zero reviews kills conversion regardless of listing quality. Contact recent guests and ask them to review on Ctrip. Ten reviews change the picture significantly.'}, amber:{title:'Actively manage Chinese OTA reviews',desc:'Respond to every review within 48 hours — in Mandarin if possible. This signals clearly that you take Chinese guests seriously.'} },
+  language:{ red:{title:'Add Mandarin to your key materials',desc:'Mandarin check-in instructions, a one-page property guide, and a translated Ctrip listing description are the minimum. A bilingual welcome card costs almost nothing.'}, amber:{title:'Upgrade to full Mandarin communication',desc:'Full listing translation and a Mandarin-capable reply channel (WeChat or email template) closes the gap significantly.'} },
+  onprop:  { red:{title:'Add basic Chinese guest touches',desc:'A kettle, instant noodles, slippers, EU-to-CN power adaptors, and a Mandarin check-in card. Under €20 per unit and they appear in positive Chinese reviews consistently.'}, amber:{title:'Systematise the on-property experience',desc:'Create a standard China welcome kit and add it to your housekeeping checklist so every arrival gets it.'} },
+};
+
+function onCmChange() {
+  const cm = document.getElementById('prop-cm').value;
+  const card = document.getElementById('cm-hint-card');
+  if (!cm || !cmData[cm]) { card.style.display='none'; return; }
+  const d = cmData[cm];
+  document.getElementById('cm-hint-icon').textContent = d.ctrip===true ? '✅' : d.ctrip===false ? '⚠️' : 'ℹ️';
+  document.getElementById('cm-hint-title').textContent = d.ctrip===true ? d.name+' — Ctrip connection available' : d.ctrip===false ? d.name+' — No native Chinese OTA connection' : d.name+' — Check your channel list';
+  document.getElementById('cm-hint-desc').innerHTML = d.note;
+  card.style.display='flex';
+}
+
+function onWebsiteChange() {
+  const w = document.getElementById('prop-website').value;
+  const fw = document.getElementById('firewall-gated');
+  if (w==='self'||w==='agency') {
+    fw.classList.add('visible');
+  } else {
+    fw.classList.remove('visible');
+    document.querySelectorAll('input[name="firewall"]').forEach(r=>r.checked=false);
+  }
+}
+
+function onFirewallUrlInput() {
+  const url = document.getElementById('firewall-url').value.trim();
+  document.getElementById('firewall-test-btn').disabled = !url;
+}
+
+function testFirewall() {
+  let raw = document.getElementById('firewall-url').value.trim();
+  if (!raw) return;
+  raw = raw.replace(/^https?:\/\//i,'').replace(/\/$/,'').split('/')[0];
+
+  const result = document.getElementById('firewall-result');
+  const header = document.getElementById('firewall-result-header');
+  const note = document.getElementById('firewall-result-note');
+  const radioGroup = document.getElementById('firewall-radio-group');
+
+  // Open test in new tab pre-filled
+  window.open('https://viewdns.info/chinesefirewall/?domain=' + encodeURIComponent(raw), '_blank');
+
+  // Show inline prompt to record result
+  header.className = 'firewall-result-header fw-header-loading';
+  header.innerHTML = '🔍 Results for <strong>' + raw + '</strong> are opening in a new tab';
+  note.innerHTML = 'ViewDNS will show a map with markers. '
+    + '<strong style="color:#1A7A3C">Green ✓ markers</strong> = select Fully accessible. '
+    + '<strong style="color:#C0392B">Red ✗ markers</strong> = select Issues found.';
+  result.style.display = 'block';
+  radioGroup.style.display = 'flex';
+  document.querySelectorAll('input[name="firewall"]').forEach(r => r.checked = false);
+}
+
+
+function copyShare() {
+  const text = document.getElementById('share-snippet').dataset.text;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('share-copy-btn');
+    btn.textContent='Copied ✓'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy LinkedIn post';btn.classList.remove('copied');},2500);
+  });
+}
+
+// City photos — local files in img/ folder
+// City gradient backgrounds — embedded SVG
+const cityPhotos = {
+  milan:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhMWEyZSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzRhMTk0MiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  rome:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhCMjUwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0Q0NjIyQSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  venice:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBkM2I2ZSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhNmI4YSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  florence:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdCM0YwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0MxN0YyNCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  naples:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCNEY3MiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI5ODBCOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  paris:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhMWEzZSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzZCMkQ4QiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  nice:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwNzdCNiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwQjREOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  lyon:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdEMDAwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0MwMzkyQiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  bordeaux:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRBMjM1QSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzdEM0M5OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  strasbourg:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCNEYzMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE5NkYzRCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  berlin:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFDMjgzMyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFNDA1NyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  munich:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRBMjA0MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzdCM0Y4QyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  hamburg:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBM0E1QyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI4NzRBNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  cologne:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJDM0U1MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  frankfurt:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCMjYzMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFODZDMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  barcelona:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0MwMzkyQiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0U3NEMzQyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  madrid:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdCMDAwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0IwM0EyRSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  mallorca:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwNjk5NCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwOTlDQyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  amsterdam:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhCMDAwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0NDMjIwMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  rotterdam:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFDM0E1RiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI0NzFBMyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  lucerne:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFODZDMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  zurich:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJDM0U1MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFBQkM5QyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  geneva:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE1NDM2MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFGNjE4RCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  interlaken:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE5NkYzRCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFFODQ0OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  zermatt:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCMjYzMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzVENkQ3RSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  vienna:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRBMjM1QSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzg4NEVBMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  salzburg:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZFMkYxQSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0EwNDAwMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  hallstatt:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE0OEY3NyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  london:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFDMjgzMyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJDM0U1MCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  edinburgh:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBM0E1QyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE1NDM2MCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  oxford:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJDM0U1MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzZFMkYxQSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  cambridge:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE1NDM2MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  prague:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRBMjM1QSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzZDMzQ4MyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  budapest:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdENjYwOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0I3OTUwQiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  athens:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0Q0QUMwRCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  santorini:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFGNjE4RCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzg1QzFFOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  lisbon:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0I3NzcwRCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0Q0QUMwRCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  porto:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdCMDAwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk0MzEyNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  brussels:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCNEY3MiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFODZDMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  copenhagen:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBM0E1QyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzExN0E2NSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  stockholm:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFDMjgzMyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  bangkok:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdENjYwOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0M4QTIxNyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  singapore:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBCM0Q5MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE1NjVDMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  tokyo:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0MwMzkyQiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyMkIyMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  dubai:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdENjYwOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0I3OTUwQiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  kyoto:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZFMkYxQSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk0MzEyNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  turin:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJDM0U1MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFBNTI3NiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  krakow:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRBMjM1QSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzZDMzQ4MyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  warsaw:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFDMjgzMyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFNDA1NyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  bruges:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE1NDM2MCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFGNjE4RCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  oslo:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBM0E1QyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE5NkYzRCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+  helsinki:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCNEY3MiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFODZDMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
+};
+function getCityPhotoKey(cityLabel) {
+  if (!cityLabel) return null;
+  const key = cityLabel.toLowerCase().replace(/\s+/g,'').replace(/[^a-z]/g,'');
+  return cityPhotos[key] || null;
+}
+
+function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel, median, aboveMedian, diff) {
+  const canvas = document.getElementById('share-canvas');
+  const W=1200, H=630;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const photoUrl = getCityPhotoKey(cityLabel);
+
+  function drawCard(bgImg) {
+    ctx.clearRect(0,0,W,H);
+
+    // Background: photo + blue overlay, or solid blue
+    if (bgImg) {
+      ctx.drawImage(bgImg, 0, 0, W, H);
+      const bg=ctx.createLinearGradient(0,0,W,H);
+      bg.addColorStop(0,'rgba(21,88,176,0.70)');
+      bg.addColorStop(1,'rgba(46,134,222,0.70)');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    } else {
+      const bg=ctx.createLinearGradient(0,0,W,H);
+      bg.addColorStop(0,'#1558B0');
+      bg.addColorStop(1,'#2E86DE');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    }
+
+    // Dark gradient bottom
+    const overlay=ctx.createLinearGradient(0,H*0.5,0,H);
+    overlay.addColorStop(0,'rgba(0,0,0,0)');
+    overlay.addColorStop(1,'rgba(0,0,0,0.35)');
+    ctx.fillStyle=overlay; ctx.fillRect(0,0,W,H);
+
+    // Logo icon
+    ctx.fillStyle='#C9190B';
+    roundRect(ctx,48,44,64,64,14); ctx.fill();
+    ctx.fillStyle='#F5C842';
+    ctx.font='bold 34px serif';
+    ctx.textAlign='center';
+    ctx.fillText('中',80,89);
+
+    // Logo text
+    ctx.fillStyle='rgba(255,255,255,0.9)';
+    ctx.font='bold 28px Arial, sans-serif';
+    ctx.textAlign='left';
+    ctx.fillText('ChinaCheck',128,74);
+    ctx.fillStyle='rgba(255,255,255,0.55)';
+    ctx.font='14px Arial, sans-serif';
+    ctx.fillText('CHINA READINESS TOOL',128,97);
+
+    // Score circle — smaller, top right
+    const cx=1080, cy=290, r=100;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fill();
+    ctx.strokeStyle='#F5C842';
+    ctx.lineWidth=7; ctx.stroke();
+    ctx.fillStyle='#F5C842';
+    ctx.font='bold 64px Arial, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(prepPct+'%',cx,cy+20);
+    ctx.fillStyle='rgba(255,255,255,0.55)';
+    ctx.font='13px Arial, sans-serif';
+    ctx.fillText('READINESS SCORE',cx,cy+48);
+
+    // City headline — dynamic font size for long names
+    const headline = cityLabel ? 'China readiness · '+cityLabel : 'China readiness check';
+    const hSize = headline.length > 30 ? 36 : headline.length > 22 ? 44 : 52;
+    ctx.fillStyle='#ffffff';
+    ctx.font='bold '+hSize+'px Arial, sans-serif';
+    ctx.textAlign='left';
+    ctx.fillText(headline,48,220);
+
+    // Verdict
+    const vColor=verdictKey==='green'?'#A8FFB8':verdictKey==='amber'?'#FFE566':'#FFB3AE';
+    const vText=verdictKey==='green'?'Well prepared':verdictKey==='amber'?'Needs work':'Not ready';
+    ctx.fillStyle=vColor;
+    ctx.font='bold 30px Arial, sans-serif';
+    ctx.fillText(vText,48,270);
+
+    // Stats
+    ctx.fillStyle='rgba(255,255,255,0.75)';
+    ctx.font='19px Arial, sans-serif';
+    if(potentialScore!==null) ctx.fillText('Market demand index: '+potentialScore+'/100',48,318);
+    const bmLine=aboveMedian
+      ? prepPct+'% vs '+median+'% avg — '+diff+' pts above '+bmLabel
+      : prepPct+'% vs '+median+'% avg for '+bmLabel;
+    ctx.fillText(bmLine,48,352);
+
+    // Divider
+    ctx.fillStyle='rgba(255,255,255,0.2)';
+    ctx.fillRect(48,388,680,1);
+
+    // Footer
+    ctx.fillStyle='rgba(255,255,255,0.50)';
+    ctx.font='16px Arial, sans-serif';
+    ctx.fillText('Built by Roger Bisschoff · linkedin.com/in/rogerbisschoff/',48,420);
+
+    // Output
+    const img=document.getElementById('share-image');
+    img.src=canvas.toDataURL('image/png');
+    document.getElementById('share-image-wrap').style.display='block';
+    document.getElementById('share-dl-btn').style.display='block';
+  }
+
+  // Load city gradient or photo
+  if (photoUrl) {
+    const photoImg = new Image();
+    photoImg.crossOrigin = 'anonymous';
+    photoImg.onload = function() { drawCard(photoImg); };
+    photoImg.onerror = function() { drawCard(null); };
+    photoImg.src = photoUrl;
+  } else {
+    drawCard(null);
+  }
+}
+
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+
+function downloadCard(){
+  const canvas=document.getElementById('share-canvas');
+  const a=document.createElement('a');
+  a.download='chinacheck-result.png';
+  a.href=canvas.toDataURL('image/png');
+  a.click();
+}
+
 const locationData = {
   italy:{ label:'Italy', cities:{
-    milan:{label:'Milan',tier:'top',score:95,insight:'<strong>Milan is Italy\'s primary gateway for Chinese travellers.</strong> Consistently top-3 in Ctrip European city searches, driven by fashion, design, and business tourism. Operators here who are not on Ctrip are leaving significant revenue on the table.'},
-    rome:{label:'Rome',tier:'top',score:93,insight:'<strong>Rome ranks among the highest-demand Chinese destinations in Europe.</strong> Cultural heritage tourism drives enormous group and FIT volumes. Peak seasons extend well beyond European summer.'},
-    venice:{label:'Venice',tier:'top',score:88,insight:'<strong>Venice is a bucket-list destination for Chinese travellers.</strong> Ctrip demand is heavily seasonal but very high at peak. The concentration of visitors makes OTA visibility particularly competitive — and particularly rewarding.'},
-    florence:{label:'Florence',tier:'top',score:87,insight:'<strong>Florence is a core stop on the classic Italy circuit</strong> for Chinese tour groups and FIT travellers. Art, fashion outlets, and food tourism all drive demand. Strong Ctrip and Fliggy search volumes for the historic centre.'},
-    naples:{label:'Naples',tier:'strong',score:68,insight:'<strong>Naples is a growing destination for Chinese travellers</strong>, driven largely by Amalfi Coast and Pompeii excursions. Properties here have a first-mover advantage — competition on Ctrip is still thin.'},
-    turin:{label:'Turin',tier:'strong',score:58,insight:'<strong>Turin attracts moderate Chinese visitor volumes</strong>, mostly linked to business travel and automotive/design tourism. Ctrip presence generates measurable bookings for well-positioned properties.'},
-    countryside:{label:'Italian countryside / other',tier:'emerging',score:30,insight:'<strong>Rural Italy attracts a growing segment of Chinese FIT travellers</strong> looking beyond the main circuit. Agriturismo and countryside properties are appearing on Ctrip itineraries, though volumes remain modest.'}
+    milan:{label:'Milan',tier:'top',score:95,
+      insight:'<strong>Milan is Italy\'s primary gateway for Chinese travellers.</strong> Consistently top-3 in Ctrip European city searches, driven by fashion, design, and business tourism.',
+      post:'Milan draws three distinct Chinese traveller profiles: fashion tourists during February and September fashion weeks, design and creative professionals year-round, and business travellers linked to trade fairs. Average stay is 3-4 nights, longer than Rome or Venice. Chinese visitors increasingly book independently via Ctrip rather than through group tours. Xiaohongshu (RedNote) drives significant inspiration traffic for Milan specifically — luxury shopping and design content performs strongly. Vacation rentals in Brera, Navigli, and the design district consistently outperform hotels on Chinese OTA review scores.'},
+    rome:{label:'Rome',tier:'top',score:93,
+      insight:'<strong>Rome ranks among the highest-demand Chinese destinations in Europe.</strong> Cultural heritage tourism drives enormous group and FIT volumes.',
+      post:'Rome is a bucket-list destination anchored by the Colosseum, Vatican, and Trevi Fountain — sites that appear in virtually every Chinese Europe itinerary. Chinese visitors come primarily as part of the classic Italy circuit (Rome-Florence-Venice) with stays averaging 2 nights. Peak demand runs April-May and September-October, aligned with Chinese Golden Week holidays and mild weather. A growing segment of younger FIT travellers, inspired by Italian dramas popular on Chinese streaming platforms, books independently and stays longer. Apartments near the historic centre with Roman-style decor perform particularly well on Ctrip reviews.'},
+    venice:{label:'Venice',tier:'top',score:88,
+      insight:'<strong>Venice is a bucket-list destination for Chinese travellers.</strong> Ctrip demand is heavily seasonal but very high at peak.',
+      post:'Venice holds near-mythical status for Chinese travellers — canals and gondolas appear constantly on Xiaohongshu and Douyin. Demand peaks March-May and September-October. Average stay is short (1-2 nights) as Venice is typically a stop on the Italy circuit, but value-per-night is high. Chinese visitors are disproportionately likely to splurge on an authentic Venice experience. Wedding photography and honeymoon stays are a significant and growing segment — Venice is one of the most-photographed European destinations on Chinese social media. Properties near San Marco and Cannaregio generate the strongest Ctrip search visibility.'},
+    florence:{label:'Florence',tier:'top',score:87,
+      insight:'<strong>Florence is a core stop on the classic Italy circuit</strong> for Chinese tour groups and FIT travellers.',
+      post:'Florence attracts Chinese travellers through art, fashion outlets, and Tuscan food culture. The Uffizi Gallery and Ponte Vecchio are anchor attractions. A growing segment visits specifically for outlet shopping (The Mall, McArthurGlen) — Chinese tourists are the highest-spending nationality at Tuscan fashion outlets. Stays average 2 nights on the classic circuit. Chinese visitors increasingly research via Xiaohongshu where Tuscan countryside and aperitivo culture content performs strongly. Agriturismo-style properties within reach of Florence are an emerging opportunity for longer-stay FIT travellers.'},
+    naples:{label:'Naples',tier:'strong',score:68,
+      insight:'<strong>Naples is a growing destination for Chinese travellers</strong>, driven largely by Amalfi Coast and Pompeii excursions.',
+      post:'Naples serves primarily as a gateway for Amalfi Coast, Pompeii, and Capri day trips — these are among the most-photographed Italian destinations on Chinese social media. Chinese visitors typically stay 2-3 nights using Naples as a base. Demand is concentrated May-October with a strong summer peak. The traveller profile skews toward younger independent travellers who have already done Rome and Florence. Pizza and street food experiences in Naples are increasingly featured in Chinese travel content. Properties with rooftop terraces and sea views generate disproportionate Ctrip engagement.'},
+    turin:{label:'Turin',tier:'strong',score:58,
+      insight:'<strong>Turin attracts moderate Chinese visitor volumes</strong>, mostly linked to business travel and automotive/design tourism.',
+      post:'Turin draws Chinese visitors through automotive heritage (Fiat, Ferrari proximity), design culture, and business travel. The Egyptian Museum — one of the world\'s most important — has strong appeal for culturally-minded Chinese FIT travellers. Chinese residents in the Turin area generate consistent demand for family visit accommodation. Demand is relatively flat across seasons. A niche but growing segment of Chinese honeymooners and road-trippers includes Turin on extended northern Italy itineraries combining Milan, the Lakes, and the Alps.'},
+    countryside:{label:'Italian countryside / other',tier:'emerging',score:30,
+      insight:'<strong>Rural Italy attracts a growing segment of Chinese FIT travellers</strong> looking beyond the main circuit.',
+      post:'Italian countryside properties are attracting a new generation of Chinese experiential travellers who have already completed the classic circuit. Tuscany, the Amalfi hinterland, and the Dolomites perform strongly on Xiaohongshu, where slow-travel and food-culture content drives aspiration. The traveller profile is educated, independent, and high-spending. Agriturismo experiences — olive oil, wine, pasta-making — resonate strongly. Shoulder seasons (April-May, September-October) see the highest share of Chinese visitors, who prefer cooler weather and smaller crowds. First-mover advantage on Ctrip for rural properties is still very real.'}
   }},
   france:{ label:'France', cities:{
-    paris:{label:'Paris',tier:'top',score:98,insight:'<strong>Paris is the single most-searched European city on Ctrip.</strong> Chinese visitor volumes are the highest on the continent. Any property not on Ctrip here is missing the largest Chinese inbound market in Europe.'},
-    nice:{label:'Nice',tier:'strong',score:72,insight:'<strong>Nice and the Cote d\'Azur have strong Chinese leisure appeal</strong>, linked to luxury and aspirational travel. Solid Ctrip search volumes, particularly for summer. Less competitive than Paris on OTA listings.'},
-    bordeaux:{label:'Bordeaux',tier:'strong',score:63,insight:'<strong>Bordeaux has distinct appeal for Chinese wine tourism</strong>, a strong and growing niche. Ctrip bookings linked to chateau visits and wine routes are meaningful for well-positioned properties.'},
-    lyon:{label:'Lyon',tier:'strong',score:60,insight:'<strong>Lyon draws Chinese food and culture tourists</strong> as a secondary destination on France itineraries. Moderate but consistent demand on Ctrip.'},
-    marseille:{label:'Marseille',tier:'emerging',score:40,insight:'<strong>Marseille is emerging on Chinese travel itineraries</strong> linked to Provence and the south. Demand is growing from a low base.'},
-    strasbourg:{label:'Strasbourg',tier:'emerging',score:38,insight:'<strong>Strasbourg features on Alsace and Christmas market itineraries</strong> for Chinese FIT travellers. Modest but real demand.'},
-    countryside:{label:'French countryside / other',tier:'emerging',score:33,insight:'<strong>Provence, the Loire Valley, and other rural France destinations are attracting Chinese FIT travellers</strong> at a growing rate. Chateaux and wine tourism are the primary drivers.'}
+    paris:{label:'Paris',tier:'top',score:98,
+      insight:'<strong>Paris is the single most-searched European city on Ctrip.</strong> Chinese visitor volumes are the highest on the continent.',
+      post:'Paris is the single most-visited European city for Chinese travellers and leads all European destinations on Ctrip search volume. Three distinct profiles dominate: luxury shoppers (Champs-Élysées, Le Marais boutiques), cultural tourists (Louvre, Eiffel Tower), and increasingly, food and lifestyle travellers inspired by French content on Xiaohongshu. Average stay is 3-4 nights. Chinese visitors spend more per capita in Paris than any other European city. Demand peaks April-June and September-October. A growing segment of Chinese students and young professionals based in Europe uses Paris as a weekend destination, creating year-round mid-week demand.'},
+    nice:{label:'Nice',tier:'strong',score:72,
+      insight:'<strong>Nice and the Cote d\'Azur have strong Chinese leisure appeal</strong>, linked to luxury and aspirational travel.',
+      post:'Nice and the C\u00f4te d\'Azur attract Chinese travellers seeking the luxury beach lifestyle they associate with European aspiration — a visual register that performs exceptionally on Douyin and Xiaohongshu. Peak demand is June-August, shorter season than inland France. Chinese visitors to this region skew affluent and tend to combine Nice with Monaco and Cannes. A growing honeymoon and wedding photography segment uses the Riviera as backdrop. Apartments with sea views and proximity to the Promenade des Anglais generate strong Ctrip review profiles.'},
+    bordeaux:{label:'Bordeaux',tier:'strong',score:63,
+      insight:'<strong>Bordeaux has distinct appeal for Chinese wine tourism</strong>, a strong and growing niche.',
+      post:'Bordeaux is a destination of growing strategic importance for properties targeting Chinese travellers. Wine culture has deep prestige in China — Bordeaux châteaux are recognised brand names among Chinese affluent consumers. Chinese visitors to Bordeaux are disproportionately high-spending and tend to stay longer (3-5 nights) than the European average. Château visits, private wine tastings, and cellar tours are the primary draw. The profile skews toward mid-career professionals and entrepreneurs who gift and collect wine. Demand is shoulder-season heavy: May-June and September-October. Xiaohongshu wine content referencing Bordeaux generates significant outbound travel intent.'},
+    lyon:{label:'Lyon',tier:'strong',score:60,
+      insight:'<strong>Lyon draws Chinese food and culture tourists</strong> as a secondary destination on France itineraries.',
+      post:'Lyon is France\'s gastronomic capital and increasingly recognised as such by Chinese food-culture travellers. Bouchon dining, Paul Bocuse heritage, and the Halles de Lyon market feature regularly in Chinese travel content. Chinese visitors typically add Lyon to a Paris-south France itinerary, staying 1-2 nights. The profile skews toward food-interested FIT travellers and Chinese residents in France visiting for weekend breaks. Silk heritage (Lyon was historically connected to the Chinese silk trade) adds a cultural resonance that plays well in content targeting educated Chinese travellers.'},
+    marseille:{label:'Marseille',tier:'emerging',score:40,
+      insight:'<strong>Marseille is emerging on Chinese travel itineraries</strong> linked to Provence and the south.',
+      post:'Marseille is at an early stage of Chinese travel discovery, primarily serving as a gateway for Provence, the Calanques, and Aix-en-Provence. Chinese visitors who come are typically self-directed independent travellers following curated Xiaohongshu itineraries. The Vieux-Port and MuCEM museum generate most of the content-driven interest. First-mover advantage for properties on Ctrip is still strong. Lavender season (June-August) drives a measurable spike in Provence-bound Chinese visitors who often overnight in or near Marseille.'},
+    strasbourg:{label:'Strasbourg',tier:'emerging',score:38,
+      insight:'<strong>Strasbourg features on Alsace and Christmas market itineraries</strong> for Chinese FIT travellers.',
+      post:'Strasbourg attracts Chinese visitors primarily for two reasons: the Alsatian half-timbered architecture (which photographs exceptionally well and circulates widely on Xiaohongshu) and the Christmas market, one of Europe\'s oldest. The Christmas market period generates a significant but concentrated spike in Chinese visitor interest — December is disproportionately strong for this market. The broader Alsace wine route appeals to the same wine-tourism segment active in Bordeaux and the Rhine valley. Cross-border road-trippers combining Strasbourg with Germany\'s Black Forest and Rhine valley are an established Chinese travel pattern.'},
+    countryside:{label:'French countryside / other',tier:'emerging',score:33,
+      insight:'<strong>Provence, the Loire Valley, and other rural France destinations are attracting Chinese FIT travellers</strong> at a growing rate.',
+      post:'Rural France is attracting a sophisticated segment of Chinese independent travellers who seek authenticity over landmarks. Provence lavender fields, Loire Valley châteaux, and Dordogne villages all circulate heavily on Chinese visual platforms. The traveller profile is highly educated, often has previous European travel experience, and chooses accommodation for character rather than convenience. Self-catering properties with local character and outdoor space perform strongly. Road trips — driving through the Provence countryside, the Alsace wine route, or the Périgord — are an established Chinese travel format that is growing steadily year-on-year.'}
   }},
   germany:{ label:'Germany', cities:{
-    munich:{label:'Munich',tier:'top',score:87,insight:'<strong>Munich is Germany\'s top Chinese tourism destination</strong>, fuelled by Oktoberfest, Neuschwanstein day trips, and luxury shopping. Ctrip search volumes are among the highest in German-speaking Europe.'},
-    berlin:{label:'Berlin',tier:'top',score:85,insight:'<strong>Berlin is the leading Chinese cultural destination in Germany</strong>, driven by history and city tourism. Strong Ctrip presence with consistent year-round demand.'},
-    frankfurt:{label:'Frankfurt',tier:'strong',score:74,insight:'<strong>Frankfurt is Germany\'s primary Chinese business travel hub</strong> and a major air gateway. Strong corporate and transit demand on Chinese OTAs.'},
-    dusseldorf:{label:'Dusseldorf',tier:'strong',score:65,insight:'<strong>Dusseldorf has one of Germany\'s largest Chinese communities</strong> and a strong trade fair calendar. Meaningful Chinese OTA demand, particularly during Messe periods.'},
-    hamburg:{label:'Hamburg',tier:'strong',score:62,insight:'<strong>Hamburg attracts solid Chinese leisure and business traffic</strong>. Port city heritage and Chinese trade links make it a consistent Ctrip destination.'},
-    cologne:{label:'Cologne',tier:'strong',score:58,insight:'<strong>Cologne draws Chinese visitors</strong> for the cathedral, trade fairs, and Rhine valley tourism. Moderate but consistent Ctrip demand.'},
-    countryside:{label:'German countryside / other',tier:'emerging',score:28,insight:'<strong>The Romantic Road, Rhine Valley, and Bavarian Alps</strong> all feature on Chinese FIT itineraries. Rural properties near major attractions can capture meaningful Ctrip traffic.'}
+    munich:{label:'Munich',tier:'top',score:87,
+      insight:'<strong>Munich is Germany\'s top Chinese tourism destination</strong>, fuelled by Oktoberfest, Neuschwanstein day trips, and luxury shopping.',
+      post:'Munich generates Chinese visitor demand from three distinct sources: castle tourism (Neuschwanstein is one of the most-recognised European landmarks on Chinese social media), Oktoberfest (which draws a growing number of Chinese travellers specifically for the experience), and luxury retail. Average stay is 2-3 nights as Munich serves as a base for Bavaria day trips. Chinese visitors trend younger than the European average for Germany — influenced by Bavarian visual content on Douyin. Demand peaks July-October. A growing Chinese student population in Munich (LMU, TU Munich) creates year-round demand for longer-stay accommodation.'},
+    berlin:{label:'Berlin',tier:'top',score:85,
+      insight:'<strong>Berlin is the leading Chinese cultural destination in Germany</strong>, driven by history and city tourism.',
+      post:'Berlin draws Chinese visitors primarily through Cold War and WWII history — the Brandenburg Gate, Checkpoint Charlie, and the Holocaust Memorial appear consistently in Chinese travel content. The cultural and arts scene (Museum Island, street art) attracts a younger, more independent traveller profile. Chinese visitors to Berlin stay longer than other German cities (3-4 nights average) and tend to be more independent and self-directed. The Berlin Chinese community is among Germany\'s largest, generating consistent visiting-friends-and-family accommodation demand. Demand is relatively flat across seasons with a slight summer peak.'},
+    frankfurt:{label:'Frankfurt',tier:'strong',score:74,
+      insight:'<strong>Frankfurt is Germany\'s primary Chinese business travel hub</strong> and a major air gateway.',
+      post:'Frankfurt is primarily a business travel destination for Chinese visitors — it is the main European hub for Chinese corporate travel, banking, and the automotive sector. Chinese business travellers in Frankfurt stay longer, spend more per night, and have higher expectations for digital connectivity and service. A secondary segment of transit visitors (Frankfurt is a major Chinese air hub into Europe) converts to 1-night stays before connecting onward. Chinese investment in Frankfurt real estate and financial services creates a consistent stream of high-spending visitors. Weekend leisure demand is weaker — properties near the financial district and exhibition centre (Messe Frankfurt) generate the strongest Ctrip profiles.'},
+    dusseldorf:{label:'Dusseldorf',tier:'strong',score:65,
+      insight:'<strong>Dusseldorf has one of Germany\'s largest Chinese communities</strong> and a strong trade fair calendar.',
+      post:'Dusseldorf has Germany\'s largest per-capita Chinese resident community, centred around Immermannstrasse — known as the "Japanese and Chinese quarter." This creates unusually strong visiting-friends-and-family demand that runs year-round. Trade fair demand (Düsseldorf Messe hosts major international fairs including interpack, drupa, and MEDICA) adds high-spending corporate Chinese visitor peaks. The profile spans both business and leisure, with more diverse accommodation needs than Frankfurt. Chinese restaurants and shops in the Immermannstrasse area make Dusseldorf particularly comfortable for first-time Chinese European visitors.'},
+    hamburg:{label:'Hamburg',tier:'strong',score:62,
+      insight:'<strong>Hamburg attracts solid Chinese leisure and business traffic</strong>. Port city heritage and Chinese trade links make it a consistent Ctrip destination.',
+      post:'Hamburg\'s long history as a trading port with China creates genuine cultural resonance — the Speicherstadt warehouse district and Miniatur Wunderland feature regularly in Chinese travel content. Business travel linked to Hamburg\'s port, logistics, and trade sector generates consistent Chinese corporate demand. Chinese visitors also come for the Elbphilharmonie (architecture tourism is a growing Chinese travel interest) and to visit family members in Germany\'s second-largest Chinese community. Average stay is 2 nights. Demand is consistent year-round with a modest summer leisure peak.'},
+    cologne:{label:'Cologne',tier:'strong',score:58,
+      insight:'<strong>Cologne draws Chinese visitors</strong> for the cathedral, trade fairs, and Rhine valley tourism.',
+      post:'Cologne Cathedral is one of Germany\'s most-photographed landmarks in Chinese travel content — its Gothic scale photographs dramatically and circulates on Xiaohongshu. The Rhine valley day trip (Cologne to Koblenz by boat) is an established Chinese itinerary component. Trade fair demand (Cologne hosts major international fairs including Anuga, Art Cologne, and INTERMOT) adds business traveller peaks. Chinese visitors typically combine Cologne with Düsseldorf and Bonn on a Rhine itinerary. Average stay is 1-2 nights. Christmas market season generates a secondary peak of Chinese visitors in December.'},
+    countryside:{label:'German countryside / other',tier:'emerging',score:28,
+      insight:'<strong>The Romantic Road, Rhine Valley, and Bavarian Alps</strong> all feature on Chinese FIT itineraries.',
+      post:'Germany\'s countryside is attracting Chinese road-trip travellers on self-drive itineraries — the Romantic Road (Würzburg to Füssen) is specifically marketed to Chinese FIT travellers and appears on major Chinese travel platforms as a flagship European road trip route. The Black Forest, Rhine valley, and Bavarian Alps generate strong visual content on Chinese social media. The traveller profile is experienced, independent, and mid-to-high spending. Properties near Neuschwanstein Castle, along the Romantic Road, and in the Black Forest have early-mover advantage on Ctrip. Summer and early autumn are peak seasons.'}
   }},
   spain:{ label:'Spain', cities:{
-    barcelona:{label:'Barcelona',tier:'top',score:90,insight:'<strong>Barcelona is Spain\'s top Chinese destination by a wide margin</strong> — Gaudi, beaches, and city tourism drive enormous Ctrip volumes. One of the highest-demand cities in Southern Europe.'},
-    madrid:{label:'Madrid',tier:'top',score:84,insight:'<strong>Madrid ranks strongly on Ctrip for Spain</strong>, driven by art tourism, shopping, and its position as an air hub. Strong year-round demand from both FIT and group travellers.'},
-    seville:{label:'Seville',tier:'strong',score:62,insight:'<strong>Seville is a growing Chinese destination</strong> on the Andalusia circuit. Flamenco and Moorish architecture drive consistent interest on Chinese travel platforms.'},
-    granada:{label:'Granada',tier:'strong',score:60,insight:'<strong>Granada\'s Alhambra is a must-see on Chinese Andalusia itineraries.</strong> Strong group and FIT demand concentrated around the historic site.'},
-    valencia:{label:'Valencia',tier:'strong',score:55,insight:'<strong>Valencia is on the Ctrip radar</strong> for paella, architecture, and its growing profile as a city break destination. Moderate and consistent Chinese demand.'},
-    palma:{label:'Palma (Mallorca)',tier:'strong',score:56,insight:'<strong>Mallorca is establishing itself as a Chinese luxury beach destination</strong>. Ctrip searches are growing, particularly for high-end accommodation.'},
-    countryside:{label:'Spanish countryside / other',tier:'emerging',score:30,insight:'<strong>Rural Spain — Camino de Santiago, wine regions, rural Andalusia</strong> — is attracting a growing niche of Chinese experiential travellers. OTA competition is very low.'}
+    barcelona:{label:'Barcelona',tier:'top',score:90,
+      insight:'<strong>Barcelona is Spain\'s top Chinese destination by a wide margin</strong> — Gaudi, beaches, and city tourism drive enormous Ctrip volumes.',
+      post:'Barcelona generates the highest Chinese visitor volumes in Spain by a significant margin. Gaud\u00ed architecture — Sagrada Família, Park Güell, Casa Batlló — is among the most recognised and shared European content on Chinese platforms. Chinese visitors stay 2-3 nights on average and combine culture with beach. A growing segment visits specifically for FC Barcelona, adding football tourism to the profile. The Chinese visitor profile in Barcelona is younger than the European average, with strong Douyin and Xiaohongshu influence on booking decisions. Apartments in the Eixample and Gothic Quarter generate the strongest Ctrip visibility. Peak demand runs April-October.'},
+    madrid:{label:'Madrid',tier:'top',score:84,
+      insight:'<strong>Madrid ranks strongly on Ctrip for Spain</strong>, driven by art tourism, shopping, and its position as an air hub.',
+      post:'Madrid attracts Chinese visitors through the Prado and Reina Sofía museums, luxury shopping (Gran Vía, Serrano), and its role as an air hub connecting Spain with China. Chinese art tourists make up a meaningful share of Prado visitors — Velázquez and Goya are well-known in Chinese art education. Average stay is 2-3 nights. A growing Chinese student community at Spanish universities creates year-round visiting-friends-and-family demand. Business travel linked to Spanish-Chinese trade (infrastructure, energy, real estate) adds a corporate segment. Demand is relatively flat across seasons with modest spring and autumn peaks.'},
+    seville:{label:'Seville',tier:'strong',score:62,
+      insight:'<strong>Seville is a growing Chinese destination</strong> on the Andalusia circuit.',
+      post:'Seville draws Chinese visitors through the visual drama of Moorish architecture — the Alcázar and Giralda tower circulate widely on Chinese social media. Flamenco performances are a sought-after experience, increasingly marketed through Chinese booking platforms. Chinese visitors typically include Seville on an Andalusia circuit combining Granada and Córdoba, staying 1-2 nights. The traveller profile is culturally engaged and self-directed. April (Feria de Abril) and spring shoulder season generate peak demand. The combination of Moorish heritage and Spanish culture has particular resonance for Chinese visitors who draw parallels with their own historical appreciation of craftsmanship and imperial architecture.'},
+    granada:{label:'Granada',tier:'strong',score:60,
+      insight:'<strong>Granada\'s Alhambra is a must-see on Chinese Andalusia itineraries.</strong> Strong group and FIT demand concentrated around the historic site.',
+      post:'The Alhambra is one of the most visited heritage sites in Europe for Chinese travellers — Moorish architecture and palace gardens have profound aesthetic appeal in the Chinese cultural tradition. Alhambra ticket availability is a limiting factor; Chinese visitors who pre-book via Ctrip packages secure better access. Average stay is 1-2 nights, centred entirely around the Alhambra visit. The profile spans tour groups and independent travellers. Summer is peak season but the site is visited year-round. Properties within walking distance of the Alhambra and in the Albaicín neighbourhood generate the highest Ctrip engagement.'},
+    valencia:{label:'Valencia',tier:'strong',score:55,
+      insight:'<strong>Valencia is on the Ctrip radar</strong> for paella, architecture, and its growing profile as a city break destination.',
+      post:'Valencia is an emerging Chinese destination gaining momentum through food tourism — paella is one of the most recognised Spanish dishes in China and Valencia as its origin city has genuine brand value. The City of Arts and Sciences (Calatrava architecture) generates strong visual content on Chinese platforms. Las Fallas festival (March) attracts growing Chinese visitor interest — spectacular fire and fireworks content performs well on Douyin. Average stay is 2 nights. Valencia\'s appeal is building among Chinese travellers who have already done Madrid and Barcelona and seek a less-visited Spanish city with authentic character.'},
+    palma:{label:'Palma (Mallorca)',tier:'strong',score:56,
+      insight:'<strong>Mallorca is establishing itself as a Chinese luxury beach destination</strong>. Ctrip searches are growing, particularly for high-end accommodation.',
+      post:'Mallorca is growing rapidly as a Chinese luxury leisure destination — turquoise water, yacht culture, and clifftop villas circulate heavily on Xiaohongshu luxury travel content. The traveller profile is affluent, typically travelling as couples or small groups, and prioritises visual quality of the stay over price. Chinese visitors to Mallorca stay longer than average (4-6 nights) and spend significantly more per night. Peak season is June-September. Wedding photography, honeymoon stays, and anniversary trips are a strong and growing segment. Properties with private pools, sea views, and strong aesthetic design generate disproportionate Ctrip and social media traction.'},
+    countryside:{label:'Spanish countryside / other',tier:'emerging',score:30,
+      insight:'<strong>Rural Spain</strong> is attracting a growing niche of Chinese experiential travellers.',
+      post:'Rural Spain is attracting a niche but growing segment of Chinese experiential travellers — the Camino de Santiago in particular has developed a following among Chinese pilgrims and adventure travellers, driven by a popular Chinese novel and film adaptation. Andalusian white villages (Ronda, Frigiliana), Rioja wine country, and the Basque countryside draw Chinese food and wine travellers. The profile is experienced, independent, and high-spending. Road trips self-driving through rural Spain are growing as Chinese travellers gain confidence with European driving. Properties offering authentic local experiences and positioned near natural landmarks have clear first-mover advantage on Ctrip.'}
   }},
   netherlands:{ label:'Netherlands', cities:{
-    amsterdam:{label:'Amsterdam',tier:'top',score:88,insight:'<strong>Amsterdam is the Netherlands\' dominant Chinese inbound destination</strong> and one of the top European city-break choices on Ctrip. Canals, museums, and tulip season drive very strong demand.'},
-    rotterdam:{label:'Rotterdam',tier:'strong',score:58,insight:'<strong>Rotterdam draws Chinese architecture and design tourists</strong>, plus port city heritage interest. Moderate but consistent Ctrip demand, less competitive than Amsterdam.'},
-    the_hague:{label:'The Hague',tier:'emerging',score:40,insight:'<strong>The Hague attracts Chinese visitors</strong> via government institutions and nearby Delft and Madurodam. Solid day-trip traffic that converts to accommodation demand.'},
-    utrecht:{label:'Utrecht',tier:'emerging',score:38,insight:'<strong>Utrecht features as a day-trip from Amsterdam</strong> on Chinese itineraries. Growing independent visitor profile.'},
-    delft:{label:'Delft',tier:'emerging',score:35,insight:'<strong>Delft\'s blue pottery heritage has strong recognition among Chinese travellers.</strong> Day-trip demand is high; conversion to overnight stays is the opportunity.'},
-    eindhoven:{label:'Eindhoven',tier:'emerging',score:32,insight:'<strong>Eindhoven\'s design and tech profile</strong> attracts Chinese business and design travellers. Philips Museum and Dutch Design Week are anchor attractions.'},
-    countryside:{label:'Dutch countryside / other',tier:'emerging',score:25,insight:'<strong>Tulip fields, windmills, and cheese markets</strong> attract Chinese tourists on seasonal itineraries. Keukenhof season (spring) drives meaningful short-stay demand.'}
+    amsterdam:{label:'Amsterdam',tier:'top',score:88,
+      insight:'<strong>Amsterdam is the Netherlands\' dominant Chinese inbound destination</strong> and one of the top European city-break choices on Ctrip.',
+      post:'Amsterdam generates strong and consistent Chinese visitor demand anchored by the Rijksmuseum, Van Gogh Museum, and Anne Frank House. Canal architecture and tulip imagery circulate endlessly on Chinese platforms — Amsterdam has strong aspirational brand recognition in China. Average stay is 2-3 nights. Chinese visitors typically include Amsterdam on a Benelux circuit combining Brussels and Paris. A growing segment of Chinese students at Dutch universities (Amsterdam, Delft, Eindhoven) creates year-round visiting-friends-and-family demand. Keukenhof season (April-May) drives a significant spike in Chinese visitors — tulip tourism is among the most booked Chinese European experiences on Ctrip. Apartments in the canal ring and Jordaan neighbourhood generate the highest review scores.'},
+    rotterdam:{label:'Rotterdam',tier:'strong',score:58,
+      insight:'<strong>Rotterdam draws Chinese architecture and design tourists</strong>, plus port city heritage interest.',
+      post:'Rotterdam attracts a distinct Chinese visitor profile centred on architecture and design tourism — the Cube Houses, Markthal, Erasmus Bridge, and Depot Boijmans are all featured regularly in Chinese architecture and design content. Rotterdam\'s port is the largest in Europe and has long-standing trade connections with China, generating modest but consistent Chinese business travel. Chinese design students and creative professionals visit Rotterdam specifically as an architecture pilgrimage. Average stay is 1-2 nights, typically combined with a day trip to Delft or The Hague. Less competitive on Ctrip than Amsterdam — first-mover advantage for well-positioned properties is real.'},
+    the_hague:{label:'The Hague',tier:'emerging',score:40,
+      insight:'<strong>The Hague attracts Chinese visitors</strong> via government institutions and nearby Delft and Madurodam.',
+      post:'The Hague draws Chinese visitors primarily as a day trip from Amsterdam or Rotterdam, anchored by Madurodam (the miniature Netherlands park, very popular with Chinese families and consistently featured in Chinese family travel content) and the Mauritshuis museum (Vermeer\'s Girl with a Pearl Earring is well-known in China). Delft\'s blue pottery has strong brand recognition in China — Delft porcelain and Chinese porcelain share historical trade connections that resonate with culturally-informed Chinese visitors. Chinese diplomatic and legal visitors add a modest business travel segment. Properties offering easy access to both The Hague and Delft on a single night are well-positioned.'},
+    utrecht:{label:'Utrecht',tier:'emerging',score:38,
+      insight:'<strong>Utrecht features as a day-trip from Amsterdam</strong> on Chinese itineraries.',
+      post:'Utrecht is gaining traction among Chinese independent travellers as an authentic Dutch alternative to Amsterdam — canal-level terraces (unique to Utrecht), well-preserved medieval centre, and a quieter atmosphere appeal to experienced Chinese travellers seeking something beyond the main tourist circuit. A large Chinese student community at Utrecht University creates consistent visiting-friends-and-family demand. Dom Tower and Centraal Museum are the primary attractions in Chinese travel content. Utrecht is also a growing Dutch cycling culture destination — Dutch cycling has significant appeal in Chinese urban culture and lifestyle content. Average stay is 1-2 nights.'},
+    delft:{label:'Delft',tier:'emerging',score:35,
+      insight:'<strong>Delft\'s blue pottery heritage has strong recognition among Chinese travellers.</strong> Day-trip demand is high.',
+      post:'Delft has a specific and genuine Chinese cultural connection — Delftware blue-and-white pottery shares a direct historical lineage with Chinese Ming porcelain, a fact well-known among culturally-informed Chinese visitors. Royal Delft (Koninklijke Delft) is a must-visit for Chinese ceramics enthusiasts and features consistently in Chinese travel guides. Vermeer\'s Delft is also a strong draw for art-educated Chinese visitors. Most Chinese visitors come as a day trip from Amsterdam or Rotterdam, but the growing number of Chinese independent travellers who research deeply is creating overnight demand. Properties near Market Square generate the highest Ctrip visibility.'},
+    eindhoven:{label:'Eindhoven',tier:'emerging',score:32,
+      insight:'<strong>Eindhoven\'s design and tech profile</strong> attracts Chinese business and design travellers.',
+      post:'Eindhoven draws Chinese visitors through design and technology — as the home of Philips and the Dutch Design Week (October), it has specific appeal for Chinese design professionals, tech industry visitors, and students at Design Academy Eindhoven. Chinese tech companies with European operations use Eindhoven as a base. Dutch Design Week generates a concentrated spike in Chinese creative industry visitors each October. The traveller profile is professional, design-literate, and often combining Eindhoven with a visit to Cologne or Düsseldorf. Longer-stay serviced accommodation performs better here than short-stay hotels for the tech and design visitor segment.'},
+    countryside:{label:'Dutch countryside / other',tier:'emerging',score:25,
+      insight:'<strong>Tulip fields, windmills, and cheese markets</strong> attract Chinese tourists on seasonal itineraries.',
+      post:'Dutch countryside experiences have disproportionate brand recognition in China — tulip fields, traditional windmills, and cheese markets appear in Chinese school geography books and TV travel shows. Keukenhof (April-May) draws Chinese visitors specifically for tulip field photography and is one of the most-booked Dutch experiences on Ctrip. Zaanse Schans (working windmill village) and Alkmaar cheese market generate strong Chinese social media content. Chinese rural visitors are seasonal (heavily concentrated in spring) and prioritise visual and photographic experiences. Countryside properties that market proximity to these iconic landscapes on Ctrip have clear differentiation from Amsterdam-centric competitors.'}
   }},
   switzerland:{ label:'Switzerland', cities:{
-    lucerne:{label:'Lucerne',tier:'top',score:89,insight:'<strong>Lucerne is the single most popular Swiss destination for Chinese travellers</strong> — lake, mountains, and the Chapel Bridge are bucket-list items. Extremely strong Ctrip demand, particularly for group tours.'},
-    zurich:{label:'Zurich',tier:'top',score:86,insight:'<strong>Zurich is Switzerland\'s primary Chinese business and luxury travel destination.</strong> Strong Ctrip demand year-round, driven by finance, luxury shopping, and proximity to the Alps.'},
-    interlaken:{label:'Interlaken',tier:'top',score:85,insight:'<strong>Interlaken is a Chinese tourism hotspot</strong> driven by Jungfrau excursions and adventure tourism. One of the highest Chinese visitor concentration points in Europe relative to city size.'},
-    zermatt:{label:'Zermatt',tier:'top',score:83,insight:'<strong>Zermatt and the Matterhorn are iconic for Chinese travellers.</strong> Strong seasonal demand and a high-value guest profile. Ctrip search volumes spike significantly in summer and winter.'},
-    geneva:{label:'Geneva',tier:'top',score:82,insight:'<strong>Geneva attracts high-spending Chinese travellers</strong> for watches, luxury goods, and lake scenery. Consistent Ctrip demand with a premium guest profile.'},
-    bern:{label:'Bern',tier:'strong',score:62,insight:'<strong>Bern draws Chinese visitors as the federal capital</strong> and a UNESCO old town. Solid Ctrip presence, less competitive than Lucerne or Zurich.'},
-    countryside:{label:'Swiss countryside / other',tier:'strong',score:65,insight:'<strong>Swiss mountain and lake destinations are disproportionately popular with Chinese FIT travellers.</strong> Properties in scenic rural locations benefit from strong Ctrip demand tied to nature and ski tourism.'}
+    lucerne:{label:'Lucerne',tier:'top',score:89,
+      insight:'<strong>Lucerne is the single most popular Swiss destination for Chinese travellers</strong> — lake, mountains, and the Chapel Bridge are bucket-list items.',
+      post:'Lucerne is Switzerland\'s most visited city for Chinese travellers and consistently ranks in the top five European destinations on Ctrip. The Chapel Bridge, Lake Lucerne, and Mount Pilatus are iconic images in Chinese travel media. Chinese group tours to Switzerland almost universally include Lucerne. Average stay is 1-2 nights for groups, 2-3 nights for FIT travellers. A growing segment of Chinese visitors comes specifically for mountain experiences — cogwheel railways, cable cars, and Alpine panoramas generate exceptional content for Douyin and Xiaohongshu. Demand peaks June-September and December-January (ski season). Chinese New Year generates a significant early-year spike.'},
+    zurich:{label:'Zurich',tier:'top',score:86,
+      insight:'<strong>Zurich is Switzerland\'s primary Chinese business and luxury travel destination.</strong> Strong Ctrip demand year-round.',
+      post:'Zurich draws Chinese visitors across multiple high-value segments: luxury shoppers (Bahnhofstrasse is among Europe\'s top Chinese luxury retail destinations), financial industry business travellers, and affluent leisure tourists combining city culture with Alpine access. Average spend per Chinese visitor in Zurich is among the highest in Europe. Chinese luxury watch purchasing in Switzerland is a major travel motivator — Zurich\'s watch boutiques attract dedicated shopping visitors. Swiss quality and precision have deep brand resonance in China. Year-round demand is stable with modest peaks in summer and around Chinese New Year. Serviced apartments and boutique properties in the city centre and Zurich West generate strong Ctrip profiles.'},
+    interlaken:{label:'Interlaken',tier:'top',score:85,
+      insight:'<strong>Interlaken is a Chinese tourism hotspot</strong> driven by Jungfrau excursions and adventure tourism.',
+      post:'Interlaken and the Jungfrau region are among the most visited Alpine destinations for Chinese travellers — the Jungfraujoch ("Top of Europe") is specifically marketed to Chinese visitors by Switzerland Tourism and appears on virtually every Chinese Switzerland itinerary. Adventure activities (paragliding, skydiving, canyon adventures) are disproportionately popular with younger Chinese visitors who share extreme sport content on Douyin. Chinese visitors often extend stays to 2-3 nights to experience multiple Alpine activities. Summer (June-September) and winter ski season are both strong. Several Chinese-language tour operators have made Interlaken their primary Swiss base. Properties with mountain views and easy access to the Jungfrau railway generate the highest Ctrip scores.'},
+    zermatt:{label:'Zermatt',tier:'top',score:83,
+      insight:'<strong>Zermatt and the Matterhorn are iconic for Chinese travellers.</strong> Strong seasonal demand and a high-value guest profile.',
+      post:'The Matterhorn is one of the most recognisable Alpine images in China — its pyramid profile appears in Chinese children\'s textbooks and is widely associated with Swiss quality and the Toblerone brand. Zermatt attracts high-spending Chinese travellers who make the journey specifically for Matterhorn photography and skiing. The car-free village environment and premium Alpine atmosphere align with Chinese aspirational travel values. Summer (July-August) and winter ski season (December-March) are both strong peaks. Chinese visitors to Zermatt have the highest average spend of any Swiss destination. Glacier skiing in summer is a unique selling point that resonates strongly with Chinese social media audiences.'},
+    geneva:{label:'Geneva',tier:'top',score:82,
+      insight:'<strong>Geneva attracts high-spending Chinese travellers</strong> for watches, luxury goods, and lake scenery.',
+      post:'Geneva draws Chinese visitors through luxury goods, watchmaking heritage, and international prestige. Chinese visitors to Geneva skew toward the most affluent traveller segment — senior business executives, luxury shoppers, and high-net-worth tourists. SIHH (now Watches and Wonders, held annually in Geneva) attracts dedicated Chinese watch industry visitors and collectors. The United Nations European headquarters and CERN add an intellectual tourism segment. Lake Geneva and Mont Blanc proximity provide scenic context. Average stay is 2-3 nights. Chinese visitors often combine Geneva with a day trip to Chamonix (Mont Blanc) — a strongly established Chinese travel pattern. Luxury apartments and boutique properties near the lake generate the strongest Ctrip profiles.'},
+    bern:{label:'Bern',tier:'strong',score:62,
+      insight:'<strong>Bern draws Chinese visitors as the federal capital</strong> and a UNESCO old town.',
+      post:'Bern attracts a culturally-interested Chinese visitor profile — the UNESCO-listed medieval arcades, Bear Park, and Federal Parliament building feature in Chinese cultural tourism content. Chinese visitors to Bern are typically FIT travellers combining Bern with Lucerne and Interlaken on a Swiss circuit. Einstein\'s former residence in Bern has specific appeal for Chinese science and education tourists. Rose Garden views over the old city generate strong visual content. Demand is consistent through spring, summer, and autumn. Less competitive on Ctrip than Lucerne or Zurich — properties in the old town have clear positioning advantage.'},
+    countryside:{label:'Swiss countryside / other',tier:'strong',score:65,
+      insight:'<strong>Swiss mountain and lake destinations are disproportionately popular with Chinese FIT travellers.</strong>',
+      post:'Swiss mountain and lake destinations outside the main cities hold exceptional appeal for Chinese independent travellers seeking authentic Alpine experiences. Grindelwald, Graubünden, Appenzell, and the Bernese Oberland generate strong Xiaohongshu content from Chinese visitors who document village life, mountain hikes, and seasonal landscapes. The Swiss countryside traveller from China is experienced, environmentally aware, and willing to pay a significant premium for authentic character. Road trips through Swiss countryside — following mountain passes and lake shores — are an established Chinese travel format. Shoulder season (May-June, September-October) attracts Chinese visitors who prefer cooler temperatures and smaller crowds. Properties with mountain access and authentic local character have sustained demand on Ctrip.'}
   }},
   austria:{ label:'Austria', cities:{
-    vienna:{label:'Vienna',tier:'top',score:85,insight:'<strong>Vienna is Austria\'s dominant Chinese tourism destination</strong> — classical music, imperial history, and cafe culture resonate strongly. Consistent and high-volume Ctrip demand year-round.'},
-    salzburg:{label:'Salzburg',tier:'top',score:80,insight:'<strong>Salzburg ranks very highly on Chinese European itineraries</strong>, driven by Mozart heritage and Sound of Music tourism. Strong Ctrip demand, particularly for group tours.'},
-    hallstatt:{label:'Hallstatt',tier:'top',score:78,insight:'<strong>Hallstatt has become one of the most viral Chinese tourism destinations in Europe</strong> — the village was even replicated in China. Ctrip interest is enormous relative to its size.'},
-    innsbruck:{label:'Innsbruck',tier:'strong',score:65,insight:'<strong>Innsbruck draws Chinese ski and alpine tourists</strong> and benefits from proximity to Bavaria. Solid winter and summer demand.'},
-    graz:{label:'Graz',tier:'emerging',score:42,insight:'<strong>Graz is an emerging destination for Chinese cultural travellers</strong>. UNESCO old town and design scene are growing draws. Less competitive than Vienna on Chinese OTAs.'},
-    linz:{label:'Linz',tier:'emerging',score:35,insight:'<strong>Linz draws modest Chinese visitor numbers</strong>, mainly linked to the Danube route and Ars Electronica festival.'},
-    countryside:{label:'Austrian countryside / other',tier:'strong',score:60,insight:'<strong>The Austrian Alps, Salzkammergut lake district, and wine regions</strong> all appear on Chinese FIT itineraries. Rural properties near scenic landmarks can capture strong Ctrip demand.'}
+    vienna:{label:'Vienna',tier:'top',score:85,
+      insight:'<strong>Vienna is Austria\'s dominant Chinese tourism destination</strong> — classical music, imperial history, and cafe culture resonate strongly.',
+      post:'Vienna draws Chinese visitors through a combination of imperial grandeur and classical music culture — the Schönbrunn Palace, Kunsthistorisches Museum, and State Opera are all recognised landmarks in Chinese cultural education. Chinese visitors to Vienna are typically culturally engaged and tend to stay longer than other Austrian cities (2-3 nights). Classical music concerts at the Vienna Philharmonic and State Opera are booked by Chinese visitors as premium experiences. Coffee house culture and Viennese pastry (Sacher-Torte) generate strong food tourism content. Chinese student musicians at Vienna\'s music conservatories create a unique demand segment for medium-term stays. Demand is consistent year-round with peaks in summer and Christmas market season.'},
+    salzburg:{label:'Salzburg',tier:'top',score:80,
+      insight:'<strong>Salzburg ranks very highly on Chinese European itineraries</strong>, driven by Mozart heritage and Sound of Music tourism.',
+      post:'Salzburg\'s appeal to Chinese visitors rests on two cultural pillars: Mozart\'s birthplace (classical music education is deeply embedded in Chinese middle-class culture) and The Sound of Music (the film has a devoted following in China). Chinese visitors often include Salzburg specifically to walk the Sound of Music filming locations — a uniquely strong cultural driver. Salzburg Festival (July-August) attracts Chinese classical music enthusiasts. Day trips to Berchtesgaden and Königssee (Bavaria side) and to the Austrian Lake District are common additions. Average stay is 1-2 nights. Chinese visitors combine Salzburg with Vienna and Hallstatt on the classic Austria circuit.'},
+    hallstatt:{label:'Hallstatt',tier:'top',score:78,
+      insight:'<strong>Hallstatt has become one of the most viral Chinese tourism destinations in Europe</strong> — the village was even replicated in China.',
+      post:'Hallstatt is one of the most remarkable examples of Chinese travel demand creating a destination — a Chinese developer built a full-scale replica of the village in Guangdong Province, and the original is now a pilgrimage destination for Chinese visitors wanting to see the "real" version. Hallstatt has effectively become a Chinese cultural landmark in Europe. Chinese visitors come specifically for the lakeside photography — the classic viewpoint is among the most-posted European images on Xiaohongshu. Average visit is 3-4 hours as a day trip from Salzburg. Growing demand for overnight stays (to photograph the village at dawn before crowds arrive) creates a premium accommodation opportunity. Properties with lake views and early check-in capability command a significant premium from Chinese visitors.'},
+    innsbruck:{label:'Innsbruck',tier:'strong',score:65,
+      insight:'<strong>Innsbruck draws Chinese ski and alpine tourists</strong> and benefits from proximity to Bavaria.',
+      post:'Innsbruck attracts Chinese visitors through Alpine experiences and its position as a gateway between Austria and Bavaria. The Old Town\'s Golden Roof and Alpine backdrop generate strong visual content. Ski tourism (Nordkette cable car directly from the city centre) has growing Chinese appeal — Austrian skiing is increasingly featured in Chinese luxury travel content. Chinese visitors often combine Innsbruck with Salzburg and Munich on a Bavaria-Austria circuit. Swarovski Crystal Worlds (just outside Innsbruck) is a specific Chinese visitor magnet — crystal and gemstone experiences have strong Chinese gift and luxury appeal. Average stay is 1-2 nights.'},
+    graz:{label:'Graz',tier:'emerging',score:42,
+      insight:'<strong>Graz is an emerging destination for Chinese cultural travellers</strong>. UNESCO old town and design scene are growing draws.',
+      post:'Graz is at an early stage of Chinese tourism development with genuine upside for first-mover properties. The UNESCO-listed historic centre, Kunsthaus Graz (contemporary art museum), and Styrian culinary culture are attracting a niche of culturally-sophisticated Chinese independent travellers who research beyond the standard circuit. Graz as a base for Styrian wine country and the green hills of the Steiermark has emerging appeal. Chinese visitors to Graz are typically experienced European travellers on extended itineraries. Less competitive on Ctrip than Vienna or Salzburg — a well-positioned property can establish a strong review profile quickly.'},
+    linz:{label:'Linz',tier:'emerging',score:35,
+      insight:'<strong>Linz draws modest Chinese visitor numbers</strong>, mainly linked to the Danube route and Ars Electronica festival.',
+      post:'Linz attracts a small but distinct Chinese visitor segment through the Ars Electronica Festival (September) — a major international digital art and technology event that draws Chinese creative industry visitors. The Danube cycling and cruise route passes through Linz, generating a modest stream of Chinese leisure visitors. Linz\'s position between Vienna and Salzburg makes it a potential stopover on extended Austrian itineraries. Properties close to the Ars Electronica Center and the Danube riverfront are best positioned. First-mover Ctrip listings can establish a review profile with limited competition.'},
+    countryside:{label:'Austrian countryside / other',tier:'strong',score:60,
+      insight:'<strong>The Austrian Alps, Salzkammergut lake district, and wine regions</strong> all appear on Chinese FIT itineraries.',
+      post:'Austria\'s countryside draws Chinese independent travellers through stunning Alpine and lake landscapes — the Salzkammergut lake district (beyond Hallstatt) is gaining Chinese social media traction as a serene and photogenic alternative to the crowded highlights. Austrian ski resorts (Kitzbühel, St. Anton, Ischgl) attract growing Chinese winter sports tourism — skiing holidays in Europe are an established aspiration among affluent Chinese families. Wachau Valley wine tourism and Styrian wine country are developing Chinese visitor segments. Road trips through the Austrian Alps generate exceptional Xiaohongshu content. Properties near ski lifts or with lake access capture both seasonal peaks effectively.'}
   }},
   uk:{ label:'United Kingdom', cities:{
-    london:{label:'London',tier:'top',score:97,insight:'<strong>London is the top Chinese inbound destination in the UK and one of the highest in Europe.</strong> Ctrip search volumes are matched only by Paris. Chinese visitors come for culture, shopping, education, and finance — demand is year-round and high-value.'},
-    edinburgh:{label:'Edinburgh',tier:'strong',score:70,insight:'<strong>Edinburgh is Scotland\'s primary Chinese tourist destination</strong>, driven by castle and whisky tourism. Ctrip demand is strong, particularly in August during the Fringe.'},
-    oxford:{label:'Oxford',tier:'strong',score:68,insight:'<strong>Oxford has an extremely strong Chinese education and cultural tourism draw.</strong> University visits from Chinese families are a major source of demand — often converting to premium accommodation bookings.'},
-    cambridge:{label:'Cambridge',tier:'strong',score:65,insight:'<strong>Cambridge mirrors Oxford\'s Chinese tourism profile</strong> — university visits, punting, and academic tourism drive consistent Ctrip demand.'},
-    manchester:{label:'Manchester',tier:'strong',score:65,insight:'<strong>Manchester draws Chinese visitors via its large student community</strong> and football tourism. Meaningful Ctrip demand with less competition than London.'},
-    bath:{label:'Bath',tier:'strong',score:60,insight:'<strong>Bath is a popular short-break destination for Chinese travellers</strong> based in London. Roman Baths and Georgian architecture are the primary draws.'},
-    countryside:{label:'UK countryside / other',tier:'emerging',score:35,insight:'<strong>The Cotswolds, Scottish Highlands, and Lake District</strong> all feature on premium Chinese FIT itineraries. Rural properties in iconic landscapes can build strong Ctrip profiles.'}
+    london:{label:'London',tier:'top',score:97,
+      insight:'<strong>London is the top Chinese inbound destination in the UK and one of the highest in Europe.</strong> Year-round, high-value demand.',
+      post:'London generates the highest Chinese visitor volumes of any European city outside France. Five distinct segments drive demand: education tourism (Chinese families visiting children at UK universities — London has the highest concentration in Europe), luxury shopping (Harrods, Bond Street, Bicester Village day trips), cultural tourism (British Museum, Tate Modern, Buckingham Palace), financial and business travel, and increasingly, culinary tourism. Chinese students at London universities create year-round visiting-friends-and-family demand with an average stay of 4-5 nights — significantly above the European average. Luxury apartments in South Kensington, Chelsea, and Mayfair serve the high-end segment; properties near university campuses (UCL, King\'s College, Imperial) serve the education segment. Year-round demand with peaks in July-August and Chinese New Year.'},
+    edinburgh:{label:'Edinburgh',tier:'strong',score:70,
+      insight:'<strong>Edinburgh is Scotland\'s primary Chinese tourist destination</strong>, driven by castle and whisky tourism.',
+      post:'Edinburgh draws Chinese visitors through an increasingly strong cultural identity — Edinburgh Castle, the Royal Mile, and Scotch whisky tourism have all grown significantly in Chinese travel content. Whisky tourism is a specific Chinese travel motivator — Scotland is the world\'s most prestigious whisky origin and Chinese whisky consumers travel specifically to distilleries. Edinburgh Festival (August) attracts Chinese cultural visitors. Chinese students at Edinburgh University (one of Scotland\'s largest Chinese student populations) generate year-round visiting-friends-and-family demand. Road trips through the Highlands — the North Coast 500 in particular — are gaining Chinese social media traction as a dramatic self-drive route.'},
+    oxford:{label:'Oxford',tier:'strong',score:68,
+      insight:'<strong>Oxford has an extremely strong Chinese education and cultural tourism draw.</strong>',
+      post:'Oxford\'s Chinese visitor profile is defined by education — Chinese families visiting children studying at Oxford, prospective students on university tours, and education-aspirational Chinese tourists who come to experience the university environment. Oxford and Cambridge are among the most recognised institutional brands in China. Chinese visits are typically 1-2 days, often combining with a return to London via Blenheim Palace. Harry Potter filming locations in Oxford attract a younger Chinese visitor segment with strong social media engagement. Chinese academic delegations visiting Oxford faculties add a professional layer. Properties within the city centre walking distance of the university generate the strongest Ctrip profiles.'},
+    cambridge:{label:'Cambridge',tier:'strong',score:65,
+      insight:'<strong>Cambridge mirrors Oxford\'s Chinese tourism profile</strong> — university visits, punting, and academic tourism.',
+      post:'Cambridge draws Chinese visitors through the same education-prestige profile as Oxford — the university brand is deeply respected in China and family visits to Chinese students at Cambridge are a primary driver. Punting on the Cam is specifically featured in Chinese travel guides and Xiaohongshu as a quintessentially English experience. King\'s College Chapel is one of the most photographed UK landmarks in Chinese travel content. Day trips from London via direct rail (55 minutes) make Cambridge an easy addition to London-based itineraries. Chinese visitors to Cambridge tend to be more educated and culturally motivated than the average UK tourist.'},
+    manchester:{label:'Manchester',tier:'strong',score:65,
+      insight:'<strong>Manchester draws Chinese visitors via its large student community</strong> and football tourism.',
+      post:'Manchester generates Chinese demand from two strong and distinct sources: football tourism (Manchester United and Manchester City are among the most-followed football clubs in China) and student visiting traffic from one of Europe\'s largest Chinese student populations. Old Trafford and the Etihad Stadium are specific Chinese visitor destinations — match tickets booked through Chinese tour operators are a dedicated travel product. Manchester\'s MediaCityUK and Northern Quarter creative scene attract design and media professionals. Chinese students at University of Manchester and Manchester Metropolitan University generate significant year-round visiting-friends-and-family accommodation demand. Properties near the university district and city centre generate consistent Ctrip bookings year-round.'},
+    bath:{label:'Bath',tier:'strong',score:60,
+      insight:'<strong>Bath is a popular short-break destination for Chinese travellers</strong> based in London.',
+      post:'Bath attracts Chinese day-trip and short-break visitors primarily from London, anchored by the Roman Baths (one of the best-preserved Roman sites in Europe, with strong educational appeal for Chinese visitors) and Georgian architecture. Jane Austen tourism has a dedicated Chinese following — Austen\'s novels are widely read in China and Bath\'s connections to her work draw literary tourists. Cotswolds combination day trips (Bath + Cotswolds) are a well-established Chinese travel product sold through Ctrip. Average stay for Chinese visitors choosing to overnight is 1-2 nights. Properties with Georgian character and proximity to the Roman Baths generate the most distinctive Ctrip profiles.'},
+    countryside:{label:'UK countryside / other',tier:'emerging',score:35,
+      insight:'<strong>The Cotswolds, Scottish Highlands, and Lake District</strong> all feature on premium Chinese FIT itineraries.',
+      post:'UK countryside destinations are attracting a growing Chinese independent traveller segment inspired by British period drama and landscape content — Downton Abbey filming locations, Peak District landscapes, and Cotswolds villages circulate extensively on Chinese streaming platforms. Chinese drama tourism (visiting filming locations for popular shows) is an established travel format. The Scottish Highlands are gaining traction through Outlander, Braveheart, and Highland landscape content on Xiaohongshu. Lake District properties can position around Beatrix Potter connections (well-known in China through children\'s books). Self-drive road trips through English countryside are growing as Chinese visitors gain European driving confidence. Properties with authentic period character and proximity to filming locations have clear differentiation.'}
   }},
   portugal:{ label:'Portugal', cities:{
-    lisbon:{label:'Lisbon',tier:'strong',score:72,insight:'<strong>Lisbon is Southern Europe\'s fastest-growing Chinese tourism destination.</strong> Ctrip search volumes have risen sharply since 2022. Properties here are still relatively under-represented on Chinese OTAs — a real opportunity.'},
-    porto:{label:'Porto',tier:'strong',score:65,insight:'<strong>Porto is growing fast on the Chinese travel radar</strong>, driven by wine tourism and its distinctive architecture. Less competitive on Ctrip than Lisbon — a genuine first-mover opportunity.'},
-    sintra:{label:'Sintra',tier:'strong',score:60,insight:'<strong>Sintra\'s fairy-tale palaces are a recognised attraction on Chinese Portugal itineraries.</strong> Day-trip demand from Lisbon is very high; overnight stays are growing.'},
-    algarve:{label:'Algarve',tier:'emerging',score:45,insight:'<strong>The Algarve is emerging as a Chinese beach and golf destination.</strong> Demand is growing from a low base, with strong upside for early-listed properties.'},
-    coimbra:{label:'Coimbra',tier:'emerging',score:35,insight:'<strong>Coimbra features on Chinese cultural itineraries</strong> linked to its ancient university. Modest but growing Ctrip presence.'},
-    aveiro:{label:'Aveiro',tier:'emerging',score:32,insight:'<strong>Aveiro\'s canal boats and Art Nouveau architecture</strong> have gained traction on Chinese social travel platforms. A niche but growing opportunity.'},
-    countryside:{label:'Portuguese countryside / other',tier:'emerging',score:30,insight:'<strong>The Douro Valley wine region and Alentejo</strong> are attracting Chinese experiential travellers. Rural properties here have an early-mover advantage on Chinese OTAs.'}
+    lisbon:{label:'Lisbon',tier:'strong',score:72,
+      insight:'<strong>Lisbon is Southern Europe\'s fastest-growing Chinese tourism destination.</strong> Under-represented on Chinese OTAs — real opportunity.',
+      post:'Lisbon is one of the fastest-growing European destinations in Chinese outbound travel — Ctrip search volumes have risen sharply since 2022 and properties here are still under-represented on Chinese OTAs. The Chinese visitor profile is largely independent FIT travellers who have already experienced Western Europe\'s main circuits and seek something new. Fado music, azulejo tile art, Pastéis de Belém, and Alfama streetscapes all generate strong Chinese social content. Lisbon\'s position as a European capital with an Atlantic character and relatively modest prices appeals to younger Chinese independent travellers. The Golden Visa programme has also driven Chinese real estate investment interest that converts into longer-stay visits. Properties in Alfama, Bairro Alto, and Belém generate the strongest Ctrip visibility.'},
+    porto:{label:'Porto',tier:'strong',score:65,
+      insight:'<strong>Porto is growing fast on the Chinese travel radar</strong>, driven by wine tourism and distinctive architecture.',
+      post:'Porto is growing rapidly in Chinese travel consciousness through Port wine tourism and exceptional visual appeal — the Ribeira waterfront, azulejo-tiled facades, and Dom Luís Bridge are among Portugal\'s most-shared images on Chinese platforms. Port wine has strong Chinese market presence (LVMH-owned brands including Quinta do Crasto have active Chinese distribution) and wine-interested visitors come specifically to the Douro Valley from Porto. Chinese visitors to Porto are typically younger, independent, and socially media-active. Average stay is 2-3 nights. Less competitive on Ctrip than Lisbon — a first-mover property can establish a strong review profile rapidly. The growing popularity of Porto on Xiaohongshu is driving significant new booking intent.'},
+    sintra:{label:'Sintra',tier:'strong',score:60,
+      insight:'<strong>Sintra\'s fairy-tale palaces are a recognised attraction on Chinese Portugal itineraries.</strong>',
+      post:'Sintra\'s fairy-tale palaces — Pena Palace in particular — are among Portugal\'s most-photographed landmarks in Chinese travel content. The colourful Romanticist architecture and hilltop forest setting create exactly the type of visual drama that performs on Chinese social media. Chinese visitors come almost entirely as day trips from Lisbon, but growing awareness is driving demand for Sintra-based overnight stays (particularly to access the palaces before day-trip crowds arrive). Properties that market early-morning palace access as a differentiator perform particularly well with Chinese visitors who understand the photographic advantage of arriving first.'},
+    algarve:{label:'Algarve',tier:'emerging',score:45,
+      insight:'<strong>The Algarve is emerging as a Chinese beach and golf destination.</strong>',
+      post:'The Algarve is at an early stage of Chinese leisure tourism development with genuine upside. Golden rock formations, dramatic cliffs, and turquoise water at Praia da Marinha and Ponta da Piedade have grown rapidly on Chinese visual platforms. A developing Chinese golf tourism segment is drawn to Algarve\'s concentration of courses — golf tourism from China is an established and high-spending travel format. Albufeira and Lagos are the primary Chinese visitor entry points. Average stay is longer than most Portuguese destinations (4-5 nights) as the Algarve lends itself to beach holiday formats. First-mover advantage on Ctrip is still very significant — well-photographed properties with pool access can establish dominant review profiles quickly.'},
+    coimbra:{label:'Coimbra',tier:'emerging',score:35,
+      insight:'<strong>Coimbra features on Chinese cultural itineraries</strong> linked to its ancient university.',
+      post:'Coimbra draws a niche of Chinese academic and cultural tourists through its ancient university — founded in 1290, it is one of Europe\'s oldest and its black-cloaked students and medieval academic traditions have specific resonance for Chinese education-culture travellers. Fado de Coimbra (distinct from Lisbon fado, sung by male students) is an authentic musical experience that Chinese cultural visitors seek out. Coimbra is increasingly featured on Chinese "hidden Portugal" content. Properties positioned around university life and authentic Coimbra character can serve this niche effectively on Ctrip.'},
+    aveiro:{label:'Aveiro',tier:'emerging',score:32,
+      insight:'<strong>Aveiro\'s canal boats and Art Nouveau architecture</strong> have gained traction on Chinese social travel platforms.',
+      post:'Aveiro has emerged on Chinese social media as "the Venice of Portugal" — a framing that resonates strongly and generates growing visit intent. Moliceiro canal boats, Art Nouveau buildings, and ovos moles (traditional egg sweets) all feature in Chinese food and travel content. Chinese visitors come as a day trip from Porto or as an overnight stop, typically combining with Coimbra. The "miniature Venice" positioning is a specific Chinese travel content format — Chinese visitors seek out canal cities across Europe as a photographic genre. First-mover Ctrip listings here can establish a strong profile with very limited competition.'},
+    countryside:{label:'Portuguese countryside / other',tier:'emerging',score:30,
+      insight:'<strong>The Douro Valley wine region and Alentejo</strong> are attracting Chinese experiential travellers.',
+      post:'Portuguese countryside is attracting the most sophisticated tier of Chinese independent travellers — those seeking authentic, unhurried experiences beyond the main tourist circuit. The Douro Valley is gaining Chinese wine tourism attention as Port wine grows in the Chinese market. Douro river cruises feature in Chinese premium travel content as a slow-travel format. Alentejo cork forests, white villages, and farm-to-table food culture have growing Xiaohongshu presence. The traveller profile is experienced, high-spending, and seeks character accommodation — quintas, wine estates, and rural villas with local identity. These visitors are increasingly self-driving, following curated Xiaohongshu itineraries. Properties that tell a local story and are listed on Ctrip have a strong first-mover position in what remains a very low-competition segment.'}
   }}
 };
+
+
+const dimensions = [
+  {name:'OTA Visibility',            field:'ota',      weight:3, optional:false},
+  {name:'Payment Acceptance',        field:'payment',  weight:3, optional:false},
+  {name:'Firewall & Digital Access', field:'firewall', weight:3, optional:true},
+  {name:'Chinese OTA Reviews',       field:'reviews',  weight:2, optional:false},
+  {name:'Language & Communication',  field:'language', weight:2, optional:false},
+  {name:'On-property Experience',    field:'onprop',   weight:1, optional:false},
+];
+const valueMap={red:0,amber:1,green:2};
+const labelMap={red:{text:'Not ready',cls:'pill-red'},amber:{text:'In progress',cls:'pill-amber'},green:{text:'Good',cls:'pill-green'}};
+
+function runCheck() {
+  const website = document.getElementById('prop-website').value;
+  const hasWebsite = website==='self'||website==='agency';
+  const active = dimensions.filter(d=>!d.optional||hasWebsite);
+  const values={};
+  let allAnswered=true;
+  active.forEach(d=>{
+    const sel=document.querySelector('input[name="'+d.field+'"]:checked');
+    if(!sel) allAnswered=false; else values[d.field]=sel.value;
+  });
+  if(!allAnswered){alert('Please answer all dimensions before running ChinaCheck.');return;}
+
+  gtag('event', 'china_check_completed', {'event_category': 'engagement'});
+
+  let totalWeight=0,totalScore=0;
+  active.forEach(d=>{totalWeight+=d.weight;totalScore+=valueMap[values[d.field]]*d.weight;});
+  const prepPct=Math.round((totalScore/(totalWeight*2))*100);
+  const verdictKey=prepPct>80?'green':prepPct>=40?'amber':'red';
+  const prepColor=prepPct>80?'var(--green)':prepPct>=40?'var(--amber)':'var(--red)';
+  const gapColorCls=prepPct>80?'gap-color-green':prepPct>=40?'gap-color-amber':'gap-color-red';
+  const verdictLabels={green:{text:'Well prepared',cls:'verdict-green'},amber:{text:'Needs work',cls:'verdict-amber'},red:{text:'Not ready',cls:'verdict-red'}};
+
+  const country=document.getElementById('sel-country').value;
+  const city=document.getElementById('sel-city').value;
+  const potentialScore=(country&&city&&locationData[country]&&locationData[country].cities[city])?locationData[country].cities[city].score:null;
+  const cityLabel=potentialScore!==null?locationData[country].cities[city].label:'';
+  const gap=potentialScore!==null?potentialScore-prepPct:null;
+  let gapSummary='';
+  if(gap!==null){
+    if(gap<=0) gapSummary='Your preparation matches or exceeds what this market demands. You are well-positioned to capture Chinese traveller demand here.';
+    else if(gap<=20) gapSummary='You are close to capturing the full potential of this market. A few targeted improvements will close the gap.';
+    else if(gap<=50) gapSummary='There is a significant gap between what this market offers and your current preparation. The opportunity is real — but you are not yet set up to capture it.';
+    else gapSummary='This market has very high Chinese traveller demand, but your operation is currently leaving most of it on the table. The upside of getting ready here is substantial.';
+  }
+  const notes={green:'Your operation covers the core requirements for Chinese travellers. Focus next on content quality on Chinese OTAs and actively building reviews.',amber:'You have a foundation but gaps that will cost you bookings. Prioritise OTA listing and payment first — those two moves drive the most impact.',red:'You are effectively invisible to Chinese travellers right now. Start with a Ctrip listing and WeChat Pay — those two steps alone change the picture significantly.'};
+
+  document.getElementById('result-property-name').textContent='';
+  document.getElementById('rp-city').textContent=cityLabel;
+  document.getElementById('rp-potential-score').textContent=potentialScore!==null?potentialScore:'—';
+  const prepScoreEl=document.getElementById('rp-prep-score');
+  prepScoreEl.textContent=prepPct+'%'; prepScoreEl.style.color=prepColor;
+  const verdictEl=document.getElementById('rp-verdict');
+  verdictEl.textContent=verdictLabels[verdictKey].text; verdictEl.className='vs-verdict '+verdictLabels[verdictKey].cls;
+
+  if(potentialScore!==null){
+    document.getElementById('gap-bar-potential').style.width=potentialScore+'%';
+    document.getElementById('gap-bar-preparation').style.width='0%';
+    setTimeout(()=>{document.getElementById('gap-bar-preparation').style.width=prepPct+'%';document.getElementById('gap-bar-preparation').className='gap-bar-preparation '+gapColorCls;},80);
+    document.getElementById('gap-label-right').textContent=prepPct+'% of '+potentialScore+' point opportunity';
+  }
+  document.getElementById('gap-summary').textContent=gapSummary;
+
+  const listEl=document.getElementById('dim-results-list');
+  listEl.innerHTML='';
+  active.forEach(d=>{
+    const v=values[d.field];
+    const row=document.createElement('div'); row.className='dim-result-row';
+    row.innerHTML='<div class="dim-result-name">'+d.name+'</div><div class="dim-result-pill '+labelMap[v].cls+'">'+labelMap[v].text+'</div>';
+    listEl.appendChild(row);
+  });
+  document.getElementById('result-note').textContent=notes[verdictKey];
+
+  // Business impact
+  const units=parseFloat(document.getElementById('prop-units').value);
+  const rate=parseFloat(document.getElementById('prop-rate').value);
+  const bizSection=document.getElementById('biz-section');
+  let revPotential=0;
+  if(units>0&&rate>0&&potentialScore!==null){
+    const ds=potentialScore;
+    const baseShare=ds>80?0.08:ds>=60?0.05:ds>=40?0.025:0.01;
+    const occupied=units*365*0.68;
+    const chineseNights=Math.round(occupied*baseShare);
+    revPotential=Math.round(chineseNights*rate);
+    const revGap=Math.round(revPotential*(1-prepPct/100));
+    const fmt=n=>'€'+n.toLocaleString('de-DE');
+    document.getElementById('biz-potential').textContent=fmt(revPotential);
+    document.getElementById('biz-note').textContent='How this is calculated: '+units+' units × 365 nights × 68% occupancy = '+Math.round(occupied)+' occupied nights/year. At '+Math.round(baseShare*100)+'% Chinese guest share for this market = '+chineseNights+' Chinese guest nights at full readiness × '+fmt(rate)+'/night = '+fmt(revPotential)+' annual potential. Your preparation score ('+prepPct+'%) implies '+fmt(revGap)+' of that is currently uncaptured. Figures are indicative.';
+    bizSection.style.display='block';
+
+    // Revenue by dimension
+    const revDimSection=document.getElementById('rev-dim-section');
+    const revDimList=document.getElementById('rev-dim-list');
+    const revDimContext=document.getElementById('rev-dim-context');
+    revDimList.innerHTML='';
+    revDimContext.textContent='Estimated annual gain per property if each gap is fully closed — based on '+units+' units at €'+rate+'/night in this market.';
+    const wTotal=active.reduce((s,d)=>s+d.weight,0);
+    const fmt2=n=>'€'+Math.round(n).toLocaleString('de-DE');
+    active.forEach(d=>{
+      const v=values[d.field];
+      const share=d.weight/wTotal;
+      const dimRev=revPotential*share;
+      const gap=v==='green'?0:v==='amber'?dimRev*0.5:dimRev;
+      const row=document.createElement('div'); row.className='rev-dim-row';
+      const cls=v==='green'?'ok':v==='amber'?'amber':'';
+      const txt=v==='green'?'Captured':'−'+fmt2(gap)+'/yr';
+      row.innerHTML='<div class="rev-dim-name">'+d.name+'</div><div class="rev-dim-impact '+cls+'">'+txt+'</div>';
+      revDimList.appendChild(row);
+    });
+    revDimSection.style.display='block';
+  } else {
+    bizSection.style.display='none';
+    document.getElementById('rev-dim-section').style.display='none';
+  }
+
+  // Benchmark
+  if(country&&benchmarkData[country]){
+    const bm=benchmarkData[country];
+    document.getElementById('bm-your-fill').style.width='0%';
+    document.getElementById('bm-median-fill').style.width='0%';
+    setTimeout(()=>{document.getElementById('bm-your-fill').style.width=prepPct+'%';document.getElementById('bm-median-fill').style.width=bm.median+'%';},100);
+    document.getElementById('bm-your-val').textContent=prepPct+'%';
+    document.getElementById('bm-median-val').textContent=bm.median+'%';
+    const diff=prepPct-bm.median;
+    document.getElementById('bm-note').textContent=diff>0?'You score '+diff+' points above the typical '+bm.label+'. Most operators here are well behind on China readiness.':diff===0?'You are at the median for '+bm.label+'. There is room to pull ahead.':'You are '+Math.abs(diff)+' points below the median for '+bm.label+'. The priorities below will close that gap quickly.';
+    document.getElementById('benchmark-section').style.display='block';
+  } else {
+    document.getElementById('benchmark-section').style.display='none';
+  }
+
+  // Priority actions
+  const prios=[];
+  active.forEach(d=>{
+    const v=values[d.field];
+    if(v==='red'&&priorityActions[d.field]?.red) prios.push({urgency:0,action:priorityActions[d.field].red,weight:d.weight});
+    else if(v==='amber'&&priorityActions[d.field]?.amber) prios.push({urgency:1,action:priorityActions[d.field].amber,weight:d.weight});
+  });
+  prios.sort((a,b)=>a.urgency-b.urgency||b.weight-a.weight);
+  const top3=prios.slice(0,3);
+  const prioList=document.getElementById('priority-list');
+  prioList.innerHTML='';
+  ['p1','p2','p3'].forEach((cls,i)=>{
+    if(!top3[i]) return;
+    const item=document.createElement('div'); item.className='priority-item';
+    item.innerHTML='<div class="priority-num '+cls+'">'+(i+1)+'</div><div><div class="priority-item-title">'+top3[i].action.title+'</div><div class="priority-item-desc">'+top3[i].action.desc+'</div></div>';
+    prioList.appendChild(item);
+  });
+  document.getElementById('priority-section').style.display=top3.length?'block':'none';
+
+  // Share snippet + percentile
+  const cm=document.getElementById('prop-cm').value;
+  const bm=country&&benchmarkData[country]?benchmarkData[country]:null;
+  const median=bm?bm.median:30;
+  const bmLabel=bm?bm.label:'operators in this market';
+  const percentileAbove=Math.min(99,Math.max(1,Math.round(100-(prepPct/100*100))));
+  const aboveMedian=prepPct>median;
+  const diff=Math.abs(prepPct-median);
+
+  // Percentile card
+  const spc=document.getElementById('share-percentile-card');
+  if(aboveMedian){
+    spc.innerHTML='<div class="spc-num">Top '+Math.max(5,100-Math.round((prepPct/100)*85))+'%</div>'
+      +'<div class="spc-text"><strong>You score '+diff+' points above the average '+bmLabel+'.</strong> Most haven\'t checked at all — you already know more than they do.</div>';
+  } else {
+    spc.innerHTML='<div class="spc-num">'+prepPct+'%</div>'
+      +'<div class="spc-text"><strong>You now know your China readiness score.</strong> Most '+bmLabel+' have never checked. Knowing the gap is the first step to closing it.</div>';
+  }
+
+  // LinkedIn post with city intelligence
+  const cityPost = (country && city && locationData[country] && locationData[country].cities[city])
+    ? locationData[country].cities[city].post || '' : '';
+  const vWord=verdictKey==='green'?'well prepared':verdictKey==='amber'?'partially ready':'not yet ready';
+  const benchLine=aboveMedian
+    ?'My score ('+prepPct+'%) is '+diff+' points above the average for '+bmLabel+'.'
+    :'My score sits at the median for '+bmLabel+' ('+median+'%).';
+  const cmLine=cm&&cmData[cm]&&cmData[cm].ctrip===true?' Channel manager: '+cmData[cm].name+' — Ctrip connection available.':
+               cm&&cmData[cm]&&cmData[cm].ctrip===false?' Channel manager: '+cmData[cm].name+' — no native Ctrip connection.':'';
+
+  const demandLine = potentialScore!==null ? 'China demand index for '+cityLabel+': '+potentialScore+'/100.' : '';
+  const readinessLine = 'My readiness score: '+prepPct+'% — '+vWord+'.';
+  const benchmarkLine = aboveMedian
+    ? 'That puts me '+diff+' points above the average '+bmLabel+'.'
+    : 'The average '+bmLabel+' sits at '+median+'%. Room to improve.';
+
+  let shareText = '';
+  shareText += 'I just ran a China readiness check on my operation';
+  shareText += cityLabel ? ' in '+cityLabel+'.' : '.';
+  shareText += ' The results were eye-opening.\n\n';
+  shareText += '𝗠𝘆 𝘀𝗰𝗼𝗿𝗲: '+prepPct+'% — '+vWord+'.\n';
+  if(demandLine) shareText += '𝗠𝗮𝗿𝗸𝗲𝘁 𝗱𝗲𝗺𝗮𝗻𝗱 𝗶𝗻𝗱𝗲𝘅: '+potentialScore+'/100.\n';
+  shareText += benchmarkLine+'\n\n';
+
+  if(cityPost) {
+    const sentences = cityPost.match(/[^.!?]+[.!?]+/g) || [];
+    const shortPost = sentences.slice(0,2).join(' ').trim();
+    if(shortPost) shareText += shortPost+'\n\n';
+  }
+
+  if(cmLine) shareText += cmLine.trim()+'\n\n';
+
+  shareText += '𝗪𝗵𝗮𝘁 𝗶𝘀 𝘆𝗼𝘂𝗿 𝗖𝗵𝗶𝗻𝗮 𝗿𝗲𝗮𝗱𝗶𝗻𝗲𝘀𝘀 𝘀𝗰𝗼𝗿𝗲?\n';
+  shareText += 'Check yours in 2 minutes — link in the first comment.\n\n';
+  shareText += '#ChinaInbound #Hospitality #STR #ChinaReadiness #OTA\n\n';
+  shareText += '→ Tool built by Roger Bisschoff | linkedin.com/in/rogerbisschoff/';
+
+  document.getElementById('share-snippet').textContent=shareText;
+  document.getElementById('share-snippet').dataset.text=shareText;
+  document.getElementById('share-section').style.display='block';
+  buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel, median, aboveMedian, diff);
+
+  // Apply city photo as CSS background on result header
+  const resultHeader = document.getElementById('result-header');
+  const cityPhotoUrl = getCityPhotoKey(cityLabel);
+  if (cityPhotoUrl && resultHeader) {
+    resultHeader.style.backgroundImage = 'url(' + cityPhotoUrl + ')';
+    resultHeader.classList.add('has-photo');
+  } else if (resultHeader) {
+    resultHeader.style.backgroundImage = '';
+    resultHeader.classList.remove('has-photo');
+  }
+
+  const panel=document.getElementById('result-panel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
 const tierConfig = {
   top:      {label:'Top destination', badgeCls:'tier-top',      fillCls:'fill-top'},
@@ -663,153 +1603,7 @@ function onCityChange() {
   document.getElementById('assessment-section').classList.add('visible');
 }
 
-const dimensions = [
-  {name:'OTA Visibility',           field:'ota',      weight:3},
-  {name:'Payment Acceptance',       field:'payment',  weight:3},
-  {name:'Chinese OTA Reviews',      field:'reviews',  weight:2},
-  {name:'Language & Communication', field:'language', weight:2},
-  {name:'On-property Experience',   field:'onprop',   weight:1},
-];
-const valueMap = {red:0,amber:1,green:2};
-const labelMap = {
-  red:{text:'Not ready',cls:'pill-red'},
-  amber:{text:'In progress',cls:'pill-amber'},
-  green:{text:'Good',cls:'pill-green'},
-};
 
-function runCheck() {
-  const values = {};
-  let allAnswered = true;
-  dimensions.forEach(d => {
-    const sel = document.querySelector('input[name="'+d.field+'"]:checked');
-    if (!sel) allAnswered = false;
-    else values[d.field] = sel.value;
-  });
-  if (!allAnswered) { alert('Please rate all six dimensions before running ChinaCheck.'); return; }
-
-  // GA4 completion event
-  gtag('event', 'china_check_completed', {
-    'event_category': 'engagement',
-    'event_label': 'ChinaCheck assessment completed'
-  });
-
-  // Preparation score (0–100)
-  let totalWeight=0, totalScore=0;
-  dimensions.forEach(d => { totalWeight+=d.weight; totalScore+=valueMap[values[d.field]]*d.weight; });
-  const prepPct = Math.round((totalScore/(totalWeight*2))*100);
-
-  // Colour thresholds: red <40, amber 40-80, green >80
-  const verdictKey = prepPct > 80 ? 'green' : prepPct >= 40 ? 'amber' : 'red';
-  const prepColor  = prepPct > 80 ? 'var(--green)' : prepPct >= 40 ? 'var(--amber)' : 'var(--red)';
-  const gapColorCls = prepPct > 80 ? 'gap-color-green' : prepPct >= 40 ? 'gap-color-amber' : 'gap-color-red';
-
-  const verdictLabels = {
-    green: {text:'Well prepared', cls:'verdict-green'},
-    amber: {text:'Needs work',    cls:'verdict-amber'},
-    red:   {text:'Not ready',     cls:'verdict-red'},
-  };
-
-  // Get market potential score from location selection
-  const country = document.getElementById('sel-country').value;
-  const city    = document.getElementById('sel-city').value;
-  const potentialScore = (country && city && locationData[country] && locationData[country].cities[city])
-    ? locationData[country].cities[city].score : null;
-  const cityLabel = (potentialScore !== null) ? locationData[country].cities[city].label : '';
-
-  // Gap text
-  const gap = potentialScore !== null ? potentialScore - prepPct : null;
-  let gapSummary = '';
-  if (gap !== null) {
-    if (gap <= 0) {
-      gapSummary = 'Your preparation matches or exceeds what this market demands. You are well-positioned to capture Chinese traveller demand here.';
-    } else if (gap <= 20) {
-      gapSummary = 'You are close to capturing the full potential of this market. A few targeted improvements will close the gap.';
-    } else if (gap <= 50) {
-      gapSummary = 'There is a significant gap between what this market offers and your current preparation. The opportunity is real — but you are not yet set up to capture it.';
-    } else {
-      gapSummary = 'This market has very high Chinese traveller demand, but your operation is currently leaving most of it on the table. The upside of getting ready here is substantial.';
-    }
-  }
-
-  const notes = {
-    green: 'Your operation covers the core requirements for Chinese travellers. Focus next on content quality on Chinese OTAs and actively building reviews.',
-    amber: 'You have a foundation but gaps that will cost you bookings. Prioritise OTA listing and payment first — those two moves drive the most impact.',
-    red:   'You are effectively invisible to Chinese travellers right now. Start with a Ctrip listing and WeChat Pay — those two steps alone change the picture significantly.',
-  };
-
-  // Render
-  document.getElementById('result-property-name').textContent = '';
-
-  // Potential card
-  document.getElementById('rp-city').textContent = cityLabel;
-  document.getElementById('rp-potential-score').textContent = potentialScore !== null ? potentialScore : '—';
-
-  // Preparation card
-  const prepScoreEl = document.getElementById('rp-prep-score');
-  prepScoreEl.textContent = prepPct + '%';
-  prepScoreEl.style.color = prepColor;
-  const verdictEl = document.getElementById('rp-verdict');
-  verdictEl.textContent = verdictLabels[verdictKey].text;
-  verdictEl.className = 'vs-verdict ' + verdictLabels[verdictKey].cls;
-
-  // Gap bar
-  if (potentialScore !== null) {
-    document.getElementById('gap-bar-potential').style.width = potentialScore + '%';
-    document.getElementById('gap-bar-preparation').style.width = '0%';
-    setTimeout(() => {
-      document.getElementById('gap-bar-preparation').style.width = prepPct + '%';
-      document.getElementById('gap-bar-preparation').className = 'gap-bar-preparation ' + gapColorCls;
-    }, 80);
-    document.getElementById('gap-label-right').textContent = prepPct + '% of ' + potentialScore + ' point opportunity';
-  }
-  document.getElementById('gap-summary').textContent = gapSummary;
-
-  // Dimension rows
-  const listEl = document.getElementById('dim-results-list');
-  listEl.innerHTML = '';
-  dimensions.forEach(d => {
-    const v = values[d.field];
-    const row = document.createElement('div');
-    row.className = 'dim-result-row';
-    row.innerHTML = '<div class="dim-result-name">'+d.name+'</div><div class="dim-result-pill '+labelMap[v].cls+'">'+labelMap[v].text+'</div>';
-    listEl.appendChild(row);
-  });
-
-  document.getElementById('result-note').textContent = notes[verdictKey];
-
-  // ── BUSINESS IMPACT CALCULATION ──
-  const units = parseFloat(document.getElementById('prop-units').value);
-  const rate  = parseFloat(document.getElementById('prop-rate').value);
-  const bizSection = document.getElementById('biz-section');
-
-  if (units > 0 && rate > 0 && potentialScore !== null) {
-    const demandScore = potentialScore;
-    const baseChineseShare = demandScore > 80 ? 0.08 : demandScore >= 60 ? 0.05 : demandScore >= 40 ? 0.025 : 0.01;
-    const occupiedNights    = units * 365 * 0.68;
-    const chineseNightsFull = Math.round(occupiedNights * baseChineseShare);
-    const revPotential      = Math.round(chineseNightsFull * rate);
-    const prepRatio         = prepPct / 100;
-    const revGap            = Math.round(revPotential * (1 - prepRatio));
-    const fmt = (n) => '€' + n.toLocaleString('de-DE');
-
-    document.getElementById('biz-potential').textContent = fmt(revPotential);
-    document.getElementById('biz-note').textContent =
-      'How this is calculated: ' + units + ' units × 365 nights × 68% occupancy = ' +
-      Math.round(occupiedNights) + ' occupied nights/year. At ' +
-      Math.round(baseChineseShare*100) + '% Chinese guest share for this market = ' +
-      chineseNightsFull + ' Chinese guest nights at full readiness × ' + fmt(rate) +
-      '/night = ' + fmt(revPotential) + ' annual potential. Your preparation score (' +
-      prepPct + '%) implies ' + fmt(revGap) + ' of that is currently uncaptured. ' +
-      'Figures are indicative — actual results depend on listing quality, pricing, and seasonality.';
-
-    bizSection.style.display = 'block';
-  } else {
-    bizSection.style.display = 'none';
-  }
-  const panel = document.getElementById('result-panel');
-  panel.classList.add('visible');
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
-}
 </script>
 </body>
 </html>
