@@ -115,15 +115,27 @@
   }
   .hero h1 {
     color:#fff; font-size:clamp(24px,7vw,40px);
-    font-weight:800; letter-spacing:-0.8px; line-height:1.15; margin-bottom:12px;
+    font-weight:800; letter-spacing:-0.8px; line-height:1.2; margin-bottom:12px;
   }
+  .hero h1 .hero-br { display:block; }
   .hero h1 em, .hero h1 span { font-style:normal; color:#C0392B; }
+  .hero h1 span { display:inline-block; }
   .hero p { color:rgba(255,255,255,0.38); font-size:14px; max-width:460px; margin:0 auto; line-height:1.65; }
+
+  @media (max-width:420px) {
+    .hero h1 {
+      font-size:24px;
+      letter-spacing:-0.5px;
+    }
+    .hero h1 .hero-br { display:none; }
+    .hero h1 span { display:inline; }
+  }
 
   /* ── LANDING CLARITY ── */
   .landing-payoff {
-    font-size:13px; color:var(--ink2); line-height:1.6;
-    margin:0 0 12px; text-align:center;
+    font-size:12px; color:var(--muted); line-height:1.6;
+    margin:0 0 14px; text-align:center;
+    max-width:420px; margin-left:auto; margin-right:auto;
   }
   .example-card {
     background:var(--card); border-radius:var(--r12);
@@ -150,6 +162,10 @@
   .example-tag.readiness {
     background:#FFFBEB; color:#92600A;
     border:0.5px solid #FCD34D;
+  }
+  .example-tag.gaps {
+    background:var(--red-light); color:#C0392B;
+    border:0.5px solid #FFCCC7;
   }
   .example-gaps { font-size:12px; color:var(--muted); }
   .landing-trust {
@@ -620,7 +636,7 @@
 </div>
 
 <div class="hero">
-  <h1>Is your property<br><span>ready for Chinese guests?</span></h1>
+  <h1>Is your property<br class="hero-br"><span>ready for Chinese guests?</span></h1>
   <p>Start with your location and see how much Chinese-traveller demand your city has, then how ready your operation is to capture it.</p>
 </div>
 
@@ -634,7 +650,7 @@
       <span class="example-city">Milan</span>
       <span class="example-tag demand">High inbound demand</span>
       <span class="example-tag readiness">Readiness 46 / 100</span>
-      <span class="example-gaps">4 gaps to close</span>
+      <span class="example-tag gaps">4 gaps to close</span>
     </div>
   </div>
 
@@ -980,8 +996,7 @@
   <div class="ab-inner">
     <div class="ab-logo">中</div>
     <div class="ab-text">
-      Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> — commercial &amp; distribution leader in European hospitality.<br>
-      <span class="ab-series">Operator Series</span> — free tools for senior property operators.
+      Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span> — free tools for senior property operators.
     </div>
   </div>
 </div>
