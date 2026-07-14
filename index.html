@@ -646,6 +646,60 @@
   .ab-text a { color:#F5C842; text-decoration:none; font-weight:600; }
   .ab-text a:hover { color:#fff; }
   .ab-series { color:rgba(255,255,255,0.6); font-weight:600; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    html, body { overflow-x: clip; }
+    .logo-sub { display: none; }
+    .logo-name {
+      font-size: 14px;
+      max-width: 36vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .stage-badge { display: none; }
+    header {
+      padding: 10px 12px;
+      padding-top: calc(10px + env(safe-area-inset-top));
+    }
+    .lang-btn {
+      min-height: 36px;
+      padding: 8px 10px;
+    }
+    .lang-btn span.lang-label { display: none; }
+    .lang-sep { display: none; }
+    .lang-flag { font-size: 15px; }
+    .flow-progress { padding: 8px 12px 10px; }
+    .flow-step { font-size: 9px; letter-spacing: 0.3px; }
+    .container {
+      padding: 20px 14px calc(80px + env(safe-area-inset-bottom));
+    }
+    .hero { padding: 28px 16px 24px; }
+    .ios-row {
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px 16px;
+    }
+    .ios-row select, .ios-row input {
+      font-size: 16px;
+      min-height: 44px;
+      flex: 1 1 140px;
+    }
+    .run-btn, .firewall-test-btn, .share-btn {
+      min-height: 48px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    .radio-option label {
+      min-height: 48px;
+      font-size: 13px;
+      padding: 10px 8px;
+    }
+    .ab-inner { flex-direction: column; text-align: center; }
+    .ab-text { text-align: center; }
+  }
 </style>
 </head>
 <body>
