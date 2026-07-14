@@ -18,15 +18,26 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@700&display=swap');
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
-    --red:#C0392B; --amber:#C97B0A; --green:#1A7A3C;
-    --ink:#0A0A0F; --ink2:#2C2C3A; --muted:#7A7A8C; --muted2:#ADADBE;
-    --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.05);
+    --accent:#007AFF;
+    --accent-dark:#0051D5;
+    --accent-light:rgba(0, 122, 255, 0.12);
+    --accent-secondary:#5856D6;
+    --alert:#FF3B30;
+    --positive:#34C759;
+    --warning:#FF9500;
+    --red:#FF3B30; --amber:#FF9500; --green:#34C759;
+    --ink:#1C1C1E; --ink2:#3A3A3C; --muted:#8E8E93; --muted2:#AEAEB2;
+    --border:rgba(60, 60, 67, 0.12); --border2:rgba(60, 60, 67, 0.08);
     --bg:#F2F2F7; --card:#FFFFFF; --card2:#F9F9FB;
     --china-red:#C0392B; --gold:#D4A24C; --gold-bright:#D4A24C;
-    --green-light:#F0FDF4; --red-light:#FFF1F0;
-    --r16:16px; --r12:12px; --r10:10px;
-    --shadow:0 2px 12px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
-    --shadow-lg:0 8px 30px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06);
+    --green-light:rgba(52,199,89,0.1); --red-light:rgba(255,59,48,0.08);
+    --radius-lg:20px; --radius-md:16px; --radius-sm:12px;
+    --r16:var(--radius-lg); --r12:var(--radius-md); --r10:var(--radius-sm);
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md:0 8px 24px rgba(0,0,0,0.06);
+    --shadow-card:0 2px 16px rgba(0,0,0,0.06);
+    --shadow:var(--shadow-card);
+    --shadow-lg:var(--shadow-md);
   }
   html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
   body {
@@ -67,6 +78,32 @@
     background:rgba(212,162,76,0.15); border:0.5px solid rgba(212,162,76,0.45);
     color:#D4A24C; font-size:10px; font-weight:700;
     padding:4px 10px; border-radius:20px; letter-spacing:0.6px; text-transform:uppercase;
+  }
+  .header-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+  /* ── LANG SWITCH ── */
+  .lang-switch {
+    display:flex; align-items:center; gap:1px;
+    background:rgba(255,255,255,0.06); border:0.5px solid rgba(255,255,255,0.12);
+    border-radius:20px; padding:3px; flex-shrink:0;
+  }
+  .lang-btn {
+    display:flex; align-items:center; gap:4px;
+    background:transparent; border:none; cursor:pointer;
+    color:rgba(255,255,255,0.45); font-size:10px; font-weight:700;
+    letter-spacing:0.3px; padding:5px 8px; border-radius:16px;
+    transition:all 0.15s; -webkit-tap-highlight-color:transparent;
+    font-family:-apple-system,'Inter',sans-serif;
+  }
+  .lang-btn:hover { color:rgba(255,255,255,0.75); }
+  .lang-btn.active {
+    background:rgba(212,162,76,0.18); color:#D4A24C;
+    border:0.5px solid rgba(212,162,76,0.4);
+  }
+  .lang-flag { font-size:12px; line-height:1; }
+  .lang-sep { color:rgba(255,255,255,0.18); font-size:10px; }
+  @media (max-width:380px) {
+    .lang-btn span.lang-label { display:none; }
   }
 
   /* ── FLOW PROGRESS ── */
@@ -118,8 +155,8 @@
     font-weight:800; letter-spacing:-0.8px; line-height:1.2; margin-bottom:12px;
   }
   .hero h1 .hero-br { display:block; }
-  .hero h1 em, .hero h1 span { font-style:normal; color:#C0392B; }
-  .hero h1 span { display:inline-block; }
+  .hero h1 em, .hero h1 .hero-highlight { font-style:normal; color:#C0392B; }
+  .hero h1 .hero-highlight { display:inline-block; }
   .hero p { color:rgba(255,255,255,0.38); font-size:14px; max-width:460px; margin:0 auto; line-height:1.65; }
 
   @media (max-width:420px) {
@@ -128,7 +165,7 @@
       letter-spacing:-0.5px;
     }
     .hero h1 .hero-br { display:none; }
-    .hero h1 span { display:inline; }
+    .hero h1 .hero-highlight { display:inline; }
   }
 
   /* ── LANDING CLARITY ── */
@@ -619,69 +656,78 @@
     <div class="logo-mark">中</div>
     <div class="logo-text-wrap">
       <span class="logo-name">ChinaCheck</span>
-      <span class="logo-sub">China Readiness Tool</span>
+      <span class="logo-sub" data-i18n="header.sub">China Readiness Tool</span>
     </div>
   </div>
-  <div class="stage-badge">Stage 2</div>
+  <div class="header-right">
+    <div class="stage-badge" data-i18n="header.stage">Stage 2</div>
+    <div class="lang-switch" id="lang-switch">
+      <button type="button" class="lang-btn" data-lang="en" onclick="applyLang('en')"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button>
+      <span class="lang-sep">|</span>
+      <button type="button" class="lang-btn" data-lang="it" onclick="applyLang('it')"><span class="lang-flag">🇮🇹</span><span class="lang-label">IT</span></button>
+      <span class="lang-sep">|</span>
+      <button type="button" class="lang-btn" data-lang="de" onclick="applyLang('de')"><span class="lang-flag">🇩🇪</span><span class="lang-label">DE</span></button>
+    </div>
+  </div>
 </header>
 
 <div class="flow-progress" id="flow-progress">
   <div class="flow-steps">
-    <div class="flow-step active" id="flow-step-1">Location</div>
-    <div class="flow-step" id="flow-step-2">Assessment</div>
-    <div class="flow-step" id="flow-step-3">Result</div>
+    <div class="flow-step active" id="flow-step-1" data-i18n="flow.location">Location</div>
+    <div class="flow-step" id="flow-step-2" data-i18n="flow.assessment">Assessment</div>
+    <div class="flow-step" id="flow-step-3" data-i18n="flow.result">Result</div>
   </div>
   <div class="flow-bar"><div class="flow-bar-fill" id="flow-bar-fill"></div></div>
 </div>
 </div>
 
 <div class="hero">
-  <h1>Is your property<br class="hero-br"><span>ready for Chinese guests?</span></h1>
-  <p>Start with your location and see how much Chinese-traveller demand your city has, then how ready your operation is to capture it.</p>
+  <h1><span data-i18n="hero.titleLine1">Is your property</span><br class="hero-br"><span class="hero-highlight" data-i18n="hero.titleLine2">ready for Chinese guests?</span></h1>
+  <p data-i18n="hero.desc">Start with your location and see how much Chinese-traveller demand your city has, then how ready your operation is to capture it.</p>
 </div>
 
 <div class="container">
 
-  <p class="landing-payoff">It takes two minutes. You get a demand read for your city and a readiness score, with the specific gaps to close.</p>
+  <p class="landing-payoff" data-i18n="landing.payoff">It takes two minutes. You get a demand read for your city and a readiness score, with the specific gaps to close.</p>
 
   <div class="example-card" aria-label="Example result">
-    <div class="example-label">Example result</div>
+    <div class="example-label" data-i18n="example.label">Example result</div>
     <div class="example-line">
       <span class="example-city">Milan</span>
-      <span class="example-tag demand">High inbound demand</span>
-      <span class="example-tag readiness">Readiness 46 / 100</span>
-      <span class="example-tag gaps">4 gaps to close</span>
+      <span class="example-tag demand" data-i18n="example.demand">High inbound demand</span>
+      <span class="example-tag readiness" data-i18n="example.readiness">Readiness 46 / 100</span>
+      <span class="example-tag gaps" data-i18n="example.gaps">4 gaps to close</span>
     </div>
   </div>
 
-  <p class="landing-trust">Built by Roger Bisschoff, commercial and distribution leader in European hospitality.</p>
+  <p class="landing-trust" data-i18n="landing.trust">Built by Roger Bisschoff, commercial and distribution leader in European hospitality.</p>
 
   <div class="step-label" style="margin-top:0">
     <div class="step-num">1</div>
     <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 10-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-    <div class="step-text">Your location</div>
+    <div class="step-text" data-i18n="step.location">Your location</div>
   </div>
 
   <div class="ios-group">
     <div class="ios-row">
-      <div class="ios-row-label">Country</div>
+      <div class="ios-row-label" data-i18n="ios.country">Country</div>
       <select id="sel-country" onchange="onCountryChange()">
-        <option value="">Select...</option>
-        <option value="italy">Italy</option>
-        <option value="france">France</option>
-        <option value="germany">Germany</option>
-        <option value="spain">Spain</option>
-        <option value="netherlands">Netherlands</option>
-        <option value="switzerland">Switzerland</option>
-        <option value="austria">Austria</option>
-        <option value="uk">United Kingdom</option>
-        <option value="portugal">Portugal</option>
+        <option value="" data-i18n="select.default">Select...</option>
+        <option value="italy" data-i18n="countries.italy">Italy</option>
+        <option value="france" data-i18n="countries.france">France</option>
+        <option value="germany" data-i18n="countries.germany">Germany</option>
+        <option value="spain" data-i18n="countries.spain">Spain</option>
+        <option value="netherlands" data-i18n="countries.netherlands">Netherlands</option>
+        <option value="switzerland" data-i18n="countries.switzerland">Switzerland</option>
+        <option value="austria" data-i18n="countries.austria">Austria</option>
+        <option value="uk" data-i18n="countries.uk">United Kingdom</option>
+        <option value="portugal" data-i18n="countries.portugal">Portugal</option>
       </select>
     </div>
     <div class="ios-row">
-      <div class="ios-row-label">City</div>
+      <div class="ios-row-label" data-i18n="ios.city">City</div>
       <select id="sel-city" onchange="onCityChange()" disabled>
-        <option value="">Select country first...</option>
+        <option value="" data-i18n="select.countryFirst">Select country first...</option>
       </select>
     </div>
   </div>
@@ -699,7 +745,7 @@
     </div>
     <div class="demand-bar-wrap">
       <div class="demand-bar-label">
-        <span>Chinese traveller demand index</span>
+        <span data-i18n="demand.index">Chinese traveller demand index</span>
         <span id="dc-score-label"></span>
       </div>
       <div class="demand-bar-track">
@@ -714,28 +760,28 @@
     <div class="step-label">
       <div class="step-num">2</div>
       <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 18V8M9 18V5M14 18v-7M19 18V11"/></svg>
-      <div class="step-text">Your property</div>
+      <div class="step-text" data-i18n="step.property">Your property</div>
     </div>
 
     <div class="ios-group">
       <div class="ios-row">
-        <div class="ios-row-label">Type</div>
+        <div class="ios-row-label" data-i18n="ios.type">Type</div>
         <select id="prop-type">
-          <option value="">Select...</option>
-          <option value="vacation">Vacation rental / STR</option>
-          <option value="villa">Villa</option>
-          <option value="serviced">Serviced apartments</option>
-          <option value="apart-hotel">Apart-hotel</option>
-          <option value="boutique">Boutique hotel</option>
-          <option value="resort">Resort</option>
+          <option value="" data-i18n="select.default">Select...</option>
+          <option value="vacation" data-i18n="propType.vacation">Vacation rental / STR</option>
+          <option value="villa" data-i18n="propType.villa">Villa</option>
+          <option value="serviced" data-i18n="propType.serviced">Serviced apartments</option>
+          <option value="apart-hotel" data-i18n="propType.apartHotel">Apart-hotel</option>
+          <option value="boutique" data-i18n="propType.boutique">Boutique hotel</option>
+          <option value="resort" data-i18n="propType.resort">Resort</option>
         </select>
       </div>
       <div class="ios-row">
-        <div class="ios-row-label">Units / rooms</div>
+        <div class="ios-row-label" data-i18n="ios.units">Units / rooms</div>
         <input type="number" id="prop-units" placeholder="e.g. 8" min="1" max="2000">
       </div>
       <div class="ios-row">
-        <div class="ios-row-label">Avg. nightly rate</div>
+        <div class="ios-row-label" data-i18n="ios.rate">Avg. nightly rate</div>
         <div style="display:flex;align-items:center;gap:2px;flex:1;justify-content:flex-end;">
           <span class="ios-row-prefix">€</span>
           <input type="number" id="prop-rate" placeholder="150" min="1" max="10000" style="max-width:90px;text-align:right;">
@@ -746,15 +792,15 @@
     <div class="step-label">
       <div class="step-num">3</div>
       <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M6 4v16M18 4v16M6 12h12"/><path d="M10 8l4 4-4 4"/></svg>
-      <div class="step-text">Your tech stack</div>
+      <div class="step-text" data-i18n="step.tech">Your tech stack</div>
     </div>
 
     <div class="ios-group">
       <div class="ios-row">
-        <div class="ios-row-label">Channel manager</div>
+        <div class="ios-row-label" data-i18n="ios.cm">Channel manager</div>
         <select id="prop-cm" onchange="onCmChange()">
-          <option value="">Select...</option>
-          <optgroup label="Vacation rental">
+          <option value="" data-i18n="select.default">Select...</option>
+          <optgroup label="Vacation rental" data-i18n-label="optgroup.vacationRental">
             <option value="rentalsunited">Rentals United</option>
             <option value="avantio">Avantio</option>
             <option value="hostaway">Hostaway</option>
@@ -762,24 +808,24 @@
             <option value="bookingsync">BookingSync</option>
             <option value="smoobu">Smoobu</option>
           </optgroup>
-          <optgroup label="Hotel / Apart-hotel">
+          <optgroup label="Hotel / Apart-hotel" data-i18n-label="optgroup.hotel">
             <option value="siteminder">SiteMinder</option>
             <option value="dedge">D-EDGE</option>
             <option value="cloudbeds">Cloudbeds</option>
             <option value="rms">RMS Cloud</option>
             <option value="littlehotelier">Little Hotelier</option>
           </optgroup>
-          <option value="other">Other / not sure</option>
-          <option value="none">No channel manager</option>
+          <option value="other" data-i18n="cm.other">Other / not sure</option>
+          <option value="none" data-i18n="cm.none">No channel manager</option>
         </select>
       </div>
       <div class="ios-row">
-        <div class="ios-row-label">Website access</div>
+        <div class="ios-row-label" data-i18n="ios.website">Website access</div>
         <select id="prop-website" onchange="onWebsiteChange()">
-          <option value="">Select...</option>
-          <option value="self">Self-managed (control hosting/DNS)</option>
-          <option value="agency">Managed by agency or PMS</option>
-          <option value="no">No direct website</option>
+          <option value="" data-i18n="select.default">Select...</option>
+          <option value="self" data-i18n="website.self">Self-managed (control hosting/DNS)</option>
+          <option value="agency" data-i18n="website.agency">Managed by agency or PMS</option>
+          <option value="no" data-i18n="website.no">No direct website</option>
         </select>
       </div>
     </div>
@@ -795,79 +841,79 @@
     <div class="step-label">
       <div class="step-num">4</div>
       <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="6"/><path d="M12 8v4l2.5 1.5"/></svg>
-      <div class="step-text">Rate your readiness</div>
+      <div class="step-text" data-i18n="step.readiness">Rate your readiness</div>
     </div>
 
     <div class="dimension-card">
       <div class="dim-header">
         <div class="dim-title-wrap">
-          <div class="dim-title">OTA Visibility</div>
-          <div class="dim-desc">Listed and active on Ctrip/Trip.com — the primary platform Chinese travellers use to book internationally. Fliggy and Meituan have no channel manager integration; those require a separate manual listing.</div>
+          <div class="dim-title" data-i18n="dim.ota.title">OTA Visibility</div>
+          <div class="dim-desc" data-i18n="dim.ota.desc">Listed and active on Ctrip/Trip.com — the primary platform Chinese travellers use to book internationally. Fliggy and Meituan have no channel manager integration; those require a separate manual listing.</div>
         </div>
-        <div class="dim-weight">Weight: high</div>
+        <div class="dim-weight" data-i18n="weight.high">Weight: high</div>
       </div>
       <div class="radio-group">
-        <div class="radio-option"><input type="radio" name="ota" id="ota-r" value="red"><label for="ota-r" class="red">Not listed</label></div>
-        <div class="radio-option"><input type="radio" name="ota" id="ota-g" value="green"><label for="ota-g" class="green">Active</label></div>
-      </div>
-    </div>
-
-    <div class="dimension-card">
-      <div class="dim-header">
-        <div class="dim-title-wrap">
-          <div class="dim-title">Payment Acceptance</div>
-          <div class="dim-desc">WeChat Pay and/or Alipay accepted — at property or through your booking system.</div>
-        </div>
-        <div class="dim-weight">Weight: high</div>
-      </div>
-      <div class="radio-group">
-        <div class="radio-option"><input type="radio" name="payment" id="pay-r" value="red"><label for="pay-r" class="red">No</label></div>
-        <div class="radio-option"><input type="radio" name="payment" id="pay-g" value="green"><label for="pay-g" class="green">Yes</label></div>
+        <div class="radio-option"><input type="radio" name="ota" id="ota-r" value="red"><label for="ota-r" class="red" data-i18n="dim.ota.optRed">Not listed</label></div>
+        <div class="radio-option"><input type="radio" name="ota" id="ota-g" value="green"><label for="ota-g" class="green" data-i18n="dim.ota.optGreen">Active</label></div>
       </div>
     </div>
 
     <div class="dimension-card">
       <div class="dim-header">
         <div class="dim-title-wrap">
-          <div class="dim-title">Chinese OTA Reviews</div>
-          <div class="dim-desc">Reviews from Chinese guests on Ctrip, Fliggy, or Meituan. Zero reviews is a conversion killer regardless of listing quality.</div>
+          <div class="dim-title" data-i18n="dim.payment.title">Payment Acceptance</div>
+          <div class="dim-desc" data-i18n="dim.payment.desc">WeChat Pay and/or Alipay accepted — at property or through your booking system.</div>
         </div>
-        <div class="dim-weight">Weight: medium</div>
+        <div class="dim-weight" data-i18n="weight.high">Weight: high</div>
       </div>
       <div class="radio-group">
-        <div class="radio-option"><input type="radio" name="reviews" id="rev-r" value="red"><label for="rev-r" class="red">No reviews</label></div>
-        <div class="radio-option"><input type="radio" name="reviews" id="rev-a" value="amber"><label for="rev-a" class="amber">Some, unmanaged</label></div>
-        <div class="radio-option"><input type="radio" name="reviews" id="rev-g" value="green"><label for="rev-g" class="green">Actively managed</label></div>
+        <div class="radio-option"><input type="radio" name="payment" id="pay-r" value="red"><label for="pay-r" class="red" data-i18n="common.no">No</label></div>
+        <div class="radio-option"><input type="radio" name="payment" id="pay-g" value="green"><label for="pay-g" class="green" data-i18n="common.yes">Yes</label></div>
       </div>
     </div>
 
     <div class="dimension-card">
       <div class="dim-header">
         <div class="dim-title-wrap">
-          <div class="dim-title">Language &amp; Communication</div>
-          <div class="dim-desc">Mandarin content in listings, welcome materials, or staff communication capability.</div>
+          <div class="dim-title" data-i18n="dim.reviews.title">Chinese OTA Reviews</div>
+          <div class="dim-desc" data-i18n="dim.reviews.desc">Reviews from Chinese guests on Ctrip, Fliggy, or Meituan. Zero reviews is a conversion killer regardless of listing quality.</div>
         </div>
-        <div class="dim-weight">Weight: medium</div>
+        <div class="dim-weight" data-i18n="weight.medium">Weight: medium</div>
       </div>
       <div class="radio-group">
-        <div class="radio-option"><input type="radio" name="language" id="lang-r" value="red"><label for="lang-r" class="red">English only</label></div>
-        <div class="radio-option"><input type="radio" name="language" id="lang-a" value="amber"><label for="lang-a" class="amber">Basic Mandarin</label></div>
-        <div class="radio-option"><input type="radio" name="language" id="lang-g" value="green"><label for="lang-g" class="green">Full Mandarin</label></div>
+        <div class="radio-option"><input type="radio" name="reviews" id="rev-r" value="red"><label for="rev-r" class="red" data-i18n="dim.reviews.optRed">No reviews</label></div>
+        <div class="radio-option"><input type="radio" name="reviews" id="rev-a" value="amber"><label for="rev-a" class="amber" data-i18n="dim.reviews.optAmber">Some, unmanaged</label></div>
+        <div class="radio-option"><input type="radio" name="reviews" id="rev-g" value="green"><label for="rev-g" class="green" data-i18n="dim.reviews.optGreen">Actively managed</label></div>
       </div>
     </div>
 
     <div class="dimension-card">
       <div class="dim-header">
         <div class="dim-title-wrap">
-          <div class="dim-title">On-property Experience</div>
-          <div class="dim-desc">Practical touches that matter: kettle, instant noodles, slippers, electricity converter, Mandarin check-in instructions.</div>
+          <div class="dim-title" data-i18n="dim.language.title">Language &amp; Communication</div>
+          <div class="dim-desc" data-i18n="dim.language.desc">Mandarin content in listings, welcome materials, or staff communication capability.</div>
         </div>
-        <div class="dim-weight">Weight: low</div>
+        <div class="dim-weight" data-i18n="weight.medium">Weight: medium</div>
       </div>
       <div class="radio-group">
-        <div class="radio-option"><input type="radio" name="onprop" id="op-r" value="red"><label for="op-r" class="red">Western only</label></div>
-        <div class="radio-option"><input type="radio" name="onprop" id="op-a" value="amber"><label for="op-a" class="amber">Some basics</label></div>
-        <div class="radio-option"><input type="radio" name="onprop" id="op-g" value="green"><label for="op-g" class="green">China-adapted</label></div>
+        <div class="radio-option"><input type="radio" name="language" id="lang-r" value="red"><label for="lang-r" class="red" data-i18n="dim.language.optRed">English only</label></div>
+        <div class="radio-option"><input type="radio" name="language" id="lang-a" value="amber"><label for="lang-a" class="amber" data-i18n="dim.language.optAmber">Basic Mandarin</label></div>
+        <div class="radio-option"><input type="radio" name="language" id="lang-g" value="green"><label for="lang-g" class="green" data-i18n="dim.language.optGreen">Full Mandarin</label></div>
+      </div>
+    </div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
+          <div class="dim-title" data-i18n="dim.onprop.title">On-property Experience</div>
+          <div class="dim-desc" data-i18n="dim.onprop.desc">Practical touches that matter: kettle, instant noodles, slippers, electricity converter, Mandarin check-in instructions.</div>
+        </div>
+        <div class="dim-weight" data-i18n="weight.low">Weight: low</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="onprop" id="op-r" value="red"><label for="op-r" class="red" data-i18n="dim.onprop.optRed">Western only</label></div>
+        <div class="radio-option"><input type="radio" name="onprop" id="op-a" value="amber"><label for="op-a" class="amber" data-i18n="dim.onprop.optAmber">Some basics</label></div>
+        <div class="radio-option"><input type="radio" name="onprop" id="op-g" value="green"><label for="op-g" class="green" data-i18n="dim.onprop.optGreen">China-adapted</label></div>
       </div>
     </div>
 
@@ -875,43 +921,43 @@
       <div class="dimension-card">
         <div class="dim-header">
           <div class="dim-title-wrap">
-            <div class="dim-title">Firewall &amp; Digital Accessibility</div>
-            <div class="dim-desc">Can Chinese travellers reach your website and booking engine? Most European sites fail behind the Great Firewall — blocked scripts, slow load, broken checkout. Operators rarely know.</div>
+            <div class="dim-title" data-i18n="dim.firewall.title">Firewall &amp; Digital Accessibility</div>
+            <div class="dim-desc" data-i18n="dim.firewall.desc">Can Chinese travellers reach your website and booking engine? Most European sites fail behind the Great Firewall — blocked scripts, slow load, broken checkout. Operators rarely know.</div>
           </div>
-          <div class="dim-weight">Weight: high</div>
+          <div class="dim-weight" data-i18n="weight.high">Weight: high</div>
         </div>
         <div class="firewall-test-row">
           <input type="text" class="firewall-url-input" id="firewall-url" placeholder="yourdomain.com" oninput="onFirewallUrlInput()">
-          <button class="firewall-test-btn" id="firewall-test-btn" onclick="testFirewall()" disabled>Test now →</button>
+          <button class="firewall-test-btn" id="firewall-test-btn" onclick="testFirewall()" disabled data-i18n="firewall.testBtn">Test now →</button>
         </div>
         <div class="firewall-result" id="firewall-result" style="display:none">
           <div class="firewall-result-header" id="firewall-result-header"></div>
           <div class="firewall-result-note" id="firewall-result-note"></div>
         </div>
         <div class="radio-group" id="firewall-radio-group" style="display:none">
-          <div class="radio-option"><input type="radio" name="firewall" id="fw-g" value="green"><label for="fw-g" class="green">Fully accessible</label></div>
-          <div class="radio-option"><input type="radio" name="firewall" id="fw-r" value="red"><label for="fw-r" class="red">Issues found</label></div>
+          <div class="radio-option"><input type="radio" name="firewall" id="fw-g" value="green"><label for="fw-g" class="green" data-i18n="dim.firewall.optGreen">Fully accessible</label></div>
+          <div class="radio-option"><input type="radio" name="firewall" id="fw-r" value="red"><label for="fw-r" class="red" data-i18n="dim.firewall.optRed">Issues found</label></div>
         </div>
       </div>
     </div>
 
-    <button class="run-btn" onclick="runCheck()">Run ChinaCheck &rarr;</button>
+    <button class="run-btn" onclick="runCheck()" data-i18n="cta.run">Run ChinaCheck &rarr;</button>
 
     <div class="result-panel" id="result-panel">
       <div class="result-header" id="result-header">
-        <div class="result-eyebrow">ChinaCheck Result</div>
+        <div class="result-eyebrow" data-i18n="result.eyebrow">ChinaCheck Result</div>
         <div class="result-property-name-row" id="result-property-name"></div>
         <div class="result-anchors">
           <div class="vs-card vs-card-potential">
-            <div class="vs-card-label">Market potential</div>
+            <div class="vs-card-label" data-i18n="result.marketPotential">Market potential</div>
             <div class="vs-card-city" id="rp-city"></div>
             <div class="vs-score" id="rp-potential-score"></div><span class="vs-score-unit">/ 100</span>
-            <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">out of 100</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:4px;" data-i18n="result.outOf100">out of 100</div>
             <div class="demand-result-tag" id="rp-demand-tag" style="display:none"></div>
           </div>
           <div class="vs-card vs-card-preparation">
-            <div class="vs-card-label">Your preparation</div>
-            <div class="vs-card-city">Based on your answers</div>
+            <div class="vs-card-label" data-i18n="result.yourPreparation">Your preparation</div>
+            <div class="vs-card-city" data-i18n="result.basedOnAnswers">Based on your answers</div>
             <div class="prep-gauge-wrap">
               <svg class="prep-gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
                 <circle class="prep-gauge-track" cx="60" cy="60" r="50"></circle>
@@ -920,7 +966,7 @@
               </svg>
               <div class="prep-gauge-center">
                 <div class="prep-gauge-score" id="rp-prep-score"></div>
-                <div class="prep-gauge-unit">readiness</div>
+                <div class="prep-gauge-unit" data-i18n="result.readiness">readiness</div>
               </div>
             </div>
             <div class="vs-verdict" id="rp-verdict"></div>
@@ -929,7 +975,7 @@
       </div>
       <div class="gap-bar-wrap">
         <div class="gap-bar-label">
-          <span>Potential captured</span>
+          <span data-i18n="result.potentialCaptured">Potential captured</span>
           <span id="gap-label-right"></span>
         </div>
         <div class="gap-bar-track">
@@ -939,26 +985,26 @@
       </div>
       <div class="gap-summary" id="gap-summary"></div>
       <div class="biz-section" id="biz-section" style="display:none">
-        <div class="biz-header">What this means for your business</div>
+        <div class="biz-header" data-i18n="biz.header">What this means for your business</div>
         <div class="biz-potential-card">
-          <div class="biz-card-label">Revenue potential from Chinese guests / year<br><span style="font-size:10px;opacity:0.7">(same property, fully China-ready)</span></div>
+          <div class="biz-card-label" data-i18n-html="biz.cardLabel">Revenue potential from Chinese guests / year<br><span style="font-size:10px;opacity:0.7">(same property, fully China-ready)</span></div>
           <div class="biz-card-value" id="biz-potential"></div>
         </div>
         <div class="biz-gap-line" style="display:none" id="biz-gap-line"></div>
         <div class="biz-note" id="biz-note"></div>
       </div>
-      <div class="dim-results"><div class="dim-results-label">Dimension breakdown</div><div id="dim-results-list"></div></div>
+      <div class="dim-results"><div class="dim-results-label" data-i18n="result.dimBreakdown">Dimension breakdown</div><div id="dim-results-list"></div></div>
       <div class="result-note" id="result-note"></div>
 
       <div class="benchmark-section" id="benchmark-section" style="display:none">
-        <div class="benchmark-label">How you compare</div>
+        <div class="benchmark-label" data-i18n="benchmark.label">How you compare</div>
         <div class="benchmark-bar-row">
-          <div class="benchmark-bar-name">Your score</div>
+          <div class="benchmark-bar-name" data-i18n="benchmark.yourScore">Your score</div>
           <div class="benchmark-bar-track"><div class="benchmark-bar-fill" style="background:var(--china-red);width:0%" id="bm-your-fill"></div></div>
           <div class="benchmark-bar-val" id="bm-your-val">—</div>
         </div>
         <div class="benchmark-bar-row">
-          <div class="benchmark-bar-name">Avg. operator</div>
+          <div class="benchmark-bar-name" data-i18n="benchmark.avgOperator">Avg. operator</div>
           <div class="benchmark-bar-track"><div class="benchmark-bar-fill" style="background:var(--muted2);width:0%;transition:width 0.9s cubic-bezier(0.4,0,0.2,1) 0.3s" id="bm-median-fill"></div></div>
           <div class="benchmark-bar-val" id="bm-median-val">—</div>
         </div>
@@ -966,25 +1012,25 @@
       </div>
 
       <div class="priority-section" id="priority-section" style="display:none">
-        <div class="priority-label">Your top priorities</div>
+        <div class="priority-label" data-i18n="priority.label">Your top priorities</div>
         <div id="priority-list"></div>
       </div>
 
       <div class="rev-dim-section" id="rev-dim-section" style="display:none">
-        <div class="rev-dim-label">What fixing each gap adds — per property / year</div>
+        <div class="rev-dim-label" data-i18n="revDim.label">What fixing each gap adds — per property / year</div>
         <div class="rev-dim-context" id="rev-dim-context"></div>
         <div id="rev-dim-list"></div>
       </div>
 
       <div class="share-section" id="share-section" style="display:none">
-        <div class="share-label">Share your result</div>
+        <div class="share-label" data-i18n="share.label">Share your result</div>
         <div class="share-percentile-card" id="share-percentile-card"></div>
         <canvas id="share-canvas" style="display:none"></canvas>
         <div class="share-image-wrap" id="share-image-wrap" style="display:none">
           <img id="share-image" style="width:100%;border-radius:12px;display:block;margin-bottom:10px;" alt="ChinaCheck result card">
         </div>
-        <button class="share-btn share-btn-dl" id="share-dl-btn" onclick="downloadCard()" style="display:none;margin-bottom:8px;">⬇ Download image for LinkedIn</button>
-        <button class="share-btn share-btn-copy" id="share-copy-btn" onclick="copyShare()">Copy LinkedIn post</button>
+        <button class="share-btn share-btn-dl" id="share-dl-btn" onclick="downloadCard()" style="display:none;margin-bottom:8px;" data-i18n="share.download">⬇ Download image for LinkedIn</button>
+        <button class="share-btn share-btn-copy" id="share-copy-btn" onclick="copyShare()" data-i18n="share.copy">Copy LinkedIn post</button>
         <div class="share-snippet" id="share-snippet"></div>
       </div>
     </div>
@@ -995,14 +1041,330 @@
 <div class="authority-band">
   <div class="ab-inner">
     <div class="ab-logo">中</div>
-    <div class="ab-text">
+    <div class="ab-text" data-i18n-html="authority.text">
       Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span> — free tools for senior property operators.
     </div>
   </div>
 </div>
-<footer>ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a></footer>
+<footer data-i18n-html="footer.text">ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a></footer>
 
 <script>
+const I18N = {
+  en: {
+    header:{ sub:'China Readiness Tool', stage:'Stage 2' },
+    flow:{ location:'Location', assessment:'Assessment', result:'Result' },
+    hero:{ titleLine1:'Is your property', titleLine2:'ready for Chinese guests?',
+      desc:'Start with your location and see how much Chinese-traveller demand your city has, then how ready your operation is to capture it.' },
+    landing:{ payoff:'It takes two minutes. You get a demand read for your city and a readiness score, with the specific gaps to close.',
+      trust:'Built by Roger Bisschoff, commercial and distribution leader in European hospitality.' },
+    example:{ label:'Example result', demand:'High inbound demand', readiness:'Readiness 46 / 100', gaps:'4 gaps to close' },
+    step:{ location:'Your location', property:'Your property', tech:'Your tech stack', readiness:'Rate your readiness' },
+    ios:{ country:'Country', city:'City', type:'Type', units:'Units / rooms', rate:'Avg. nightly rate', cm:'Channel manager', website:'Website access' },
+    select:{ default:'Select...', countryFirst:'Select country first...', chooseCity:'Select city...' },
+    countries:{ italy:'Italy', france:'France', germany:'Germany', spain:'Spain', netherlands:'Netherlands', switzerland:'Switzerland', austria:'Austria', uk:'United Kingdom', portugal:'Portugal' },
+    benchmarkLabel:{ italy:'Italian operators', france:'French operators', germany:'German operators', spain:'Spanish operators', netherlands:'Dutch operators', switzerland:'Swiss operators', austria:'Austrian operators', uk:'UK operators', portugal:'Portuguese operators', generic:'operators in this market' },
+    propType:{ vacation:'Vacation rental / STR', villa:'Villa', serviced:'Serviced apartments', apartHotel:'Apart-hotel', boutique:'Boutique hotel', resort:'Resort' },
+    optgroup:{ vacationRental:'Vacation rental', hotel:'Hotel / Apart-hotel' },
+    cm:{ other:'Other / not sure', none:'No channel manager' },
+    website:{ self:'Self-managed (control hosting/DNS)', agency:'Managed by agency or PMS', no:'No direct website' },
+    demand:{ index:'Chinese traveller demand index' },
+    weight:{ high:'Weight: high', medium:'Weight: medium', low:'Weight: low' },
+    common:{ no:'No', yes:'Yes' },
+    dim:{
+      ota:{ title:'OTA Visibility', desc:'Listed and active on Ctrip/Trip.com — the primary platform Chinese travellers use to book internationally. Fliggy and Meituan have no channel manager integration; those require a separate manual listing.', optRed:'Not listed', optGreen:'Active' },
+      payment:{ title:'Payment Acceptance', desc:'WeChat Pay and/or Alipay accepted — at property or through your booking system.' },
+      reviews:{ title:'Chinese OTA Reviews', desc:'Reviews from Chinese guests on Ctrip, Fliggy, or Meituan. Zero reviews is a conversion killer regardless of listing quality.', optRed:'No reviews', optAmber:'Some, unmanaged', optGreen:'Actively managed' },
+      language:{ title:'Language & Communication', desc:'Mandarin content in listings, welcome materials, or staff communication capability.', optRed:'English only', optAmber:'Basic Mandarin', optGreen:'Full Mandarin' },
+      onprop:{ title:'On-property Experience', desc:'Practical touches that matter: kettle, instant noodles, slippers, electricity converter, Mandarin check-in instructions.', optRed:'Western only', optAmber:'Some basics', optGreen:'China-adapted' },
+      firewall:{ title:'Firewall & Digital Accessibility', desc:'Can Chinese travellers reach your website and booking engine? Most European sites fail behind the Great Firewall — blocked scripts, slow load, broken checkout. Operators rarely know.', optGreen:'Fully accessible', optRed:'Issues found' },
+    },
+    firewall:{ testBtn:'Test now →', openedNote:'🔍 Results for {domain} are opening in a new tab',
+      instructions:'ViewDNS will show a map with markers. <strong style="color:#1A7A3C">Green ✓ markers</strong> = select Fully accessible. <strong style="color:#C0392B">Red ✗ markers</strong> = select Issues found.' },
+    cmHint:{ yes:'{name} — Ctrip connection available', no:'{name} — No native Chinese OTA connection', unknown:'{name} — Check your channel list' },
+    cta:{ run:'Run ChinaCheck →' },
+    alerts:{ incomplete:'Please answer all dimensions before running ChinaCheck.' },
+    result:{ eyebrow:'ChinaCheck Result', marketPotential:'Market potential', outOf100:'out of 100', yourPreparation:'Your preparation',
+      basedOnAnswers:'Based on your answers', readiness:'readiness', potentialCaptured:'Potential captured', dimBreakdown:'Dimension breakdown',
+      gapLabelRight:'{prepPct}% of {potentialScore} point opportunity' },
+    tier:{ top:{label:'Top destination'}, strong:{label:'Strong market'}, emerging:{label:'Emerging market'}, low:{label:'Low demand'} },
+    demandTag:{ top:'High inbound demand', strong:'Strong inbound demand', emerging:'Emerging inbound demand', low:'Low inbound demand', generic:'Inbound demand' },
+    verdict:{ green:{text:'Well prepared'}, amber:{text:'Needs work'}, red:{text:'Not ready'} },
+    pill:{ red:'Not ready', amber:'In progress', green:'Good' },
+    gapSummary:{
+      match:'Your preparation matches or exceeds what this market demands. You are well-positioned to capture Chinese traveller demand here.',
+      close:'You are close to capturing the full potential of this market. A few targeted improvements will close the gap.',
+      significant:'There is a significant gap between what this market offers and your current preparation. The opportunity is real, but you are not yet set up to capture it.',
+      high:'This market has very high Chinese traveller demand, but your operation is currently leaving most of it on the table. The upside of getting ready here is substantial.',
+    },
+    resultNote:{
+      green:'Your operation covers the core requirements for Chinese travellers. Focus next on content quality on Chinese OTAs and actively building reviews.',
+      amber:'You have a foundation but gaps that will cost you bookings. Prioritise OTA listing and payment first, those two moves drive the most impact.',
+      red:'You are effectively invisible to Chinese travellers right now. Start with a Ctrip listing and WeChat Pay, those two steps alone change the picture significantly.',
+    },
+    biz:{ header:'What this means for your business',
+      cardLabel:'Revenue potential from Chinese guests / year<br><span style="font-size:10px;opacity:0.7">(same property, fully China-ready)</span>',
+      noteTemplate:'How this is calculated: {units} units × 365 nights × 68% occupancy = {occupied} occupied nights/year. At {sharePct}% Chinese guest share for this market = {chineseNights} Chinese guest nights at full readiness × {rate}/night = {revPotential} annual potential. Your preparation score ({prepPct}%) implies {revGap} of that is currently uncaptured. Figures are indicative.' },
+    revDim:{ label:'What fixing each gap adds — per property / year',
+      contextTemplate:'Estimated annual gain per property if each gap is fully closed, based on {units} units at {rate}/night in this market.',
+      captured:'Captured' },
+    benchmark:{ label:'How you compare', yourScore:'Your score', avgOperator:'Avg. operator',
+      above:'You score {diff} points above the typical {bmLabel}. Most operators here are well behind on China readiness.',
+      atMedian:'You are at the median for {bmLabel}. There is room to pull ahead.',
+      below:'You are {diff} points below the median for {bmLabel}. The priorities below will close that gap quickly.' },
+    priority:{
+      label:'Your top priorities',
+      ota:{ red:{title:'List on Ctrip immediately',desc:'This is the single highest-impact step. A Ctrip listing gives direct access to the largest Chinese OTA audience in Europe. Setup takes 2 to 3 weeks, via your channel manager if it connects, or via the Ctrip extranet directly.'}, amber:{title:'Fully activate your Ctrip listing',desc:'A partial listing loses bookings to optimised competitors. Complete your content, add photos, and set rate parity with your direct channel.'} },
+      payment:{ red:{title:'Add WeChat Pay or Alipay',desc:'Chinese guests expect to pay with their preferred wallet. Most European PMS providers now support both via a simple integration. This removes a hard booking barrier.'}, amber:{title:'Expand payment coverage',desc:'If WeChat Pay is live but Alipay is not (or vice versa), you are missing half the audience. Both take roughly the same effort to add.'} },
+      firewall:{ red:{title:'Fix your website for China access',desc:'Use 17ce.com to check which pages fail. Most European sites break due to blocked third-party scripts, Google Fonts, Maps, Analytics. Replace or lazy-load these to fix load time behind the firewall.'} },
+      reviews:{ red:{title:'Build your first Ctrip reviews',desc:'Zero reviews kills conversion regardless of listing quality. Contact recent guests and ask them to review on Ctrip. Ten reviews change the picture significantly.'}, amber:{title:'Actively manage Chinese OTA reviews',desc:'Respond to every review within 48 hours, in Mandarin if possible. This signals clearly that you take Chinese guests seriously.'} },
+      language:{ red:{title:'Add Mandarin to your key materials',desc:'Mandarin check-in instructions, a one-page property guide, and a translated Ctrip listing description are the minimum. A bilingual welcome card costs almost nothing.'}, amber:{title:'Upgrade to full Mandarin communication',desc:'Full listing translation and a Mandarin-capable reply channel (WeChat or email template) closes the gap significantly.'} },
+      onprop:{ red:{title:'Add basic Chinese guest touches',desc:'A kettle, instant noodles, slippers, EU-to-CN power adaptors, and a Mandarin check-in card. Under €20 per unit and they appear in positive Chinese reviews consistently.'}, amber:{title:'Systematise the on-property experience',desc:'Create a standard China welcome kit and add it to your housekeeping checklist so every arrival gets it.'} },
+    },
+    share:{ label:'Share your result', download:'⬇ Download image for LinkedIn', copy:'Copy LinkedIn post', copied:'Copied ✓',
+      percentileAbove:'<div class="spc-num">Top {topPct}%</div><div class="spc-text"><strong>You score {diff} points above the average {bmLabel}.</strong> Most haven\'t checked at all, you already know more than they do.</div>',
+      percentileBelow:'<div class="spc-num">{prepPct}%</div><div class="spc-text"><strong>You now know your China readiness score.</strong> Most {bmLabel} have never checked. Knowing the gap is the first step to closing it.</div>',
+      vWord:{ green:'well prepared', amber:'partially ready', red:'not yet ready' },
+      cmYes:' Channel manager: {name}, Ctrip connection available.',
+      cmNo:' Channel manager: {name}, no native Ctrip connection.',
+      demandLine:'China demand index for {city}: {score}/100.',
+      benchAbove:'That puts me {diff} points above the average {bmLabel}.',
+      benchBelow:'The average {bmLabel} sits at {median}%. Room to improve.',
+      intro:'I just ran a China readiness check on my operation',
+      introEyeOpening:' The results were eye-opening.\n\n',
+      question:'What is your China readiness score?\n',
+      checkYours:'Check yours in 2 minutes, link in the first comment.\n\n',
+      builtBy:'→ Tool built by Roger Bisschoff | linkedin.com/in/rogerbisschoff/' },
+    canvas:{ toolLabel:'CHINA READINESS TOOL', readinessScore:'READINESS SCORE', headlinePrefix:'China readiness',
+      headlineGeneric:'China readiness check', marketDemand:'Market demand index: {score}/100', footer:'Built by Roger Bisschoff · linkedin.com/in/rogerbisschoff/',
+      bmAbove:'{prepPct}% vs {median}% avg, {diff} pts above {bmLabel}', bmBelow:'{prepPct}% vs {median}% avg for {bmLabel}' },
+    authority:{ text:'Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, free tools for senior property operators.' },
+    footer:{ text:'ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a>' },
+  },
+  it: {
+    header:{ sub:'Strumento di Idoneità Cina', stage:'Fase 2' },
+    flow:{ location:'Posizione', assessment:'Valutazione', result:'Risultato' },
+    hero:{ titleLine1:'La tua struttura è', titleLine2:'pronta per gli ospiti cinesi?',
+      desc:'Parti dalla tua posizione per scoprire quanta domanda di viaggiatori cinesi ha la tua città, poi verifica quanto è pronta la tua struttura per intercettarla.' },
+    landing:{ payoff:'Bastano due minuti. Ottieni una lettura della domanda per la tua città e un punteggio di idoneità, con le lacune specifiche da colmare.',
+      trust:'Creato da Roger Bisschoff, responsabile commerciale e distribuzione nell\'ospitalità europea.' },
+    example:{ label:'Risultato di esempio', demand:'Domanda in entrata alta', readiness:'Idoneità 46 / 100', gaps:'4 lacune da colmare' },
+    step:{ location:'La tua posizione', property:'La tua struttura', tech:'La tua tecnologia', readiness:'Valuta la tua idoneità' },
+    ios:{ country:'Paese', city:'Città', type:'Tipo', units:'Unità / camere', rate:'Tariffa media a notte', cm:'Channel manager', website:'Accesso al sito web' },
+    select:{ default:'Seleziona...', countryFirst:'Seleziona prima il paese...', chooseCity:'Seleziona città...' },
+    countries:{ italy:'Italia', france:'Francia', germany:'Germania', spain:'Spagna', netherlands:'Paesi Bassi', switzerland:'Svizzera', austria:'Austria', uk:'Regno Unito', portugal:'Portogallo' },
+    benchmarkLabel:{ italy:'operatori italiani', france:'operatori francesi', germany:'operatori tedeschi', spain:'operatori spagnoli', netherlands:'operatori olandesi', switzerland:'operatori svizzeri', austria:'operatori austriaci', uk:'operatori del Regno Unito', portugal:'operatori portoghesi', generic:'operatori di questo mercato' },
+    propType:{ vacation:'Affitto vacanze / STR', villa:'Villa', serviced:'Appartamenti con servizi', apartHotel:'Apart-hotel', boutique:'Hotel boutique', resort:'Resort' },
+    optgroup:{ vacationRental:'Affitti vacanza', hotel:'Hotel / Apart-hotel' },
+    cm:{ other:'Altro / non sicuro', none:'Nessun channel manager' },
+    website:{ self:'Autogestito (controllo hosting/DNS)', agency:'Gestito da agenzia o PMS', no:'Nessun sito web diretto' },
+    demand:{ index:'Indice di domanda dei viaggiatori cinesi' },
+    weight:{ high:'Peso: alto', medium:'Peso: medio', low:'Peso: basso' },
+    common:{ no:'No', yes:'Sì' },
+    dim:{
+      ota:{ title:'Visibilità OTA', desc:'Presente e attivo su Ctrip/Trip.com, la piattaforma principale usata dai viaggiatori cinesi per prenotare a livello internazionale. Fliggy e Meituan non hanno integrazione con i channel manager; richiedono un inserimento manuale separato.', optRed:'Non presente', optGreen:'Attivo' },
+      payment:{ title:'Accettazione pagamenti', desc:'WeChat Pay e/o Alipay accettati, in struttura o tramite il sistema di prenotazione.' },
+      reviews:{ title:'Recensioni OTA cinesi', desc:'Recensioni di ospiti cinesi su Ctrip, Fliggy o Meituan. Zero recensioni compromette le conversioni a prescindere dalla qualità dell\'annuncio.', optRed:'Nessuna recensione', optAmber:'Alcune, non gestite', optGreen:'Gestite attivamente' },
+      language:{ title:'Lingua e comunicazione', desc:'Contenuti in mandarino negli annunci, nei materiali di benvenuto o nella capacità di comunicazione del personale.', optRed:'Solo inglese', optAmber:'Mandarino di base', optGreen:'Mandarino completo' },
+      onprop:{ title:'Esperienza in struttura', desc:'Accorgimenti pratici che contano: bollitore, noodles istantanei, ciabattine, adattatore elettrico, istruzioni di check-in in mandarino.', optRed:'Solo occidentale', optAmber:'Alcune basi', optGreen:'Adattato alla Cina' },
+      firewall:{ title:'Firewall e accessibilità digitale', desc:'I viaggiatori cinesi possono raggiungere il tuo sito e il motore di prenotazione? La maggior parte dei siti europei fallisce dietro il Great Firewall: script bloccati, caricamento lento, checkout non funzionante. Gli operatori spesso non lo sanno.', optGreen:'Completamente accessibile', optRed:'Problemi rilevati' },
+    },
+    firewall:{ testBtn:'Testa ora →', openedNote:'🔍 I risultati per {domain} si stanno aprendo in una nuova scheda',
+      instructions:'ViewDNS mostrerà una mappa con indicatori. <strong style="color:#1A7A3C">Indicatori verdi ✓</strong> = seleziona Completamente accessibile. <strong style="color:#C0392B">Indicatori rossi ✗</strong> = seleziona Problemi rilevati.' },
+    cmHint:{ yes:'{name}: connessione Ctrip disponibile', no:'{name}: nessuna connessione OTA cinese nativa', unknown:'{name}: controlla il tuo elenco canali' },
+    cta:{ run:'Avvia ChinaCheck →' },
+    alerts:{ incomplete:'Rispondi a tutte le dimensioni prima di avviare ChinaCheck.' },
+    result:{ eyebrow:'Risultato ChinaCheck', marketPotential:'Potenziale di mercato', outOf100:'su 100', yourPreparation:'La tua preparazione',
+      basedOnAnswers:'Basato sulle tue risposte', readiness:'idoneità', potentialCaptured:'Potenziale catturato', dimBreakdown:'Dettaglio per dimensione',
+      gapLabelRight:'{prepPct}% di {potentialScore} punti di opportunità' },
+    tier:{ top:{label:'Destinazione top'}, strong:{label:'Mercato forte'}, emerging:{label:'Mercato emergente'}, low:{label:'Domanda bassa'} },
+    demandTag:{ top:'Domanda in entrata alta', strong:'Domanda in entrata forte', emerging:'Domanda in entrata emergente', low:'Domanda in entrata bassa', generic:'Domanda in entrata' },
+    verdict:{ green:{text:'Ben preparato'}, amber:{text:'Serve lavoro'}, red:{text:'Non pronto'} },
+    pill:{ red:'Non pronto', amber:'In corso', green:'Buono' },
+    gapSummary:{
+      match:'La tua preparazione soddisfa o supera quanto richiesto da questo mercato. Sei ben posizionato per catturare la domanda dei viaggiatori cinesi qui.',
+      close:'Sei vicino a catturare il pieno potenziale di questo mercato. Alcuni miglioramenti mirati colmeranno il divario.',
+      significant:'Esiste un divario significativo tra quanto offre questo mercato e la tua preparazione attuale. L\'opportunità è reale, ma non sei ancora pronto a catturarla.',
+      high:'Questo mercato ha una domanda di viaggiatori cinesi molto alta, ma la tua struttura ne sta lasciando la maggior parte sul tavolo. Il vantaggio di prepararsi qui è notevole.',
+    },
+    resultNote:{
+      green:'La tua struttura copre i requisiti principali per i viaggiatori cinesi. Concentrati ora sulla qualità dei contenuti sulle OTA cinesi e sulla raccolta attiva di recensioni.',
+      amber:'Hai una base ma delle lacune che ti costeranno prenotazioni. Da prioritizzare prima l\'annuncio OTA e i pagamenti: queste due azioni hanno il maggiore impatto.',
+      red:'Al momento sei praticamente invisibile ai viaggiatori cinesi. Inizia con un annuncio su Ctrip e WeChat Pay: questi due passi da soli cambiano notevolmente la situazione.',
+    },
+    biz:{ header:'Cosa significa questo per il tuo business',
+      cardLabel:'Potenziale di ricavo dagli ospiti cinesi / anno<br><span style="font-size:10px;opacity:0.7">(stessa struttura, completamente pronta per la Cina)</span>',
+      noteTemplate:'Come viene calcolato: {units} unità × 365 notti × 68% occupazione = {occupied} notti occupate/anno. Con una quota ospiti cinesi del {sharePct}% per questo mercato = {chineseNights} notti di ospiti cinesi a piena idoneità × {rate}/notte = {revPotential} potenziale annuo. Il tuo punteggio di preparazione ({prepPct}%) implica che {revGap} di questo importo non è attualmente catturato. Le cifre sono indicative.' },
+    revDim:{ label:'Cosa aggiunge la chiusura di ogni lacuna, per struttura / anno',
+      contextTemplate:'Guadagno annuo stimato per struttura se ogni lacuna viene completamente colmata, basato su {units} unità a {rate}/notte in questo mercato.',
+      captured:'Catturato' },
+    benchmark:{ label:'Come ti confronti', yourScore:'Il tuo punteggio', avgOperator:'Operatore medio',
+      above:'Ottieni {diff} punti sopra il tipico {bmLabel}. La maggior parte degli operatori qui è molto indietro sulla idoneità per la Cina.',
+      atMedian:'Sei alla mediana per {bmLabel}. C\'è margine per distinguerti.',
+      below:'Sei {diff} punti sotto la mediana per {bmLabel}. Le priorità seguenti colmeranno rapidamente quel divario.' },
+    priority:{
+      label:'Le tue priorità principali',
+      ota:{ red:{title:'Iscriviti subito su Ctrip',desc:'Questo è il passo con il maggiore impatto in assoluto. Un annuncio su Ctrip dà accesso diretto al pubblico OTA cinese più grande in Europa. La configurazione richiede 2-3 settimane, tramite il tuo channel manager se collegato, oppure direttamente tramite l\'extranet di Ctrip.'}, amber:{title:'Attiva completamente il tuo annuncio Ctrip',desc:'Un annuncio parziale perde prenotazioni a favore di concorrenti ottimizzati. Completa i contenuti, aggiungi foto e imposta la parità tariffaria con il tuo canale diretto.'} },
+      payment:{ red:{title:'Aggiungi WeChat Pay o Alipay',desc:'Gli ospiti cinesi si aspettano di pagare con il proprio wallet preferito. La maggior parte dei fornitori PMS europei ora supporta entrambi con una semplice integrazione. Questo rimuove una barriera di prenotazione importante.'}, amber:{title:'Amplia la copertura dei pagamenti',desc:'Se WeChat Pay è attivo ma Alipay non lo è (o viceversa), stai perdendo metà del pubblico. Entrambi richiedono uno sforzo di attivazione simile.'} },
+      firewall:{ red:{title:'Correggi il tuo sito per l\'accesso dalla Cina',desc:'Usa 17ce.com per verificare quali pagine falliscono. La maggior parte dei siti europei si rompe per script di terze parti bloccati: Google Fonts, Maps, Analytics. Sostituiscili o caricali in lazy-load per migliorare i tempi dietro il firewall.'} },
+      reviews:{ red:{title:'Costruisci le tue prime recensioni su Ctrip',desc:'Zero recensioni uccide le conversioni a prescindere dalla qualità dell\'annuncio. Contatta gli ospiti recenti e chiedi loro di recensire su Ctrip. Dieci recensioni cambiano notevolmente la situazione.'}, amber:{title:'Gestisci attivamente le recensioni OTA cinesi',desc:'Rispondi a ogni recensione entro 48 ore, in mandarino se possibile. Questo segnala chiaramente che prendi sul serio gli ospiti cinesi.'} },
+      language:{ red:{title:'Aggiungi il mandarino ai materiali principali',desc:'Istruzioni di check-in in mandarino, una guida della struttura di una pagina e una descrizione dell\'annuncio Ctrip tradotta sono il minimo. Una cartolina di benvenuto bilingue costa quasi nulla.'}, amber:{title:'Passa a una comunicazione completamente in mandarino',desc:'La traduzione completa dell\'annuncio e un canale di risposta capace di mandarino (WeChat o modello email) colmano il divario in modo significativo.'} },
+      onprop:{ red:{title:'Aggiungi accorgimenti di base per gli ospiti cinesi',desc:'Un bollitore, noodles istantanei, ciabattine, adattatori di corrente EU-CN e una cartolina di check-in in mandarino. Meno di 20€ per unità e compaiono costantemente nelle recensioni positive cinesi.'}, amber:{title:'Sistematizza l\'esperienza in struttura',desc:'Crea un kit di benvenuto Cina standard e aggiungilo alla checklist delle pulizie così ogni arrivo lo riceve.'} },
+    },
+    share:{ label:'Condividi il tuo risultato', download:'⬇ Scarica immagine per LinkedIn', copy:'Copia post per LinkedIn', copied:'Copiato ✓',
+      percentileAbove:'<div class="spc-num">Top {topPct}%</div><div class="spc-text"><strong>Ottieni {diff} punti sopra la media {bmLabel}.</strong> La maggior parte non ha nemmeno controllato, tu ne sai già più di loro.</div>',
+      percentileBelow:'<div class="spc-num">{prepPct}%</div><div class="spc-text"><strong>Ora conosci il tuo punteggio di idoneità per la Cina.</strong> La maggior parte dei {bmLabel} non ha mai controllato. Conoscere il divario è il primo passo per colmarlo.</div>',
+      vWord:{ green:'ben preparato', amber:'parzialmente pronto', red:'non ancora pronto' },
+      cmYes:' Channel manager: {name}, connessione Ctrip disponibile.',
+      cmNo:' Channel manager: {name}, nessuna connessione Ctrip nativa.',
+      demandLine:'Indice di domanda Cina per {city}: {score}/100.',
+      benchAbove:'Questo mi posiziona {diff} punti sopra la media {bmLabel}.',
+      benchBelow:'La media dei {bmLabel} è al {median}%. C\'è margine di miglioramento.',
+      intro:'Ho appena eseguito un controllo di idoneità per la Cina sulla mia struttura',
+      introEyeOpening:'. I risultati sono stati sorprendenti.\n\n',
+      question:'Qual è il tuo punteggio di idoneità per la Cina?\n',
+      checkYours:'Scopri il tuo punteggio in 2 minuti, link nel primo commento.\n\n',
+      builtBy:'→ Strumento creato da Roger Bisschoff | linkedin.com/in/rogerbisschoff/' },
+    canvas:{ toolLabel:'STRUMENTO IDONEITÀ CINA', readinessScore:'PUNTEGGIO IDONEITÀ', headlinePrefix:'Idoneità Cina',
+      headlineGeneric:'Controllo idoneità Cina', marketDemand:'Indice domanda mercato: {score}/100', footer:'Creato da Roger Bisschoff · linkedin.com/in/rogerbisschoff/',
+      bmAbove:'{prepPct}% vs {median}% media, {diff} punti sopra {bmLabel}', bmBelow:'{prepPct}% vs {median}% media per {bmLabel}' },
+    authority:{ text:'Creato da <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, strumenti gratuiti per operatori senior del settore.' },
+    footer:{ text:'ChinaCheck · Analizzatore del mercato inbound cinese · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a>' },
+  },
+  de: {
+    header:{ sub:'China Readiness Tool', stage:'Stufe 2' },
+    flow:{ location:'Standort', assessment:'Bewertung', result:'Ergebnis' },
+    hero:{ titleLine1:'Ist Ihre Unterkunft', titleLine2:'bereit für chinesische Gäste?',
+      desc:'Beginnen Sie mit Ihrem Standort und sehen Sie, wie viel Nachfrage chinesischer Reisender Ihre Stadt hat, und wie bereit Ihr Betrieb ist, sie zu nutzen.' },
+    landing:{ payoff:'Es dauert zwei Minuten. Sie erhalten eine Nachfrageeinschätzung für Ihre Stadt und einen Readiness-Score mit den konkreten Lücken, die zu schließen sind.',
+      trust:'Erstellt von Roger Bisschoff, Leiter Vertrieb und Distribution in der europäischen Hotellerie.' },
+    example:{ label:'Beispielergebnis', demand:'Hohe Nachfrage', readiness:'Readiness 46 / 100', gaps:'4 Lücken zu schließen' },
+    step:{ location:'Ihr Standort', property:'Ihre Unterkunft', tech:'Ihr Tech-Stack', readiness:'Bewerten Sie Ihre Readiness' },
+    ios:{ country:'Land', city:'Stadt', type:'Typ', units:'Einheiten / Zimmer', rate:'Durchschn. Nachtpreis', cm:'Channel Manager', website:'Website-Zugang' },
+    select:{ default:'Auswählen...', countryFirst:'Zuerst Land auswählen...', chooseCity:'Stadt auswählen...' },
+    countries:{ italy:'Italien', france:'Frankreich', germany:'Deutschland', spain:'Spanien', netherlands:'Niederlande', switzerland:'Schweiz', austria:'Österreich', uk:'Vereinigtes Königreich', portugal:'Portugal' },
+    benchmarkLabel:{ italy:'italienische Betreiber', france:'französische Betreiber', germany:'deutsche Betreiber', spain:'spanische Betreiber', netherlands:'niederländische Betreiber', switzerland:'schweizer Betreiber', austria:'österreichische Betreiber', uk:'britische Betreiber', portugal:'portugiesische Betreiber', generic:'Betreiber in diesem Markt' },
+    propType:{ vacation:'Ferienwohnung / STR', villa:'Villa', serviced:'Serviced Apartments', apartHotel:'Apart-Hotel', boutique:'Boutique-Hotel', resort:'Resort' },
+    optgroup:{ vacationRental:'Ferienvermietung', hotel:'Hotel / Apart-Hotel' },
+    cm:{ other:'Andere / nicht sicher', none:'Kein Channel Manager' },
+    website:{ self:'Selbst verwaltet (Kontrolle über Hosting/DNS)', agency:'Verwaltet durch Agentur oder PMS', no:'Keine eigene Website' },
+    demand:{ index:'Nachfrageindex chinesischer Reisender' },
+    weight:{ high:'Gewichtung: hoch', medium:'Gewichtung: mittel', low:'Gewichtung: niedrig' },
+    common:{ no:'Nein', yes:'Ja' },
+    dim:{
+      ota:{ title:'OTA-Sichtbarkeit', desc:'Gelistet und aktiv auf Ctrip/Trip.com, der wichtigsten Plattform, die chinesische Reisende für internationale Buchungen nutzen. Fliggy und Meituan haben keine Channel-Manager-Integration; diese erfordern ein separates manuelles Listing.', optRed:'Nicht gelistet', optGreen:'Aktiv' },
+      payment:{ title:'Zahlungsakzeptanz', desc:'WeChat Pay und/oder Alipay akzeptiert, vor Ort oder über Ihr Buchungssystem.' },
+      reviews:{ title:'Chinesische OTA-Bewertungen', desc:'Bewertungen chinesischer Gäste auf Ctrip, Fliggy oder Meituan. Null Bewertungen sind ein Conversion-Killer, unabhängig von der Qualität des Listings.', optRed:'Keine Bewertungen', optAmber:'Einige, unverwaltet', optGreen:'Aktiv verwaltet' },
+      language:{ title:'Sprache und Kommunikation', desc:'Mandarin-Inhalte in Listings, Willkommensmaterial oder Kommunikationsfähigkeit des Personals.', optRed:'Nur Englisch', optAmber:'Grundlegendes Mandarin', optGreen:'Vollständiges Mandarin' },
+      onprop:{ title:'Erlebnis vor Ort', desc:'Praktische Details, die zählen: Wasserkocher, Instantnudeln, Hausschuhe, Steckdosenadapter, Check-in-Anweisungen auf Mandarin.', optRed:'Nur westlich', optAmber:'Einige Grundlagen', optGreen:'An China angepasst' },
+      firewall:{ title:'Firewall und digitale Erreichbarkeit', desc:'Können chinesische Reisende Ihre Website und Buchungsmaschine erreichen? Die meisten europäischen Websites scheitern an der Great Firewall, blockierte Skripte, langsames Laden, defekter Checkout. Betreiber wissen das selten.', optGreen:'Vollständig erreichbar', optRed:'Probleme festgestellt' },
+    },
+    firewall:{ testBtn:'Jetzt testen →', openedNote:'🔍 Ergebnisse für {domain} werden in einem neuen Tab geöffnet',
+      instructions:'ViewDNS zeigt eine Karte mit Markierungen. <strong style="color:#1A7A3C">Grüne ✓ Markierungen</strong> = Vollständig erreichbar auswählen. <strong style="color:#C0392B">Rote ✗ Markierungen</strong> = Probleme festgestellt auswählen.' },
+    cmHint:{ yes:'{name}: Ctrip-Verbindung verfügbar', no:'{name}: keine native chinesische OTA-Verbindung', unknown:'{name}: Kanalliste prüfen' },
+    cta:{ run:'ChinaCheck starten →' },
+    alerts:{ incomplete:'Bitte beantworten Sie alle Dimensionen, bevor Sie ChinaCheck starten.' },
+    result:{ eyebrow:'ChinaCheck Ergebnis', marketPotential:'Marktpotenzial', outOf100:'von 100', yourPreparation:'Ihre Vorbereitung',
+      basedOnAnswers:'Basierend auf Ihren Antworten', readiness:'Readiness', potentialCaptured:'Erschlossenes Potenzial', dimBreakdown:'Aufschlüsselung nach Dimension',
+      gapLabelRight:'{prepPct}% von {potentialScore} Punkten Chance' },
+    tier:{ top:{label:'Top-Destination'}, strong:{label:'Starker Markt'}, emerging:{label:'Aufstrebender Markt'}, low:{label:'Geringe Nachfrage'} },
+    demandTag:{ top:'Hohe Nachfrage', strong:'Starke Nachfrage', emerging:'Aufstrebende Nachfrage', low:'Geringe Nachfrage', generic:'Nachfrage' },
+    verdict:{ green:{text:'Gut vorbereitet'}, amber:{text:'Handlungsbedarf'}, red:{text:'Nicht bereit'} },
+    pill:{ red:'Nicht bereit', amber:'In Bearbeitung', green:'Gut' },
+    gapSummary:{
+      match:'Ihre Vorbereitung entspricht oder übertrifft das, was dieser Markt verlangt. Sie sind gut positioniert, um die Nachfrage chinesischer Reisender hier zu nutzen.',
+      close:'Sie sind nah daran, das volle Potenzial dieses Marktes zu erschließen. Ein paar gezielte Verbesserungen schließen die Lücke.',
+      significant:'Es besteht eine erhebliche Lücke zwischen dem, was dieser Markt bietet, und Ihrer aktuellen Vorbereitung. Die Chance ist real, aber Sie sind noch nicht darauf eingestellt, sie zu nutzen.',
+      high:'Dieser Markt hat eine sehr hohe Nachfrage chinesischer Reisender, aber Ihr Betrieb lässt derzeit das meiste davon ungenutzt. Der Vorteil einer Vorbereitung hier ist erheblich.',
+    },
+    resultNote:{
+      green:'Ihr Betrieb erfüllt die Kernanforderungen für chinesische Reisende. Konzentrieren Sie sich als Nächstes auf die Inhaltsqualität auf chinesischen OTAs und den aktiven Aufbau von Bewertungen.',
+      amber:'Sie haben eine Grundlage, aber Lücken, die Sie Buchungen kosten werden. Priorisieren Sie zuerst OTA-Listing und Zahlung, diese zwei Schritte haben die größte Wirkung.',
+      red:'Sie sind derzeit für chinesische Reisende praktisch unsichtbar. Beginnen Sie mit einem Ctrip-Listing und WeChat Pay, allein diese zwei Schritte verändern das Bild erheblich.',
+    },
+    biz:{ header:'Was das für Ihr Geschäft bedeutet',
+      cardLabel:'Umsatzpotenzial durch chinesische Gäste / Jahr<br><span style="font-size:10px;opacity:0.7">(gleiche Unterkunft, vollständig China-bereit)</span>',
+      noteTemplate:'So wird berechnet: {units} Einheiten × 365 Nächte × 68% Auslastung = {occupied} belegte Nächte/Jahr. Bei einem chinesischen Gästeanteil von {sharePct}% für diesen Markt = {chineseNights} chinesische Gästenächte bei voller Readiness × {rate}/Nacht = {revPotential} jährliches Potenzial. Ihr Vorbereitungsscore ({prepPct}%) bedeutet, dass {revGap} davon derzeit nicht erschlossen sind. Zahlen sind indikativ.' },
+    revDim:{ label:'Was das Schließen jeder Lücke bringt, pro Unterkunft / Jahr',
+      contextTemplate:'Geschätzter jährlicher Gewinn pro Unterkunft, wenn jede Lücke vollständig geschlossen wird, basierend auf {units} Einheiten zu {rate}/Nacht in diesem Markt.',
+      captured:'Erschlossen' },
+    benchmark:{ label:'Wie Sie abschneiden', yourScore:'Ihr Score', avgOperator:'Durchschnittlicher Betreiber',
+      above:'Sie liegen {diff} Punkte über dem typischen {bmLabel}. Die meisten Betreiber hier sind bei der China-Readiness weit zurück.',
+      atMedian:'Sie liegen beim Median für {bmLabel}. Es gibt Raum, sich abzusetzen.',
+      below:'Sie liegen {diff} Punkte unter dem Median für {bmLabel}. Die folgenden Prioritäten schließen diese Lücke schnell.' },
+    priority:{
+      label:'Ihre wichtigsten Prioritäten',
+      ota:{ red:{title:'Sofort auf Ctrip listen',desc:'Dies ist der einzelne wirkungsvollste Schritt. Ein Ctrip-Listing bietet direkten Zugang zum größten chinesischen OTA-Publikum in Europa. Die Einrichtung dauert 2 bis 3 Wochen, über Ihren Channel Manager, falls verbunden, oder direkt über das Ctrip-Extranet.'}, amber:{title:'Ihr Ctrip-Listing vollständig aktivieren',desc:'Ein unvollständiges Listing verliert Buchungen an optimierte Wettbewerber. Vervollständigen Sie Inhalte, fügen Sie Fotos hinzu und stellen Sie Preisparität mit Ihrem Direktkanal her.'} },
+      payment:{ red:{title:'WeChat Pay oder Alipay hinzufügen',desc:'Chinesische Gäste erwarten, mit ihrer bevorzugten Wallet zu zahlen. Die meisten europäischen PMS-Anbieter unterstützen inzwischen beides über eine einfache Integration. Dies entfernt eine harte Buchungsbarriere.'}, amber:{title:'Zahlungsabdeckung erweitern',desc:'Wenn WeChat Pay aktiv ist, Alipay aber nicht (oder umgekehrt), verpassen Sie die Hälfte des Publikums. Beide erfordern etwa den gleichen Aufwand zur Einrichtung.'} },
+      firewall:{ red:{title:'Ihre Website für China-Zugriff reparieren',desc:'Nutzen Sie 17ce.com, um zu prüfen, welche Seiten fehlschlagen. Die meisten europäischen Websites scheitern an blockierten Drittanbieter-Skripten, Google Fonts, Maps, Analytics. Ersetzen Sie diese oder laden Sie sie verzögert, um die Ladezeit hinter der Firewall zu verbessern.'} },
+      reviews:{ red:{title:'Erste Ctrip-Bewertungen aufbauen',desc:'Null Bewertungen töten die Conversion unabhängig von der Listing-Qualität. Kontaktieren Sie aktuelle Gäste und bitten Sie sie, auf Ctrip zu bewerten. Zehn Bewertungen verändern das Bild erheblich.'}, amber:{title:'Chinesische OTA-Bewertungen aktiv verwalten',desc:'Antworten Sie auf jede Bewertung innerhalb von 48 Stunden, wenn möglich auf Mandarin. Das signalisiert deutlich, dass Sie chinesische Gäste ernst nehmen.'} },
+      language:{ red:{title:'Mandarin zu Ihren wichtigsten Materialien hinzufügen',desc:'Check-in-Anweisungen auf Mandarin, ein einseitiger Unterkunftsguide und eine übersetzte Ctrip-Listing-Beschreibung sind das Minimum. Eine zweisprachige Willkommenskarte kostet fast nichts.'}, amber:{title:'Auf vollständige Mandarin-Kommunikation upgraden',desc:'Vollständige Übersetzung des Listings und ein Mandarin-fähiger Antwortkanal (WeChat oder E-Mail-Vorlage) schließen die Lücke erheblich.'} },
+      onprop:{ red:{title:'Grundlegende China-Details hinzufügen',desc:'Ein Wasserkocher, Instantnudeln, Hausschuhe, EU-CN-Stromadapter und eine Check-in-Karte auf Mandarin. Unter 20€ pro Einheit und sie erscheinen konsistent in positiven chinesischen Bewertungen.'}, amber:{title:'Das Erlebnis vor Ort systematisieren',desc:'Erstellen Sie ein Standard-China-Willkommenspaket und fügen Sie es Ihrer Housekeeping-Checkliste hinzu, damit jeder Ankommende es erhält.'} },
+    },
+    share:{ label:'Ihr Ergebnis teilen', download:'⬇ Bild für LinkedIn herunterladen', copy:'LinkedIn-Beitrag kopieren', copied:'Kopiert ✓',
+      percentileAbove:'<div class="spc-num">Top {topPct}%</div><div class="spc-text"><strong>Sie liegen {diff} Punkte über dem Durchschnitt der {bmLabel}.</strong> Die meisten haben noch nicht einmal geprüft, Sie wissen bereits mehr als sie.</div>',
+      percentileBelow:'<div class="spc-num">{prepPct}%</div><div class="spc-text"><strong>Jetzt kennen Sie Ihren China-Readiness-Score.</strong> Die meisten {bmLabel} haben nie geprüft. Die Lücke zu kennen ist der erste Schritt, sie zu schließen.</div>',
+      vWord:{ green:'gut vorbereitet', amber:'teilweise bereit', red:'noch nicht bereit' },
+      cmYes:' Channel Manager: {name}, Ctrip-Verbindung verfügbar.',
+      cmNo:' Channel Manager: {name}, keine native Ctrip-Verbindung.',
+      demandLine:'China-Nachfrageindex für {city}: {score}/100.',
+      benchAbove:'Das bringt mich {diff} Punkte über den Durchschnitt der {bmLabel}.',
+      benchBelow:'Der Durchschnitt der {bmLabel} liegt bei {median}%. Verbesserungspotenzial vorhanden.',
+      intro:'Ich habe gerade einen China-Readiness-Check für meinen Betrieb durchgeführt',
+      introEyeOpening:'. Die Ergebnisse waren aufschlussreich.\n\n',
+      question:'Wie hoch ist Ihr China-Readiness-Score?\n',
+      checkYours:'Prüfen Sie Ihren in 2 Minuten, Link im ersten Kommentar.\n\n',
+      builtBy:'→ Tool erstellt von Roger Bisschoff | linkedin.com/in/rogerbisschoff/' },
+    canvas:{ toolLabel:'CHINA READINESS TOOL', readinessScore:'READINESS SCORE', headlinePrefix:'China Readiness',
+      headlineGeneric:'China-Readiness-Check', marketDemand:'Marktnachfrageindex: {score}/100', footer:'Erstellt von Roger Bisschoff · linkedin.com/in/rogerbisschoff/',
+      bmAbove:'{prepPct}% vs {median}% Durchschnitt, {diff} Punkte über {bmLabel}', bmBelow:'{prepPct}% vs {median}% Durchschnitt für {bmLabel}' },
+    authority:{ text:'Erstellt von <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, kostenlose Tools für erfahrene Property-Betreiber.' },
+    footer:{ text:'ChinaCheck · China-Inbound-Marktanalyse · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a>' },
+  },
+};
+
+function getT(path) {
+  const lang = (window.currentLang || 'en');
+  const dict = I18N[lang] || I18N.en;
+  const dive = (obj) => path.split('.').reduce((o,k)=> (o && o[k]!==undefined) ? o[k] : undefined, obj);
+  const val = dive(dict);
+  if (val !== undefined) return val;
+  const fallback = dive(I18N.en);
+  return fallback !== undefined ? fallback : path;
+}
+
+function fillTemplate(str, params) {
+  return str.replace(/\{(\w+)\}/g, (m, key) => (params && params[key] !== undefined) ? params[key] : m);
+}
+
+function applyLang(lang) {
+  if (!I18N[lang]) lang = 'en';
+  window.currentLang = lang;
+  try { localStorage.setItem('ois-lang', lang); } catch(e) {}
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(function(btn){
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    const text = getT(key);
+    if (el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
+      el.setAttribute('placeholder', text);
+    } else {
+      el.textContent = text;
+    }
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+    el.innerHTML = getT(el.getAttribute('data-i18n-html'));
+  });
+  document.querySelectorAll('[data-i18n-label]').forEach(function(el){
+    el.setAttribute('label', getT(el.getAttribute('data-i18n-label')));
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+    el.setAttribute('placeholder', getT(el.getAttribute('data-i18n-placeholder')));
+  });
+  if (typeof refreshDynamicLang === 'function') refreshDynamicLang();
+}
+
 const cmData = {
   rentalsunited: {name:'Rentals United', ctrip:true,  note:'<strong>Rentals United has a native two-way API with Trip.com/Ctrip</strong> — the only major VR channel manager with direct Chinese OTA connectivity. Add Trip.com under Services, sign a direct contract with Trip.com, then activate. Listings also appear on Skyscanner automatically.'},
   avantio:       {name:'Avantio',        ctrip:false, note:'Avantio has no native Ctrip or Trip.com connection. <strong>A direct manual listing on the Ctrip extranet is your only path.</strong> Rates and availability are managed separately — fully workable but not synced with Avantio.'},
@@ -1042,7 +1404,7 @@ function onCmChange() {
   if (!cm || !cmData[cm]) { card.style.display='none'; return; }
   const d = cmData[cm];
   document.getElementById('cm-hint-icon').textContent = d.ctrip===true ? '✅' : d.ctrip===false ? '⚠️' : 'ℹ️';
-  document.getElementById('cm-hint-title').textContent = d.ctrip===true ? d.name+' — Ctrip connection available' : d.ctrip===false ? d.name+' — No native Chinese OTA connection' : d.name+' — Check your channel list';
+  document.getElementById('cm-hint-title').textContent = fillTemplate(d.ctrip===true ? getT('cmHint.yes') : d.ctrip===false ? getT('cmHint.no') : getT('cmHint.unknown'), {name:d.name});
   document.getElementById('cm-hint-desc').innerHTML = d.note;
   card.style.display='flex';
 }
@@ -1078,10 +1440,8 @@ function testFirewall() {
 
   // Show inline prompt to record result
   header.className = 'firewall-result-header fw-header-loading';
-  header.innerHTML = '🔍 Results for <strong>' + raw + '</strong> are opening in a new tab';
-  note.innerHTML = 'ViewDNS will show a map with markers. '
-    + '<strong style="color:#1A7A3C">Green ✓ markers</strong> = select Fully accessible. '
-    + '<strong style="color:#C0392B">Red ✗ markers</strong> = select Issues found.';
+  header.innerHTML = fillTemplate(getT('firewall.openedNote'), {domain:'<strong>' + raw + '</strong>'});
+  note.innerHTML = getT('firewall.instructions');
   result.style.display = 'block';
   radioGroup.style.display = 'flex';
   document.querySelectorAll('input[name="firewall"]').forEach(r => r.checked = false);
@@ -1092,8 +1452,8 @@ function copyShare() {
   const text = document.getElementById('share-snippet').dataset.text;
   navigator.clipboard.writeText(text).then(()=>{
     const btn = document.getElementById('share-copy-btn');
-    btn.textContent='Copied ✓'; btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='Copy LinkedIn post';btn.classList.remove('copied');},2500);
+    btn.textContent=getT('share.copied'); btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=getT('share.copy');btn.classList.remove('copied');},2500);
   });
 }
 
@@ -1204,7 +1564,7 @@ function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel,
     ctx.fillText('ChinaCheck',128,74);
     ctx.fillStyle='rgba(255,255,255,0.55)';
     ctx.font='14px Arial, sans-serif';
-    ctx.fillText('CHINA READINESS TOOL',128,97);
+    ctx.fillText(getT('canvas.toolLabel'),128,97);
 
     // Score circle — smaller, top right
     const cx=1080, cy=290, r=100;
@@ -1218,10 +1578,10 @@ function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel,
     ctx.fillText(prepPct+'%',cx,cy+20);
     ctx.fillStyle='rgba(255,255,255,0.55)';
     ctx.font='13px Arial, sans-serif';
-    ctx.fillText('READINESS SCORE',cx,cy+48);
+    ctx.fillText(getT('canvas.readinessScore'),cx,cy+48);
 
     // City headline — dynamic font size for long names
-    const headline = cityLabel ? 'China readiness · '+cityLabel : 'China readiness check';
+    const headline = cityLabel ? getT('canvas.headlinePrefix')+' · '+cityLabel : getT('canvas.headlineGeneric');
     const hSize = headline.length > 30 ? 36 : headline.length > 22 ? 44 : 52;
     ctx.fillStyle='#ffffff';
     ctx.font='bold '+hSize+'px Arial, sans-serif';
@@ -1230,7 +1590,7 @@ function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel,
 
     // Verdict
     const vColor=verdictKey==='green'?'#A8FFB8':verdictKey==='amber'?'#FFE566':'#FFB3AE';
-    const vText=verdictKey==='green'?'Well prepared':verdictKey==='amber'?'Needs work':'Not ready';
+    const vText=getT('verdict.'+verdictKey+'.text');
     ctx.fillStyle=vColor;
     ctx.font='bold 30px Arial, sans-serif';
     ctx.fillText(vText,48,270);
@@ -1238,10 +1598,10 @@ function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel,
     // Stats
     ctx.fillStyle='rgba(255,255,255,0.75)';
     ctx.font='19px Arial, sans-serif';
-    if(potentialScore!==null) ctx.fillText('Market demand index: '+potentialScore+'/100',48,318);
+    if(potentialScore!==null) ctx.fillText(fillTemplate(getT('canvas.marketDemand'),{score:potentialScore}),48,318);
     const bmLine=aboveMedian
-      ? prepPct+'% vs '+median+'% avg — '+diff+' pts above '+bmLabel
-      : prepPct+'% vs '+median+'% avg for '+bmLabel;
+      ? fillTemplate(getT('canvas.bmAbove'),{prepPct:prepPct,median:median,diff:diff,bmLabel:bmLabel})
+      : fillTemplate(getT('canvas.bmBelow'),{prepPct:prepPct,median:median,bmLabel:bmLabel});
     ctx.fillText(bmLine,48,352);
 
     // Divider
@@ -1251,7 +1611,7 @@ function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel,
     // Footer
     ctx.fillStyle='rgba(255,255,255,0.50)';
     ctx.font='16px Arial, sans-serif';
-    ctx.fillText('Built by Roger Bisschoff · linkedin.com/in/rogerbisschoff/',48,420);
+    ctx.fillText(getT('canvas.footer'),48,420);
 
     // Output
     const img=document.getElementById('share-image');
@@ -1503,17 +1863,17 @@ const locationData = {
 
 
 const dimensions = [
-  {name:'OTA Visibility',            field:'ota',      weight:3, optional:false},
-  {name:'Payment Acceptance',        field:'payment',  weight:3, optional:false},
-  {name:'Firewall & Digital Access', field:'firewall', weight:3, optional:true},
-  {name:'Chinese OTA Reviews',       field:'reviews',  weight:2, optional:false},
-  {name:'Language & Communication',  field:'language', weight:2, optional:false},
-  {name:'On-property Experience',    field:'onprop',   weight:1, optional:false},
+  {name:'OTA Visibility',            field:'ota',      weight:3, optional:false, titleKey:'dim.ota.title'},
+  {name:'Payment Acceptance',        field:'payment',  weight:3, optional:false, titleKey:'dim.payment.title'},
+  {name:'Firewall & Digital Access', field:'firewall', weight:3, optional:true,  titleKey:'dim.firewall.title'},
+  {name:'Chinese OTA Reviews',       field:'reviews',  weight:2, optional:false, titleKey:'dim.reviews.title'},
+  {name:'Language & Communication',  field:'language', weight:2, optional:false, titleKey:'dim.language.title'},
+  {name:'On-property Experience',    field:'onprop',   weight:1, optional:false, titleKey:'dim.onprop.title'},
 ];
 const valueMap={red:0,amber:1,green:2};
-const labelMap={red:{text:'Not ready',cls:'pill-red'},amber:{text:'In progress',cls:'pill-amber'},green:{text:'Good',cls:'pill-green'}};
+const labelMap={red:{key:'pill.red',cls:'pill-red'},amber:{key:'pill.amber',cls:'pill-amber'},green:{key:'pill.green',cls:'pill-green'}};
 
-function runCheck() {
+function runCheck(skipScroll) {
   const website = document.getElementById('prop-website').value;
   const hasWebsite = website==='self'||website==='agency';
   const active = dimensions.filter(d=>!d.optional||hasWebsite);
@@ -1523,9 +1883,9 @@ function runCheck() {
     const sel=document.querySelector('input[name="'+d.field+'"]:checked');
     if(!sel) allAnswered=false; else values[d.field]=sel.value;
   });
-  if(!allAnswered){alert('Please answer all dimensions before running ChinaCheck.');return;}
+  if(!allAnswered){if(!skipScroll) alert(getT('alerts.incomplete'));return;}
 
-  if (typeof gtag === 'function') {
+  if (!skipScroll && typeof gtag === 'function') {
     gtag('event', 'chinacheck_completed', { event_category: 'chinacheck' });
   }
 
@@ -1535,7 +1895,7 @@ function runCheck() {
   const verdictKey=prepPct>80?'green':prepPct>=40?'amber':'red';
   const prepColor=prepPct>80?'var(--green)':prepPct>=40?'var(--amber)':'var(--red)';
   const gapColorCls=prepPct>80?'gap-color-green':prepPct>=40?'gap-color-amber':'gap-color-red';
-  const verdictLabels={green:{text:'Well prepared',cls:'verdict-green'},amber:{text:'Needs work',cls:'verdict-amber'},red:{text:'Not ready',cls:'verdict-red'}};
+  const verdictLabels={green:{cls:'verdict-green'},amber:{cls:'verdict-amber'},red:{cls:'verdict-red'}};
 
   const country=document.getElementById('sel-country').value;
   const city=document.getElementById('sel-city').value;
@@ -1544,12 +1904,12 @@ function runCheck() {
   const gap=potentialScore!==null?potentialScore-prepPct:null;
   let gapSummary='';
   if(gap!==null){
-    if(gap<=0) gapSummary='Your preparation matches or exceeds what this market demands. You are well-positioned to capture Chinese traveller demand here.';
-    else if(gap<=20) gapSummary='You are close to capturing the full potential of this market. A few targeted improvements will close the gap.';
-    else if(gap<=50) gapSummary='There is a significant gap between what this market offers and your current preparation. The opportunity is real — but you are not yet set up to capture it.';
-    else gapSummary='This market has very high Chinese traveller demand, but your operation is currently leaving most of it on the table. The upside of getting ready here is substantial.';
+    if(gap<=0) gapSummary=getT('gapSummary.match');
+    else if(gap<=20) gapSummary=getT('gapSummary.close');
+    else if(gap<=50) gapSummary=getT('gapSummary.significant');
+    else gapSummary=getT('gapSummary.high');
   }
-  const notes={green:'Your operation covers the core requirements for Chinese travellers. Focus next on content quality on Chinese OTAs and actively building reviews.',amber:'You have a foundation but gaps that will cost you bookings. Prioritise OTA listing and payment first — those two moves drive the most impact.',red:'You are effectively invisible to Chinese travellers right now. Start with a Ctrip listing and WeChat Pay — those two steps alone change the picture significantly.'};
+  const notes={green:getT('resultNote.green'),amber:getT('resultNote.amber'),red:getT('resultNote.red')};
 
   document.getElementById('result-property-name').textContent='';
   document.getElementById('rp-city').textContent=cityLabel;
@@ -1559,7 +1919,7 @@ function runCheck() {
 
   const gauge=document.getElementById('prep-gauge-fill');
   const circumference=2*Math.PI*50;
-  const gaugeColor=prepPct>80?'#1A7A3C':prepPct>=40?'#D4A24C':'#C0392B';
+  const gaugeColor=prepPct>80?'#34C759':prepPct>=40?'#D4A24C':'#C0392B';
   gauge.setAttribute('stroke',gaugeColor);
   gauge.setAttribute('stroke-dasharray',String(circumference));
   gauge.style.strokeDashoffset=String(circumference);
@@ -1570,9 +1930,8 @@ function runCheck() {
   const demandTag=document.getElementById('rp-demand-tag');
   if(country&&city&&locationData[country]&&locationData[country].cities[city]){
     const tier=locationData[country].cities[city].tier;
-    const tierLabels={top:'High inbound demand',strong:'Strong inbound demand',emerging:'Emerging inbound demand',low:'Low inbound demand'};
     const tierCls={top:'demand-tag-high',strong:'demand-tag-strong',emerging:'demand-tag-emerging',low:'demand-tag-low'};
-    demandTag.textContent=tierLabels[tier]||'Inbound demand';
+    demandTag.textContent=getT('demandTag.'+tier) || getT('demandTag.generic');
     demandTag.className='demand-result-tag '+(tierCls[tier]||'demand-tag-emerging');
     demandTag.style.display='inline-block';
   } else {
@@ -1580,14 +1939,14 @@ function runCheck() {
   }
 
   const verdictEl=document.getElementById('rp-verdict');
-  verdictEl.textContent=verdictLabels[verdictKey].text; verdictEl.className='vs-verdict '+verdictLabels[verdictKey].cls;
+  verdictEl.textContent=getT('verdict.'+verdictKey+'.text'); verdictEl.className='vs-verdict '+verdictLabels[verdictKey].cls;
   setFlowProgress(3);
 
   if(potentialScore!==null){
     document.getElementById('gap-bar-potential').style.width=potentialScore+'%';
     document.getElementById('gap-bar-preparation').style.width='0%';
     setTimeout(()=>{document.getElementById('gap-bar-preparation').style.width=prepPct+'%';document.getElementById('gap-bar-preparation').className='gap-bar-preparation '+gapColorCls;},80);
-    document.getElementById('gap-label-right').textContent=prepPct+'% of '+potentialScore+' point opportunity';
+    document.getElementById('gap-label-right').textContent=fillTemplate(getT('result.gapLabelRight'),{prepPct:prepPct,potentialScore:potentialScore});
   }
   document.getElementById('gap-summary').textContent=gapSummary;
 
@@ -1596,7 +1955,7 @@ function runCheck() {
   active.forEach(d=>{
     const v=values[d.field];
     const row=document.createElement('div'); row.className='dim-result-row';
-    row.innerHTML='<div class="dim-result-name">'+d.name+'</div><div class="dim-result-pill '+labelMap[v].cls+'">'+labelMap[v].text+'</div>';
+    row.innerHTML='<div class="dim-result-name">'+getT(d.titleKey)+'</div><div class="dim-result-pill '+labelMap[v].cls+'">'+getT(labelMap[v].key)+'</div>';
     listEl.appendChild(row);
   });
   document.getElementById('result-note').textContent=notes[verdictKey];
@@ -1615,7 +1974,7 @@ function runCheck() {
     const revGap=Math.round(revPotential*(1-prepPct/100));
     const fmt=n=>'€'+n.toLocaleString('de-DE');
     document.getElementById('biz-potential').textContent=fmt(revPotential);
-    document.getElementById('biz-note').textContent='How this is calculated: '+units+' units × 365 nights × 68% occupancy = '+Math.round(occupied)+' occupied nights/year. At '+Math.round(baseShare*100)+'% Chinese guest share for this market = '+chineseNights+' Chinese guest nights at full readiness × '+fmt(rate)+'/night = '+fmt(revPotential)+' annual potential. Your preparation score ('+prepPct+'%) implies '+fmt(revGap)+' of that is currently uncaptured. Figures are indicative.';
+    document.getElementById('biz-note').textContent=fillTemplate(getT('biz.noteTemplate'),{units:units,occupied:Math.round(occupied),sharePct:Math.round(baseShare*100),chineseNights:chineseNights,rate:fmt(rate),revPotential:fmt(revPotential),prepPct:prepPct,revGap:fmt(revGap)});
     bizSection.style.display='block';
 
     // Revenue by dimension
@@ -1623,7 +1982,7 @@ function runCheck() {
     const revDimList=document.getElementById('rev-dim-list');
     const revDimContext=document.getElementById('rev-dim-context');
     revDimList.innerHTML='';
-    revDimContext.textContent='Estimated annual gain per property if each gap is fully closed — based on '+units+' units at €'+rate+'/night in this market.';
+    revDimContext.textContent=fillTemplate(getT('revDim.contextTemplate'),{units:units,rate:'€'+rate});
     const wTotal=active.reduce((s,d)=>s+d.weight,0);
     const fmt2=n=>'€'+Math.round(n).toLocaleString('de-DE');
     active.forEach(d=>{
@@ -1633,8 +1992,8 @@ function runCheck() {
       const gap=v==='green'?0:v==='amber'?dimRev*0.5:dimRev;
       const row=document.createElement('div'); row.className='rev-dim-row';
       const cls=v==='green'?'ok':v==='amber'?'amber':'';
-      const txt=v==='green'?'Captured':'−'+fmt2(gap)+'/yr';
-      row.innerHTML='<div class="rev-dim-name">'+d.name+'</div><div class="rev-dim-impact '+cls+'">'+txt+'</div>';
+      const txt=v==='green'?getT('revDim.captured'):'−'+fmt2(gap)+'/yr';
+      row.innerHTML='<div class="rev-dim-name">'+getT(d.titleKey)+'</div><div class="rev-dim-impact '+cls+'">'+txt+'</div>';
       revDimList.appendChild(row);
     });
     revDimSection.style.display='block';
@@ -1652,7 +2011,8 @@ function runCheck() {
     document.getElementById('bm-your-val').textContent=prepPct+'%';
     document.getElementById('bm-median-val').textContent=bm.median+'%';
     const diff=prepPct-bm.median;
-    document.getElementById('bm-note').textContent=diff>0?'You score '+diff+' points above the typical '+bm.label+'. Most operators here are well behind on China readiness.':diff===0?'You are at the median for '+bm.label+'. There is room to pull ahead.':'You are '+Math.abs(diff)+' points below the median for '+bm.label+'. The priorities below will close that gap quickly.';
+    const bmNoteLabel=getT('benchmarkLabel.'+country);
+    document.getElementById('bm-note').textContent=diff>0?fillTemplate(getT('benchmark.above'),{diff:diff,bmLabel:bmNoteLabel}):diff===0?fillTemplate(getT('benchmark.atMedian'),{bmLabel:bmNoteLabel}):fillTemplate(getT('benchmark.below'),{diff:Math.abs(diff),bmLabel:bmNoteLabel});
     document.getElementById('benchmark-section').style.display='block';
   } else {
     document.getElementById('benchmark-section').style.display='none';
@@ -1662,8 +2022,8 @@ function runCheck() {
   const prios=[];
   active.forEach(d=>{
     const v=values[d.field];
-    if(v==='red'&&priorityActions[d.field]?.red) prios.push({urgency:0,action:priorityActions[d.field].red,weight:d.weight});
-    else if(v==='amber'&&priorityActions[d.field]?.amber) prios.push({urgency:1,action:priorityActions[d.field].amber,weight:d.weight});
+    if(v==='red'&&priorityActions[d.field]?.red) prios.push({urgency:0,field:d.field,state:'red',weight:d.weight});
+    else if(v==='amber'&&priorityActions[d.field]?.amber) prios.push({urgency:1,field:d.field,state:'amber',weight:d.weight});
   });
   prios.sort((a,b)=>a.urgency-b.urgency||b.weight-a.weight);
   const top3=prios.slice(0,3);
@@ -1672,7 +2032,9 @@ function runCheck() {
   ['p1','p2','p3'].forEach((cls,i)=>{
     if(!top3[i]) return;
     const item=document.createElement('div'); item.className='priority-item';
-    item.innerHTML='<div class="priority-num '+cls+'">'+(i+1)+'</div><div><div class="priority-item-title">'+top3[i].action.title+'</div><div class="priority-item-desc">'+top3[i].action.desc+'</div></div>';
+    const pTitle=getT('priority.'+top3[i].field+'.'+top3[i].state+'.title');
+    const pDesc=getT('priority.'+top3[i].field+'.'+top3[i].state+'.desc');
+    item.innerHTML='<div class="priority-num '+cls+'">'+(i+1)+'</div><div><div class="priority-item-title">'+pTitle+'</div><div class="priority-item-desc">'+pDesc+'</div></div>';
     prioList.appendChild(item);
   });
   document.getElementById('priority-section').style.display=top3.length?'block':'none';
@@ -1681,7 +2043,7 @@ function runCheck() {
   const cm=document.getElementById('prop-cm').value;
   const bm=country&&benchmarkData[country]?benchmarkData[country]:null;
   const median=bm?bm.median:30;
-  const bmLabel=bm?bm.label:'operators in this market';
+  const bmLabel=country&&benchmarkData[country]?getT('benchmarkLabel.'+country):getT('benchmarkLabel.generic');
   const percentileAbove=Math.min(99,Math.max(1,Math.round(100-(prepPct/100*100))));
   const aboveMedian=prepPct>median;
   const diff=Math.abs(prepPct-median);
@@ -1689,33 +2051,27 @@ function runCheck() {
   // Percentile card
   const spc=document.getElementById('share-percentile-card');
   if(aboveMedian){
-    spc.innerHTML='<div class="spc-num">Top '+Math.max(5,100-Math.round((prepPct/100)*85))+'%</div>'
-      +'<div class="spc-text"><strong>You score '+diff+' points above the average '+bmLabel+'.</strong> Most haven\'t checked at all — you already know more than they do.</div>';
+    spc.innerHTML=fillTemplate(getT('share.percentileAbove'),{topPct:Math.max(5,100-Math.round((prepPct/100)*85)),diff:diff,bmLabel:bmLabel});
   } else {
-    spc.innerHTML='<div class="spc-num">'+prepPct+'%</div>'
-      +'<div class="spc-text"><strong>You now know your China readiness score.</strong> Most '+bmLabel+' have never checked. Knowing the gap is the first step to closing it.</div>';
+    spc.innerHTML=fillTemplate(getT('share.percentileBelow'),{prepPct:prepPct,bmLabel:bmLabel});
   }
 
   // LinkedIn post with city intelligence
   const cityPost = (country && city && locationData[country] && locationData[country].cities[city])
     ? locationData[country].cities[city].post || '' : '';
-  const vWord=verdictKey==='green'?'well prepared':verdictKey==='amber'?'partially ready':'not yet ready';
-  const benchLine=aboveMedian
-    ?'My score ('+prepPct+'%) is '+diff+' points above the average for '+bmLabel+'.'
-    :'My score sits at the median for '+bmLabel+' ('+median+'%).';
-  const cmLine=cm&&cmData[cm]&&cmData[cm].ctrip===true?' Channel manager: '+cmData[cm].name+' — Ctrip connection available.':
-               cm&&cmData[cm]&&cmData[cm].ctrip===false?' Channel manager: '+cmData[cm].name+' — no native Ctrip connection.':'';
+  const vWord=getT('share.vWord.'+verdictKey);
+  const cmLine=cm&&cmData[cm]&&cmData[cm].ctrip===true?fillTemplate(getT('share.cmYes'),{name:cmData[cm].name}):
+               cm&&cmData[cm]&&cmData[cm].ctrip===false?fillTemplate(getT('share.cmNo'),{name:cmData[cm].name}):'';
 
-  const demandLine = potentialScore!==null ? 'China demand index for '+cityLabel+': '+potentialScore+'/100.' : '';
-  const readinessLine = 'My readiness score: '+prepPct+'% — '+vWord+'.';
+  const demandLine = potentialScore!==null ? fillTemplate(getT('share.demandLine'),{city:cityLabel,score:potentialScore}) : '';
   const benchmarkLine = aboveMedian
-    ? 'That puts me '+diff+' points above the average '+bmLabel+'.'
-    : 'The average '+bmLabel+' sits at '+median+'%. Room to improve.';
+    ? fillTemplate(getT('share.benchAbove'),{diff:diff,bmLabel:bmLabel})
+    : fillTemplate(getT('share.benchBelow'),{bmLabel:bmLabel,median:median});
 
   let shareText = '';
-  shareText += 'I just ran a China readiness check on my operation';
+  shareText += getT('share.intro');
   shareText += cityLabel ? ' in '+cityLabel+'.' : '.';
-  shareText += ' The results were eye-opening.\n\n';
+  shareText += getT('share.introEyeOpening');
   shareText += '𝗠𝘆 𝘀𝗰𝗼𝗿𝗲: '+prepPct+'% — '+vWord+'.\n';
   if(demandLine) shareText += '𝗠𝗮𝗿𝗸𝗲𝘁 𝗱𝗲𝗺𝗮𝗻𝗱 𝗶𝗻𝗱𝗲𝘅: '+potentialScore+'/100.\n';
   shareText += benchmarkLine+'\n\n';
@@ -1729,9 +2085,9 @@ function runCheck() {
   if(cmLine) shareText += cmLine.trim()+'\n\n';
 
   shareText += '𝗪𝗵𝗮𝘁 𝗶𝘀 𝘆𝗼𝘂𝗿 𝗖𝗵𝗶𝗻𝗮 𝗿𝗲𝗮𝗱𝗶𝗻𝗲𝘀𝘀 𝘀𝗰𝗼𝗿𝗲?\n';
-  shareText += 'Check yours in 2 minutes — link in the first comment.\n\n';
+  shareText += getT('share.checkYours');
   shareText += '#ChinaInbound #Hospitality #STR #ChinaReadiness #OTA\n\n';
-  shareText += '→ Tool built by Roger Bisschoff | linkedin.com/in/rogerbisschoff/';
+  shareText += getT('share.builtBy');
 
   document.getElementById('share-snippet').textContent=shareText;
   document.getElementById('share-snippet').dataset.text=shareText;
@@ -1751,14 +2107,14 @@ function runCheck() {
 
   const panel=document.getElementById('result-panel');
   panel.classList.add('visible');
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  if (!skipScroll) panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 const tierConfig = {
-  top:      {label:'Top destination', badgeCls:'tier-top',      fillCls:'fill-top'},
-  strong:   {label:'Strong market',   badgeCls:'tier-strong',   fillCls:'fill-strong'},
-  emerging: {label:'Emerging market', badgeCls:'tier-emerging', fillCls:'fill-emerging'},
-  low:      {label:'Low demand',      badgeCls:'tier-low',      fillCls:'fill-low'},
+  top:      {key:'tier.top.label',      badgeCls:'tier-top',      fillCls:'fill-top'},
+  strong:   {key:'tier.strong.label',   badgeCls:'tier-strong',   fillCls:'fill-strong'},
+  emerging: {key:'tier.emerging.label', badgeCls:'tier-emerging', fillCls:'fill-emerging'},
+  low:      {key:'tier.low.label',      badgeCls:'tier-low',      fillCls:'fill-low'},
 };
 
 let chinacheckStartedFired = false;
@@ -1784,7 +2140,7 @@ function onCountryChange() {
   document.getElementById('assessment-section').classList.remove('visible');
   setFlowProgress(1);
   if (!country || !locationData[country]) {
-    citySelect.innerHTML = '<option value="">Select country first...</option>';
+    citySelect.innerHTML = '<option value="">'+getT('select.countryFirst')+'</option>';
     citySelect.disabled = true;
     return;
   }
@@ -1793,7 +2149,7 @@ function onCountryChange() {
     chinacheckStartedFired = true;
   }
   citySelect.disabled = false;
-  citySelect.innerHTML = '<option value="">Select city...</option>';
+  citySelect.innerHTML = '<option value="">'+getT('select.chooseCity')+'</option>';
   const cities = locationData[country].cities;
   Object.keys(cities).forEach(key => {
     const opt = document.createElement('option');
@@ -1813,8 +2169,8 @@ function onCityChange() {
   if (!cityData) return;
   const tier = tierConfig[cityData.tier];
   document.getElementById('dc-city').textContent = cityData.label;
-  document.getElementById('dc-country').textContent = locationData[country].label;
-  document.getElementById('dc-badge').textContent = tier.label;
+  document.getElementById('dc-country').textContent = getT('countries.'+country);
+  document.getElementById('dc-badge').textContent = getT(tier.key);
   document.getElementById('dc-badge').className = 'demand-tier-badge ' + tier.badgeCls;
   document.getElementById('dc-score-label').textContent = cityData.score + ' / 100';
   document.getElementById('dc-insight').innerHTML = cityData.insight;
@@ -1828,7 +2184,17 @@ function onCityChange() {
   setFlowProgress(2);
 }
 
+function refreshDynamicLang() {
+  if (document.getElementById('demand-card').classList.contains('visible')) {
+    onCityChange();
+  }
+  if (document.getElementById('result-panel').classList.contains('visible')) {
+    runCheck(true);
+  }
+}
+
 setFlowProgress(1);
+applyLang(localStorage.getItem('ois-lang') || 'en');
 
 </script>
 </body>
