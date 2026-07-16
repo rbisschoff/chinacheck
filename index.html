@@ -652,9 +652,23 @@
     font-style:italic; margin-bottom:12px; user-select:all;
   }
   .contact-route {
-    margin-top:4px; font-size:13px; color:var(--ink2); line-height:1.55; font-style:normal;
+    margin: 16px 0 0;
+    padding: 14px 0 0;
+    border-top: 0.5px solid var(--border);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    font-style: normal;
   }
-  .contact-route a { color:var(--accent, #2E86DE); font-weight:500; }
+  .contact-route a {
+    color: var(--accent, #2E86DE);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(46, 134, 222, 0.35);
+  }
+  .contact-route a:hover { border-bottom-color: var(--accent, #2E86DE); }
   .share-btn {
     display:block; width:100%; padding:13px 16px;
     font-size:14px; font-weight:600;
