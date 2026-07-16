@@ -21,4 +21,4 @@ To preview locally, open `index.html` in your browser.
 ## Author
 
 Built by Roger Bisschoff  
-https://www.linkedin.com/in/rogerbisschoff/
+https://www.linkedin.com/in/roger-bisschoff/

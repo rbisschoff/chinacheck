@@ -651,6 +651,10 @@
     font-size:13px; color:var(--ink2); line-height:1.65;
     font-style:italic; margin-bottom:12px; user-select:all;
   }
+  .contact-route {
+    margin-top:4px; font-size:13px; color:var(--ink2); line-height:1.55; font-style:normal;
+  }
+  .contact-route a { color:var(--accent, #2E86DE); font-weight:500; }
   .share-btn {
     display:block; width:100%; padding:13px 16px;
     font-size:14px; font-weight:600;
@@ -1139,6 +1143,7 @@
         <button class="share-btn share-btn-dl" id="share-dl-btn" onclick="downloadCard()" style="display:none;margin-bottom:8px;" data-i18n="share.download">⬇ Download image for LinkedIn</button>
         <button class="share-btn share-btn-copy" id="share-copy-btn" onclick="copyShare()" data-i18n="share.copy">Copy LinkedIn post</button>
         <div class="share-snippet" id="share-snippet"></div>
+        <p class="contact-route" data-i18n-html="contact.route">Closing that China readiness gap is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=ChinaCheck" data-contact-tool="chinacheck">rbisschoff@gmail.com</a></p>
       </div>
     </div>
 
@@ -1149,11 +1154,11 @@
   <div class="ab-inner">
     <div class="ab-logo">中</div>
     <div class="ab-text" data-i18n-html="authority.text">
-      Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span> — free tools for senior property operators.
+      Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span> — free tools for senior property operators.
     </div>
   </div>
 </div>
-<footer data-i18n-html="footer.text">ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a></footer>
+<footer data-i18n-html="footer.text">ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">linkedin.com/in/roger-bisschoff</a></footer>
 
 <script>
 const I18N = {
@@ -1240,12 +1245,13 @@ const I18N = {
       introEyeOpening:' The results were eye-opening.\n\n',
       question:'What is your China readiness score?\n',
       checkYours:'Check yours in 2 minutes, link in the first comment.\n\n',
-      builtBy:'→ Tool built by Roger Bisschoff | linkedin.com/in/rogerbisschoff/' },
+      builtBy:'→ Tool built by Roger Bisschoff | linkedin.com/in/roger-bisschoff/' },
     canvas:{ toolLabel:'CHINA READINESS TOOL', readinessScore:'READINESS SCORE', headlinePrefix:'China readiness',
-      headlineGeneric:'China readiness check', marketDemand:'Market demand index: {score}/100', footer:'Built by Roger Bisschoff · linkedin.com/in/rogerbisschoff/',
+      headlineGeneric:'China readiness check', marketDemand:'Market demand index: {score}/100', footer:'Built by Roger Bisschoff · linkedin.com/in/roger-bisschoff/',
       bmAbove:'{prepPct}% vs {median}% avg, {diff} pts above {bmLabel}', bmBelow:'{prepPct}% vs {median}% avg for {bmLabel}' },
-    authority:{ text:'Built by <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, free tools for senior property operators.' },
-    footer:{ text:'ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a>' },
+    authority:{ text:'Built by <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, free tools for senior property operators.' },
+    contact:{ route:'Closing that China readiness gap is the work I do with operators. If you want to talk it through: <a href="mailto:rbisschoff@gmail.com?subject=ChinaCheck" data-contact-tool="chinacheck">rbisschoff@gmail.com</a>' },
+    footer:{ text:'ChinaCheck · China Inbound Market Analyser · <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">linkedin.com/in/roger-bisschoff</a>' },
   },
   it: {
     header:{ sub:'Strumento di Idoneità Cina', stage:'Fase 2' },
@@ -1330,12 +1336,13 @@ const I18N = {
       introEyeOpening:'. I risultati sono stati sorprendenti.\n\n',
       question:'Qual è il tuo punteggio di idoneità per la Cina?\n',
       checkYours:'Scopri il tuo punteggio in 2 minuti, link nel primo commento.\n\n',
-      builtBy:'→ Strumento creato da Roger Bisschoff | linkedin.com/in/rogerbisschoff/' },
+      builtBy:'→ Strumento creato da Roger Bisschoff | linkedin.com/in/roger-bisschoff/' },
     canvas:{ toolLabel:'STRUMENTO IDONEITÀ CINA', readinessScore:'PUNTEGGIO IDONEITÀ', headlinePrefix:'Idoneità Cina',
-      headlineGeneric:'Controllo idoneità Cina', marketDemand:'Indice domanda mercato: {score}/100', footer:'Creato da Roger Bisschoff · linkedin.com/in/rogerbisschoff/',
+      headlineGeneric:'Controllo idoneità Cina', marketDemand:'Indice domanda mercato: {score}/100', footer:'Creato da Roger Bisschoff · linkedin.com/in/roger-bisschoff/',
       bmAbove:'{prepPct}% vs {median}% media, {diff} punti sopra {bmLabel}', bmBelow:'{prepPct}% vs {median}% media per {bmLabel}' },
-    authority:{ text:'Creato da <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, strumenti gratuiti per operatori senior del settore.' },
-    footer:{ text:'ChinaCheck · Analizzatore del mercato inbound cinese · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a>' },
+    authority:{ text:'Creato da <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, strumenti gratuiti per operatori senior del settore.' },
+    contact:{ route:'Colmare quel divario di readiness per la Cina è il lavoro che faccio con gli operatori. Se vuoi parlarne: <a href="mailto:rbisschoff@gmail.com?subject=ChinaCheck" data-contact-tool="chinacheck">rbisschoff@gmail.com</a>' },
+    footer:{ text:'ChinaCheck · Analizzatore del mercato inbound cinese · <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">linkedin.com/in/roger-bisschoff</a>' },
   },
   de: {
     header:{ sub:'China Readiness Tool', stage:'Stufe 2' },
@@ -1420,12 +1427,13 @@ const I18N = {
       introEyeOpening:'. Die Ergebnisse waren aufschlussreich.\n\n',
       question:'Wie hoch ist Ihr China-Readiness-Score?\n',
       checkYours:'Prüfen Sie Ihren in 2 Minuten, Link im ersten Kommentar.\n\n',
-      builtBy:'→ Tool erstellt von Roger Bisschoff | linkedin.com/in/rogerbisschoff/' },
+      builtBy:'→ Tool erstellt von Roger Bisschoff | linkedin.com/in/roger-bisschoff/' },
     canvas:{ toolLabel:'CHINA READINESS TOOL', readinessScore:'READINESS SCORE', headlinePrefix:'China Readiness',
-      headlineGeneric:'China-Readiness-Check', marketDemand:'Marktnachfrageindex: {score}/100', footer:'Erstellt von Roger Bisschoff · linkedin.com/in/rogerbisschoff/',
+      headlineGeneric:'China-Readiness-Check', marketDemand:'Marktnachfrageindex: {score}/100', footer:'Erstellt von Roger Bisschoff · linkedin.com/in/roger-bisschoff/',
       bmAbove:'{prepPct}% vs {median}% Durchschnitt, {diff} Punkte über {bmLabel}', bmBelow:'{prepPct}% vs {median}% Durchschnitt für {bmLabel}' },
-    authority:{ text:'Erstellt von <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, kostenlose Tools für erfahrene Property-Betreiber.' },
-    footer:{ text:'ChinaCheck · China-Inbound-Marktanalyse · <a href="https://linkedin.com/in/rogerbisschoff" target="_blank">linkedin.com/in/rogerbisschoff</a>' },
+    authority:{ text:'Erstellt von <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">Roger Bisschoff</a> · <span class="ab-series">Operator Series</span>, kostenlose Tools für erfahrene Property-Betreiber.' },
+    contact:{ route:'Genau diese China-Readiness-Lücke zu schließen ist meine Arbeit mit Betreibern. Wenn Sie darüber sprechen möchten: <a href="mailto:rbisschoff@gmail.com?subject=ChinaCheck" data-contact-tool="chinacheck">rbisschoff@gmail.com</a>' },
+    footer:{ text:'ChinaCheck · China-Inbound-Marktanalyse · <a href="https://linkedin.com/in/roger-bisschoff" target="_blank">linkedin.com/in/roger-bisschoff</a>' },
   },
 };
 
@@ -2303,6 +2311,14 @@ function refreshDynamicLang() {
 
 setFlowProgress(1);
 applyLang(window.__oisInitialLang || 'en');
+
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[data-contact-tool]');
+  if (!a) return;
+  if (typeof gtag === 'function') {
+    gtag('event', 'contact_click', { tool: a.getAttribute('data-contact-tool') });
+  }
+});
 
 </script>
 </body>
