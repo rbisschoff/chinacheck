@@ -1256,6 +1256,7 @@ const I18N = {
       cmYes:' Channel manager: {name}, Ctrip connection available.',
       cmNo:' Channel manager: {name}, no native Ctrip connection.',
       demandLine:'China demand index for {city}: {score}/100.',
+      myScore:'𝗠𝘆 𝘀𝗰𝗼𝗿𝗲: {pct}% — {verdict}.',
       benchAbove:'That puts me {diff} points above the average {bmLabel}.',
       benchBelow:'The average {bmLabel} sits at {median}%. Room to improve.',
       intro:'I just ran a China readiness check on my operation',
@@ -1347,10 +1348,11 @@ const I18N = {
       cmYes:' Channel manager: {name}, connessione Ctrip disponibile.',
       cmNo:' Channel manager: {name}, nessuna connessione Ctrip nativa.',
       demandLine:'Indice di domanda Cina per {city}: {score}/100.',
+      myScore:'𝗜𝗹 𝗺𝗶𝗼 𝗽𝘂𝗻𝘁𝗲𝗴𝗴𝗶𝗼: {pct}% — {verdict}.',
       benchAbove:'Questo mi posiziona {diff} punti sopra la media {bmLabel}.',
       benchBelow:'La media dei {bmLabel} è al {median}%. C\'è margine di miglioramento.',
       intro:'Ho appena eseguito un controllo di idoneità per la Cina sulla mia struttura',
-      introEyeOpening:'. I risultati sono stati sorprendenti.\n\n',
+      introEyeOpening:' I risultati sono stati sorprendenti.\n\n',
       question:'Qual è il tuo punteggio di idoneità per la Cina?\n',
       checkYours:'Scopri il tuo punteggio in 2 minuti, link nel primo commento.\n\n',
       builtBy:'→ Strumento creato da Roger Bisschoff | linkedin.com/in/roger-bisschoff/' },
@@ -1438,10 +1440,11 @@ const I18N = {
       cmYes:' Channel Manager: {name}, Ctrip-Verbindung verfügbar.',
       cmNo:' Channel Manager: {name}, keine native Ctrip-Verbindung.',
       demandLine:'China-Nachfrageindex für {city}: {score}/100.',
+      myScore:'𝗠𝗲𝗶𝗻 𝗦𝗰𝗼𝗿𝗲: {pct}% — {verdict}.',
       benchAbove:'Das bringt mich {diff} Punkte über den Durchschnitt der {bmLabel}.',
       benchBelow:'Der Durchschnitt der {bmLabel} liegt bei {median}%. Verbesserungspotenzial vorhanden.',
       intro:'Ich habe gerade einen China-Readiness-Check für meinen Betrieb durchgeführt',
-      introEyeOpening:'. Die Ergebnisse waren aufschlussreich.\n\n',
+      introEyeOpening:' Die Ergebnisse waren aufschlussreich.\n\n',
       question:'Wie hoch ist Ihr China-Readiness-Score?\n',
       checkYours:'Prüfen Sie Ihren in 2 Minuten, Link im ersten Kommentar.\n\n',
       builtBy:'→ Tool erstellt von Roger Bisschoff | linkedin.com/in/roger-bisschoff/' },
@@ -1646,18 +1649,23 @@ const cityPhotos = {
   oslo:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFBM0E1QyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE5NkYzRCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
   helsinki:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFCNEY3MiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJFODZDMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjYzMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==',
 };
-function getCityPhotoKey(cityLabel) {
+function getCityPhotoKey(cityLabel, cityKey) {
+  if (cityKey && cityPhotos[cityKey]) return cityPhotos[cityKey];
   if (!cityLabel) return null;
   const key = cityLabel.toLowerCase().replace(/\s+/g,'').replace(/[^a-z]/g,'');
-  return cityPhotos[key] || null;
+  if (cityPhotos[key]) return cityPhotos[key];
+  // Labels that do not slug to the photo map key (e.g. Palma (Mallorca) → mallorca)
+  const aliases = { palmamallorca: 'mallorca', palma: 'mallorca' };
+  const alias = aliases[key] || aliases[cityKey];
+  return (alias && cityPhotos[alias]) || null;
 }
 
-function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel, median, aboveMedian, diff) {
+function buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel, median, aboveMedian, diff, cityKey) {
   const canvas = document.getElementById('share-canvas');
   const W=1200, H=630;
   canvas.width=W; canvas.height=H;
   const ctx=canvas.getContext('2d');
-  const photoUrl = getCityPhotoKey(cityLabel);
+  const photoUrl = getCityPhotoKey(cityLabel, cityKey);
 
   function drawCard(bgImg) {
     ctx.clearRect(0,0,W,H);
@@ -2205,8 +2213,8 @@ function runCheck(skipScroll) {
   shareText += getT('share.intro');
   shareText += cityLabel ? ' in '+cityLabel+'.' : '.';
   shareText += getT('share.introEyeOpening');
-  shareText += '𝗠𝘆 𝘀𝗰𝗼𝗿𝗲: '+prepPct+'% — '+vWord+'.\n';
-  if(demandLine) shareText += '𝗠𝗮𝗿𝗸𝗲𝘁 𝗱𝗲𝗺𝗮𝗻𝗱 𝗶𝗻𝗱𝗲𝘅: '+potentialScore+'/100.\n';
+  shareText += fillTemplate(getT('share.myScore'), {pct: prepPct, verdict: vWord}) + '\n';
+  if(demandLine) shareText += demandLine+'\n';
   shareText += benchmarkLine+'\n\n';
 
   if(cityPost) {
@@ -2217,7 +2225,7 @@ function runCheck(skipScroll) {
 
   if(cmLine) shareText += cmLine.trim()+'\n\n';
 
-  shareText += '𝗪𝗵𝗮𝘁 𝗶𝘀 𝘆𝗼𝘂𝗿 𝗖𝗵𝗶𝗻𝗮 𝗿𝗲𝗮𝗱𝗶𝗻𝗲𝘀𝘀 𝘀𝗰𝗼𝗿𝗲?\n';
+  shareText += getT('share.question');
   shareText += getT('share.checkYours');
   shareText += '#ChinaInbound #Hospitality #STR #ChinaReadiness #OTA\n\n';
   shareText += getT('share.builtBy');
@@ -2225,11 +2233,11 @@ function runCheck(skipScroll) {
   document.getElementById('share-snippet').textContent=shareText;
   document.getElementById('share-snippet').dataset.text=shareText;
   document.getElementById('share-section').style.display='block';
-  buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel, median, aboveMedian, diff);
+  buildShareCard(prepPct, verdictKey, cityLabel, potentialScore, bmLabel, median, aboveMedian, diff, city);
 
   // Apply city photo as CSS background on result header
   const resultHeader = document.getElementById('result-header');
-  const cityPhotoUrl = getCityPhotoKey(cityLabel);
+  const cityPhotoUrl = getCityPhotoKey(cityLabel, city);
   if (cityPhotoUrl && resultHeader) {
     resultHeader.style.backgroundImage = 'url(' + cityPhotoUrl + ')';
     resultHeader.classList.add('has-photo');
@@ -2265,12 +2273,23 @@ function setFlowProgress(step) {
   });
 }
 
+function hideResults() {
+  const panel = document.getElementById('result-panel');
+  if (panel) panel.classList.remove('visible');
+  const header = document.getElementById('result-header');
+  if (header) {
+    header.style.backgroundImage = '';
+    header.classList.remove('has-photo');
+  }
+}
+
 function onCountryChange() {
   const country = document.getElementById('sel-country').value;
   const citySelect = document.getElementById('sel-city');
   citySelect.innerHTML = '';
   document.getElementById('demand-card').classList.remove('visible');
   document.getElementById('assessment-section').classList.remove('visible');
+  hideResults();
   setFlowProgress(1);
   if (!country || !locationData[country]) {
     citySelect.innerHTML = '<option value="">'+getT('select.countryFirst')+'</option>';
@@ -2297,6 +2316,7 @@ function onCityChange() {
   const city = document.getElementById('sel-city').value;
   document.getElementById('demand-card').classList.remove('visible');
   document.getElementById('assessment-section').classList.remove('visible');
+  hideResults();
   if (!country || !city) return;
   const cityData = locationData[country].cities[city];
   if (!cityData) return;
@@ -2308,8 +2328,7 @@ function onCityChange() {
   document.getElementById('dc-score-label').textContent = cityData.score + ' / 100';
   document.getElementById('dc-insight').innerHTML = cityData.insight;
   const bar = document.getElementById('dc-bar');
-  const barFillCls = cityData.score > 80 ? 'fill-strong' : cityData.score >= 40 ? 'fill-emerging' : 'fill-low';
-  bar.className = 'demand-bar-fill ' + barFillCls;
+  bar.className = 'demand-bar-fill ' + (tier.fillCls || 'fill-emerging');
   bar.style.width = '0%';
   setTimeout(() => { bar.style.width = cityData.score + '%'; }, 50);
   document.getElementById('demand-card').classList.add('visible');
