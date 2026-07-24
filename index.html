@@ -1018,6 +1018,21 @@
     <div class="dimension-card">
       <div class="dim-header">
         <div class="dim-title-wrap">
+          <div class="dim-title" data-i18n="dim.social.title">Chinese Social Media Presence</div>
+          <div class="dim-desc" data-i18n="dim.social.desc">Xiaohongshu (RedNote) is where discovery and trust increasingly form before a Ctrip search even happens. Absence here is invisible to guests earlier in their decision than a missing review is.</div>
+        </div>
+        <div class="dim-weight" data-i18n="weight.medium">Weight: medium</div>
+      </div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="social" id="soc-r" value="red"><label for="soc-r" class="red" data-i18n="dim.social.optRed">No presence</label></div>
+        <div class="radio-option"><input type="radio" name="social" id="soc-a" value="amber"><label for="soc-a" class="amber" data-i18n="dim.social.optAmber">Listed by others, not managed</label></div>
+        <div class="radio-option"><input type="radio" name="social" id="soc-g" value="green"><label for="soc-g" class="green" data-i18n="dim.social.optGreen">Actively present</label></div>
+      </div>
+    </div>
+
+    <div class="dimension-card">
+      <div class="dim-header">
+        <div class="dim-title-wrap">
           <div class="dim-title" data-i18n="dim.language.title">Language &amp; Communication</div>
           <div class="dim-desc" data-i18n="dim.language.desc">Mandarin content in listings, welcome materials, or staff communication capability.</div>
         </div>
@@ -1203,12 +1218,13 @@ const I18N = {
       ota:{ title:'OTA Visibility', desc:'Listed and active on Ctrip/Trip.com — the primary platform Chinese travellers use to book internationally. Fliggy and Meituan have no channel manager integration; those require a separate manual listing.', optRed:'Not listed', optGreen:'Active' },
       payment:{ title:'Payment Acceptance', desc:'WeChat Pay and/or Alipay accepted — at property or through your booking system.' },
       reviews:{ title:'Chinese OTA Reviews', desc:'Reviews from Chinese guests on Ctrip, Fliggy, or Meituan. Zero reviews is a conversion killer regardless of listing quality.', optRed:'No reviews', optAmber:'Some, unmanaged', optGreen:'Actively managed' },
+      social:{ title:'Chinese Social Media Presence', desc:'Xiaohongshu (RedNote) is where discovery and trust increasingly form before a Ctrip search even happens. Absence here is invisible to guests earlier in their decision than a missing review is.', optRed:'No presence', optAmber:'Listed by others, not managed', optGreen:'Actively present' },
       language:{ title:'Language & Communication', desc:'Mandarin content in listings, welcome materials, or staff communication capability.', optRed:'English only', optAmber:'Basic Mandarin', optGreen:'Full Mandarin' },
       onprop:{ title:'On-property Experience', desc:'Practical touches that matter: kettle, instant noodles, slippers, electricity converter, Mandarin check-in instructions.', optRed:'Western only', optAmber:'Some basics', optGreen:'China-adapted' },
       firewall:{ title:'Firewall & Digital Accessibility', desc:'Can Chinese travellers reach your website and booking engine? Most European sites fail behind the Great Firewall — blocked scripts, slow load, broken checkout. Operators rarely know.', optGreen:'Fully accessible', optRed:'Issues found' },
     },
     firewall:{ testBtn:'Test now →', openedNote:'🔍 Results for {domain} are opening in a new tab',
-      instructions:'ViewDNS will show a map with markers. <strong style="color:#1A7A3C">Green ✓ markers</strong> = select Fully accessible. <strong style="color:#C0392B">Red ✗ markers</strong> = select Issues found.' },
+      instructions:'ViewDNS will show a map with markers. <strong style="color:#1A7A3C">Green ✓ markers</strong> = select Fully accessible. <strong style="color:#C0392B">Red ✗ markers</strong> = select Issues found. Note: this checks whether your domain itself is reachable from within China. It does not check whether individual scripts on your site, such as Google Fonts, Google Analytics, reCAPTCHA, or Google Maps, load correctly there, those can fail independently even when the domain itself is not blocked.' },
     cmHint:{ yes:'{name} — Ctrip connection available', no:'{name} — No native Chinese OTA connection', unknown:'{name} — Check your channel list' },
     cta:{ run:'Run ChinaCheck →' },
     alerts:{ incomplete:'Please answer all dimensions before running ChinaCheck.' },
@@ -1230,9 +1246,10 @@ const I18N = {
       amber:'You have a foundation but gaps that will cost you bookings. Prioritise OTA listing and payment first, those two moves drive the most impact.',
       red:'You are effectively invisible to Chinese travellers right now. Start with a Ctrip listing and WeChat Pay, those two steps alone change the picture significantly.',
     },
+    otaCapNote:'Your score is capped because there is no Chinese OTA presence at all. Everything else in the stack becomes far less visible without it.',
     biz:{ header:'What this means for your business',
       cardLabel:'Revenue potential from Chinese guests / year<br><span style="font-size:10px;opacity:0.7">(same property, fully China-ready)</span>',
-      noteTemplate:'How this is calculated: {units} units × 365 nights × 68% occupancy = {occupied} occupied nights/year. At {sharePct}% Chinese guest share for this market = {chineseNights} Chinese guest nights at full readiness × {rate}/night = {revPotential} annual potential. Your preparation score ({prepPct}%) implies {revGap} of that is currently uncaptured. Figures are indicative.' },
+      noteTemplate:'How this is calculated: {units} units × 365 nights × 68% occupancy = {occupied} occupied nights/year. At {sharePct}% Chinese guest share for this market = {chineseNights} Chinese guest nights at full readiness × {rate}/night = {revLow}-{revHigh} annual potential range. Your preparation score ({prepPct}%) implies {revGap} of that is currently uncaptured. Figures are indicative and shown as a range rather than a single number, since actual occupancy and guest share vary by property.' },
     revDim:{ label:'What fixing each gap adds — per property / year',
       contextTemplate:'Estimated annual gain per property if each gap is fully closed, based on {units} units at {rate}/night in this market.',
       captured:'Captured' },
@@ -1295,12 +1312,13 @@ const I18N = {
       ota:{ title:'Visibilità OTA', desc:'Presente e attivo su Ctrip/Trip.com, la piattaforma principale usata dai viaggiatori cinesi per prenotare a livello internazionale. Fliggy e Meituan non hanno integrazione con i channel manager; richiedono un inserimento manuale separato.', optRed:'Non presente', optGreen:'Attivo' },
       payment:{ title:'Accettazione pagamenti', desc:'WeChat Pay e/o Alipay accettati, in struttura o tramite il sistema di prenotazione.' },
       reviews:{ title:'Recensioni OTA cinesi', desc:'Recensioni di ospiti cinesi su Ctrip, Fliggy o Meituan. Zero recensioni compromette le conversioni a prescindere dalla qualità dell\'annuncio.', optRed:'Nessuna recensione', optAmber:'Alcune, non gestite', optGreen:'Gestite attivamente' },
+      social:{ title:'Presenza sui Social Cinesi', desc:'Xiaohongshu (RedNote) è dove si formano scoperta e fiducia, spesso prima ancora di una ricerca su Ctrip. L\'assenza qui è invisibile agli ospiti prima nel loro percorso decisionale rispetto a una recensione mancante.', optRed:'Nessuna presenza', optAmber:'Presente grazie ad altri, non gestita', optGreen:'Presente attivamente' },
       language:{ title:'Lingua e comunicazione', desc:'Contenuti in mandarino negli annunci, nei materiali di benvenuto o nella capacità di comunicazione del personale.', optRed:'Solo inglese', optAmber:'Mandarino di base', optGreen:'Mandarino completo' },
       onprop:{ title:'Esperienza in struttura', desc:'Accorgimenti pratici che contano: bollitore, noodles istantanei, ciabattine, adattatore elettrico, istruzioni di check-in in mandarino.', optRed:'Solo occidentale', optAmber:'Alcune basi', optGreen:'Adattato alla Cina' },
       firewall:{ title:'Firewall e accessibilità digitale', desc:'I viaggiatori cinesi possono raggiungere il tuo sito e il motore di prenotazione? La maggior parte dei siti europei fallisce dietro il Great Firewall: script bloccati, caricamento lento, checkout non funzionante. Gli operatori spesso non lo sanno.', optGreen:'Completamente accessibile', optRed:'Problemi rilevati' },
     },
     firewall:{ testBtn:'Testa ora →', openedNote:'🔍 I risultati per {domain} si stanno aprendo in una nuova scheda',
-      instructions:'ViewDNS mostrerà una mappa con indicatori. <strong style="color:#1A7A3C">Indicatori verdi ✓</strong> = seleziona Completamente accessibile. <strong style="color:#C0392B">Indicatori rossi ✗</strong> = seleziona Problemi rilevati.' },
+      instructions:'ViewDNS mostrerà una mappa con indicatori. <strong style="color:#1A7A3C">Indicatori verdi ✓</strong> = seleziona Completamente accessibile. <strong style="color:#C0392B">Indicatori rossi ✗</strong> = seleziona Problemi rilevati. Nota: questo verifica se il tuo dominio stesso è raggiungibile dalla Cina. Non verifica se singoli script del tuo sito, come Google Fonts, Google Analytics, reCAPTCHA o Google Maps, si caricano correttamente lì: questi possono non funzionare indipendentemente, anche quando il dominio stesso non è bloccato.' },
     cmHint:{ yes:'{name}: connessione Ctrip disponibile', no:'{name}: nessuna connessione OTA cinese nativa', unknown:'{name}: controlla il tuo elenco canali' },
     cta:{ run:'Avvia ChinaCheck →' },
     alerts:{ incomplete:'Rispondi a tutte le dimensioni prima di avviare ChinaCheck.' },
@@ -1322,9 +1340,10 @@ const I18N = {
       amber:'Hai una base ma delle lacune che ti costeranno prenotazioni. Da prioritizzare prima l\'annuncio OTA e i pagamenti: queste due azioni hanno il maggiore impatto.',
       red:'Al momento sei praticamente invisibile ai viaggiatori cinesi. Inizia con un annuncio su Ctrip e WeChat Pay: questi due passi da soli cambiano notevolmente la situazione.',
     },
+    otaCapNote:'Il tuo punteggio è limitato perché non c\'è alcuna presenza sulle OTA cinesi. Tutto il resto diventa molto meno visibile senza questo.',
     biz:{ header:'Cosa significa questo per il tuo business',
       cardLabel:'Potenziale di ricavo dagli ospiti cinesi / anno<br><span style="font-size:10px;opacity:0.7">(stessa struttura, completamente pronta per la Cina)</span>',
-      noteTemplate:'Come viene calcolato: {units} unità × 365 notti × 68% occupazione = {occupied} notti occupate/anno. Con una quota ospiti cinesi del {sharePct}% per questo mercato = {chineseNights} notti di ospiti cinesi a piena idoneità × {rate}/notte = {revPotential} potenziale annuo. Il tuo punteggio di preparazione ({prepPct}%) implica che {revGap} di questo importo non è attualmente catturato. Le cifre sono indicative.' },
+      noteTemplate:'Come viene calcolato: {units} unità × 365 notti × 68% occupazione = {occupied} notti occupate/anno. Con una quota ospiti cinesi del {sharePct}% per questo mercato = {chineseNights} notti di ospiti cinesi a piena idoneità × {rate}/notte = intervallo di potenziale annuo {revLow}-{revHigh}. Il tuo punteggio di preparazione ({prepPct}%) implica che {revGap} di questo importo non è attualmente catturato. Le cifre sono indicative e mostrate come intervallo anziché come cifra singola, poiché occupazione e quota ospiti reali variano da proprietà a proprietà.' },
     revDim:{ label:'Cosa aggiunge la chiusura di ogni lacuna, per struttura / anno',
       contextTemplate:'Guadagno annuo stimato per struttura se ogni lacuna viene completamente colmata, basato su {units} unità a {rate}/notte in questo mercato.',
       captured:'Catturato' },
@@ -1387,12 +1406,13 @@ const I18N = {
       ota:{ title:'OTA-Sichtbarkeit', desc:'Gelistet und aktiv auf Ctrip/Trip.com, der wichtigsten Plattform, die chinesische Reisende für internationale Buchungen nutzen. Fliggy und Meituan haben keine Channel-Manager-Integration; diese erfordern ein separates manuelles Listing.', optRed:'Nicht gelistet', optGreen:'Aktiv' },
       payment:{ title:'Zahlungsakzeptanz', desc:'WeChat Pay und/oder Alipay akzeptiert, vor Ort oder über Ihr Buchungssystem.' },
       reviews:{ title:'Chinesische OTA-Bewertungen', desc:'Bewertungen chinesischer Gäste auf Ctrip, Fliggy oder Meituan. Null Bewertungen sind ein Conversion-Killer, unabhängig von der Qualität des Listings.', optRed:'Keine Bewertungen', optAmber:'Einige, unverwaltet', optGreen:'Aktiv verwaltet' },
+      social:{ title:'Präsenz auf chinesischen Social Media', desc:'Xiaohongshu (RedNote) ist der Ort, an dem Entdeckung und Vertrauen entstehen, oft bevor überhaupt eine Ctrip-Suche stattfindet. Fehlende Präsenz hier ist für Gäste früher in ihrer Entscheidung unsichtbar als eine fehlende Bewertung.', optRed:'Keine Präsenz', optAmber:'Von anderen gelistet, nicht verwaltet', optGreen:'Aktiv präsent' },
       language:{ title:'Sprache und Kommunikation', desc:'Mandarin-Inhalte in Listings, Willkommensmaterial oder Kommunikationsfähigkeit des Personals.', optRed:'Nur Englisch', optAmber:'Grundlegendes Mandarin', optGreen:'Vollständiges Mandarin' },
       onprop:{ title:'Erlebnis vor Ort', desc:'Praktische Details, die zählen: Wasserkocher, Instantnudeln, Hausschuhe, Steckdosenadapter, Check-in-Anweisungen auf Mandarin.', optRed:'Nur westlich', optAmber:'Einige Grundlagen', optGreen:'An China angepasst' },
       firewall:{ title:'Firewall und digitale Erreichbarkeit', desc:'Können chinesische Reisende Ihre Website und Buchungsmaschine erreichen? Die meisten europäischen Websites scheitern an der Great Firewall, blockierte Skripte, langsames Laden, defekter Checkout. Betreiber wissen das selten.', optGreen:'Vollständig erreichbar', optRed:'Probleme festgestellt' },
     },
     firewall:{ testBtn:'Jetzt testen →', openedNote:'🔍 Ergebnisse für {domain} werden in einem neuen Tab geöffnet',
-      instructions:'ViewDNS zeigt eine Karte mit Markierungen. <strong style="color:#1A7A3C">Grüne ✓ Markierungen</strong> = Vollständig erreichbar auswählen. <strong style="color:#C0392B">Rote ✗ Markierungen</strong> = Probleme festgestellt auswählen.' },
+      instructions:'ViewDNS zeigt eine Karte mit Markierungen. <strong style="color:#1A7A3C">Grüne ✓ Markierungen</strong> = Vollständig erreichbar auswählen. <strong style="color:#C0392B">Rote ✗ Markierungen</strong> = Probleme festgestellt auswählen. Hinweis: Dies prüft, ob Ihre Domain selbst aus China erreichbar ist. Es prüft nicht, ob einzelne Skripte auf Ihrer Website, wie Google Fonts, Google Analytics, reCAPTCHA oder Google Maps, dort korrekt geladen werden, diese können unabhängig davon ausfallen, selbst wenn die Domain selbst nicht blockiert ist.' },
     cmHint:{ yes:'{name}: Ctrip-Verbindung verfügbar', no:'{name}: keine native chinesische OTA-Verbindung', unknown:'{name}: Kanalliste prüfen' },
     cta:{ run:'ChinaCheck starten →' },
     alerts:{ incomplete:'Bitte beantworten Sie alle Dimensionen, bevor Sie ChinaCheck starten.' },
@@ -1414,9 +1434,10 @@ const I18N = {
       amber:'Sie haben eine Grundlage, aber Lücken, die Sie Buchungen kosten werden. Priorisieren Sie zuerst OTA-Listing und Zahlung, diese zwei Schritte haben die größte Wirkung.',
       red:'Sie sind derzeit für chinesische Reisende praktisch unsichtbar. Beginnen Sie mit einem Ctrip-Listing und WeChat Pay, allein diese zwei Schritte verändern das Bild erheblich.',
     },
+    otaCapNote:'Ihr Score ist begrenzt, da überhaupt keine Präsenz auf chinesischen OTAs besteht. Alles andere wird ohne diese deutlich weniger sichtbar.',
     biz:{ header:'Was das für Ihr Geschäft bedeutet',
       cardLabel:'Umsatzpotenzial durch chinesische Gäste / Jahr<br><span style="font-size:10px;opacity:0.7">(gleiche Unterkunft, vollständig China-bereit)</span>',
-      noteTemplate:'So wird berechnet: {units} Einheiten × 365 Nächte × 68% Auslastung = {occupied} belegte Nächte/Jahr. Bei einem chinesischen Gästeanteil von {sharePct}% für diesen Markt = {chineseNights} chinesische Gästenächte bei voller Readiness × {rate}/Nacht = {revPotential} jährliches Potenzial. Ihr Vorbereitungsscore ({prepPct}%) bedeutet, dass {revGap} davon derzeit nicht erschlossen sind. Zahlen sind indikativ.' },
+      noteTemplate:'So wird berechnet: {units} Einheiten × 365 Nächte × 68% Auslastung = {occupied} belegte Nächte/Jahr. Bei einem chinesischen Gästeanteil von {sharePct}% für diesen Markt = {chineseNights} chinesische Gästenächte bei voller Readiness × {rate}/Nacht = jährliche Potenzialspanne von {revLow}-{revHigh}. Ihr Vorbereitungsscore ({prepPct}%) bedeutet, dass {revGap} davon derzeit nicht erschlossen sind. Zahlen sind indikativ und als Spanne statt als Einzelwert dargestellt, da tatsächliche Auslastung und Gästeanteil je nach Immobilie variieren.' },
     revDim:{ label:'Was das Schließen jeder Lücke bringt, pro Unterkunft / Jahr',
       contextTemplate:'Geschätzter jährlicher Gewinn pro Unterkunft, wenn jede Lücke vollständig geschlossen wird, basierend auf {units} Einheiten zu {rate}/Nacht in diesem Markt.',
       captured:'Erschlossen' },
@@ -2008,6 +2029,7 @@ const dimensions = [
   {name:'Payment Acceptance',        field:'payment',  weight:3, optional:false, titleKey:'dim.payment.title'},
   {name:'Firewall & Digital Access', field:'firewall', weight:3, optional:true,  titleKey:'dim.firewall.title'},
   {name:'Chinese OTA Reviews',       field:'reviews',  weight:2, optional:false, titleKey:'dim.reviews.title'},
+  {name:'Chinese Social Media',      field:'social',   weight:2, optional:false, titleKey:'dim.social.title'},
   {name:'Language & Communication',  field:'language', weight:2, optional:false, titleKey:'dim.language.title'},
   {name:'On-property Experience',    field:'onprop',   weight:1, optional:false, titleKey:'dim.onprop.title'},
 ];
@@ -2032,7 +2054,11 @@ function runCheck(skipScroll) {
 
   let totalWeight=0,totalScore=0;
   active.forEach(d=>{totalWeight+=d.weight;totalScore+=valueMap[values[d.field]]*d.weight;});
-  const prepPct=Math.round((totalScore/(totalWeight*2))*100);
+  let prepPct=Math.round((totalScore/(totalWeight*2))*100);
+  const otaIsRed = values['ota'] === 'red';
+  if (otaIsRed) {
+    prepPct = Math.min(prepPct, 35);
+  }
   const verdictKey=prepPct>80?'green':prepPct>=40?'amber':'red';
   const prepColor=prepPct>80?'var(--green)':prepPct>=40?'var(--amber)':'var(--red)';
   const gapColorCls=prepPct>80?'gap-color-green':prepPct>=40?'gap-color-amber':'gap-color-red';
@@ -2100,6 +2126,9 @@ function runCheck(skipScroll) {
     listEl.appendChild(row);
   });
   document.getElementById('result-note').textContent=notes[verdictKey];
+  if (otaIsRed) {
+    document.getElementById('result-note').textContent += ' ' + getT('otaCapNote');
+  }
 
   // Business impact
   const units=parseFloat(document.getElementById('prop-units').value);
@@ -2112,10 +2141,12 @@ function runCheck(skipScroll) {
     const occupied=units*365*0.68;
     const chineseNights=Math.round(occupied*baseShare);
     revPotential=Math.round(chineseNights*rate);
+    const revLow=Math.round(revPotential*0.8);
+    const revHigh=Math.round(revPotential*1.2);
     const revGap=Math.round(revPotential*(1-prepPct/100));
     const fmt=n=>'€'+n.toLocaleString('de-DE');
-    document.getElementById('biz-potential').textContent=fmt(revPotential);
-    document.getElementById('biz-note').textContent=fillTemplate(getT('biz.noteTemplate'),{units:units,occupied:Math.round(occupied),sharePct:Math.round(baseShare*100),chineseNights:chineseNights,rate:fmt(rate),revPotential:fmt(revPotential),prepPct:prepPct,revGap:fmt(revGap)});
+    document.getElementById('biz-potential').textContent=fmt(revLow)+' – '+fmt(revHigh);
+    document.getElementById('biz-note').textContent=fillTemplate(getT('biz.noteTemplate'),{units:units,occupied:Math.round(occupied),sharePct:Math.round(baseShare*100),chineseNights:chineseNights,rate:fmt(rate),revLow:fmt(revLow),revHigh:fmt(revHigh),prepPct:prepPct,revGap:fmt(revGap)});
     bizSection.style.display='block';
 
     // Revenue by dimension
