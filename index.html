@@ -14,14 +14,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>ChinaCheck — China Readiness Tool</title>
-<meta name="description" data-i18n-meta="description" content="Assess your property, channels and operations before investing in Chinese inbound demand.">
+<meta name="description" content="Assess your property, channels and operations before investing in Chinese inbound demand.">
+<link rel="canonical" href="https://rbisschoff.github.io/chinacheck/">
 <link rel="alternate" hreflang="en" href="https://rbisschoff.github.io/chinacheck/?lang=en">
 <link rel="alternate" hreflang="it" href="https://rbisschoff.github.io/chinacheck/?lang=it">
 <link rel="alternate" hreflang="de" href="https://rbisschoff.github.io/chinacheck/?lang=de">
 <link rel="alternate" hreflang="x-default" href="https://rbisschoff.github.io/chinacheck/?lang=en">
-<meta property="og:title" data-i18n-meta="ogTitle" content="ChinaCheck — China Readiness Tool">
-<meta property="og:description" data-i18n-meta="ogDescription" content="Should you invest in Chinese inbound demand? Check your readiness first.">
+<meta property="og:title" content="ChinaCheck — China Readiness Tool">
+<meta property="og:description" content="Should you invest in Chinese inbound demand? Check your readiness first.">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ChinaCheck — China Readiness Tool">
+<meta name="twitter:description" content="Should you invest in Chinese inbound demand? Check your readiness first.">
 <script>
   (function () {
     const supported = ['en', 'it', 'de'];
@@ -39,31 +43,6 @@
     document.documentElement.lang = lang;
     window.__oisInitialLang = lang;
     try { localStorage.setItem('ois-lang', lang); } catch (e) {}
-    const metadata = {
-      en: {
-        description: 'Assess your property, channels and operations before investing in Chinese inbound demand.',
-        ogTitle: 'ChinaCheck — China Readiness Tool',
-        ogDescription: 'Should you invest in Chinese inbound demand? Check your readiness first.'
-      },
-      it: {
-        description: 'Valuta proprietà, canali e operazioni prima di investire sulla domanda inbound dalla Cina.',
-        ogTitle: 'ChinaCheck — Strumento di readiness per la Cina',
-        ogDescription: 'Devi investire sulla domanda inbound dalla Cina? Verifica prima la tua readiness.'
-      },
-      de: {
-        description: 'Bewerten Sie Objekt, Kanäle und Betrieb, bevor Sie in chinesische Inbound-Nachfrage investieren.',
-        ogTitle: 'ChinaCheck — China Readiness Tool',
-        ogDescription: 'Sollten Sie in chinesische Inbound-Nachfrage investieren? Prüfen Sie zuerst Ihre Readiness.'
-      }
-    };
-    window.updateOisMetadata = function (activeLang) {
-      const pack = metadata[activeLang] || metadata.en;
-      document.querySelectorAll('[data-i18n-meta]').forEach(function (el) {
-        const value = pack[el.getAttribute('data-i18n-meta')];
-        if (value) el.setAttribute('content', value);
-      });
-    };
-    window.updateOisMetadata(lang);
   })();
 </script>
 <style>
@@ -1590,6 +1569,61 @@ function getT(path) {
 function fillTemplate(str, params) {
   return str.replace(/\{(\w+)\}/g, (m, key) => (params && params[key] !== undefined) ? params[key] : m);
 }
+
+// Title/meta description/OG/Twitter tags and JSON-LD are generated from the SAME
+// hero copy (I18N) used for the visible page, so editing hero strings above keeps
+// SEO fields in sync automatically. Hardcoded <head> values are only a pre-JS fallback.
+const META_FALLBACK = {
+  title: 'ChinaCheck — China Readiness Tool',
+  description: 'Assess your property, channels and operations before investing in Chinese inbound demand.'
+};
+function truncateAtWord(str, maxLen) {
+  if (!str || str.length <= maxLen) return str;
+  const cut = str.slice(0, maxLen);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trim() + '…';
+}
+function setMetaContent(selector, content) {
+  const el = document.querySelector(selector);
+  if (el) el.setAttribute('content', content);
+}
+function buildJsonLd(pack) {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'ChinaCheck',
+    description: (pack && pack.landing && pack.landing.payoff) || META_FALLBACK.description,
+    url: 'https://rbisschoff.github.io/chinacheck/',
+    applicationCategory: 'BusinessApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    isPartOf: { '@type': 'WebSite', name: 'Operator Intelligence Suite', url: 'https://rbisschoff.github.io/operator-intelligence-suite/' }
+  };
+  let script = document.getElementById('ois-json-ld');
+  if (!script) {
+    script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'ois-json-ld';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+}
+function buildMetaFromCopy(lang) {
+  const pack = I18N[lang] || I18N.en;
+  let title = META_FALLBACK.title;
+  let description = META_FALLBACK.description;
+  if (pack && pack.hero && pack.hero.titleLine1 && pack.hero.titleLine2) {
+    title = 'ChinaCheck — ' + pack.hero.titleLine1 + ' ' + pack.hero.titleLine2;
+    description = truncateAtWord(pack.hero.desc, 160);
+  }
+  document.title = title;
+  setMetaContent('meta[name="description"]', description);
+  setMetaContent('meta[property="og:title"]', title);
+  setMetaContent('meta[property="og:description"]', description);
+  setMetaContent('meta[name="twitter:title"]', title);
+  setMetaContent('meta[name="twitter:description"]', description);
+  buildJsonLd(pack);
+}
+window.updateOisMetadata = buildMetaFromCopy;
 
 function applyLang(lang) {
   if (!I18N[lang]) lang = 'en';
