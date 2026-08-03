@@ -730,6 +730,35 @@
     .flow-steps { max-width:880px; }
     .flow-bar { max-width:880px; }
     .container { max-width:880px; }
+
+    /* Hero: h1 already caps at 40px via clamp() from mobile-up; subtitle was
+       disproportionately small next to it, so bring it into line. */
+    .hero { padding: 44px 20px 32px; }
+    .hero p { font-size: 16px; max-width: 520px; line-height: 1.7; }
+
+    /* Question cards: match reference's clearer card treatment (more
+       padding, firmer border) while staying inside this quiz's compact
+       880px column. */
+    .dimension-card { padding: 24px 26px; border-width: 1px; }
+    .dim-title { font-size: 17px; }
+    .dim-desc { font-size: 13px; }
+    .radio-group { gap: 10px; }
+    .radio-option label { min-height: 50px; font-size: 13px; padding: 10px 8px; }
+
+    /* Location / property / tech selector groups */
+    .ios-group { border-width: 1px; }
+    .ios-row { padding: 17px 22px; }
+    .ios-row-label { font-size: 16px; }
+    .ios-row select, .ios-row input, .ios-row-prefix { font-size: 16px; }
+
+    /* Example preview + result comparison cards */
+    .example-card { padding: 18px 20px; border-width: 1px; }
+    .demand-card { border-width: 1px; }
+    .demand-card-header { padding: 22px 22px 14px; }
+    .vs-card { padding: 20px 20px 18px; }
+    .biz-potential-card { padding: 20px 24px; }
+    .share-percentile-card { padding: 18px 20px; }
+
     .about-top-wrap { max-width:880px; padding:8px 32px 0; }
     .about { padding:28px 34px; }
     .author-avatar { width:44px; height:44px; }
