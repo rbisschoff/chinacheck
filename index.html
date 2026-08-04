@@ -687,8 +687,8 @@
   .author-info { flex:1; min-width:0; }
   .author-name { font-size:14px; font-weight:700; color:var(--ink); }
   .author-role { font-size:12px; font-weight:600; color:var(--muted); margin-top:2px; line-height:1.4; }
-  .about-outcome { font-size:13px; color:var(--ink2); line-height:1.55; margin:12px 0; text-align:center; }
-  .about-method-line { font-size:11px; color:var(--muted); line-height:1.5; margin:0 0 10px; white-space:nowrap; overflow-x:auto; text-align:center; }
+  .about-outcome, .about-engagement { font-size:13px; color:var(--ink2); line-height:1.55; margin:12px 0; max-width:680px; }
+  .about-method-line { font-size:11px; color:var(--muted); line-height:1.5; margin:0 0 10px; max-width:680px; white-space:nowrap; overflow-x:auto; }
   .about-method-line span[data-i18n$="Title"] { font-weight:600; color:var(--ink); }
   .about-method-arrow { margin:0 6px; color:var(--muted2); }
   @media (max-width:640px) { .about-method-line { white-space:normal; overflow-x:visible; } }
@@ -745,8 +745,8 @@
     .author-role { font-size:14px; }
     .about-cta-primary { font-size:14px; padding:14px 26px; }
     .author-link { font-size:13px; }
-    .about-outcome { font-size:16px; max-width:760px; margin:18px auto; }
-    .about-method-line { font-size:14px; margin-bottom:16px; }
+    .about-outcome, .about-engagement { font-size:16px; max-width:760px; margin:18px 0; }
+    .about-method-line { font-size:14px; max-width:760px; margin-bottom:16px; }
     .about-service-tag { font-size:12px; padding:10px 12px; }
     footer { max-width:880px; font-size:13px; padding:28px 32px 90px; padding-bottom:calc(90px + env(safe-area-inset-bottom)); }
   }
@@ -1212,7 +1212,7 @@
       <img class="author-avatar" src="assets/roger-headshot.jpg" alt="Roger Bisschoff" width="28" height="28">
       <div class="author-info">
         <div class="author-name">Roger Bisschoff</div>
-        <div class="author-role" data-i18n="about.role">Distribution and revenue consulting for short-term rental and serviced apartment operators</div>
+        <div class="author-role" data-i18n="about.role">Commercial growth consulting for short-term rental, vacation rental, and serviced apartment operators</div>
       </div>
     </div>
     <div class="about-cta-row">
@@ -1220,6 +1220,7 @@
       <a href="https://www.linkedin.com/in/roger-bisschoff/" target="_blank" rel="noopener noreferrer" class="author-link" data-i18n="about.viewProfile">View profile</a>
     </div>
     <p class="about-outcome" data-i18n="about.outcome">I look across an operator's whole commercial picture, revenue, distribution, guest experience, owner retention, tech stack, to find where the real growth opportunity is.</p>
+    <p class="about-engagement" data-i18n="about.engagement">Engagements are project-based: a focused review of one commercial area, or ongoing advisory support as needed. No fixed retainer required to start.</p>
     <p class="about-method-line">
       <span data-i18n="about.methodMapTitle">Map</span> <span data-i18n="about.methodLineMap">everything</span>
       <span class="about-method-arrow">→</span>
@@ -1335,9 +1336,10 @@ const I18N = {
     canvas:{ toolLabel:'CHINA READINESS TOOL', readinessScore:'READINESS SCORE', headlinePrefix:'China readiness',
       headlineGeneric:'China readiness check', marketDemand:'Market demand index: {score}/100', footer:'Built by Roger Bisschoff · linkedin.com/in/roger-bisschoff/',
       bmAbove:'{prepPct}% vs {median}% avg, {diff} pts above {bmLabel}', bmBelow:'{prepPct}% vs {median}% avg for {bmLabel}' },
-    about:{ role:'Distribution and revenue consulting for short-term rental, vacation rental, and serviced apartment operators',
+    about:{ role:'Commercial growth consulting for short-term rental, vacation rental, and serviced apartment operators',
       getInTouch:'Talk through your numbers →', viewProfile:'View profile',
       outcome:'I look across an operator\'s whole commercial picture — whether that\'s short-term rental or full property management — revenue, distribution, guest experience, owner retention, tech stack, to find where the real growth opportunity is.',
+      engagement:'Engagements are project-based: a focused review of one commercial area, or ongoing advisory support as needed. No fixed retainer required to start.',
       methodMapTitle:'Map', methodLineMap:'everything',
       methodIdentifyTitle:'Identify', methodLineIdentify:'the opportunity',
       methodQuantifyTitle:'Quantify', methodLineQuantify:'its value',
@@ -1438,9 +1440,10 @@ const I18N = {
     canvas:{ toolLabel:'STRUMENTO IDONEITÀ CINA', readinessScore:'PUNTEGGIO IDONEITÀ', headlinePrefix:'Idoneità Cina',
       headlineGeneric:'Controllo idoneità Cina', marketDemand:'Indice domanda mercato: {score}/100', footer:'Creato da Roger Bisschoff · linkedin.com/in/roger-bisschoff/',
       bmAbove:'{prepPct}% vs {median}% media, {diff} punti sopra {bmLabel}', bmBelow:'{prepPct}% vs {median}% media per {bmLabel}' },
-    about:{ role:'Consulenza in distribuzione e revenue per operatori di short-term rental, vacation rental, e appartamenti in gestione',
+    about:{ role:'Consulenza di crescita commerciale per operatori short-term rental, vacation rental e appartamenti in gestione',
       getInTouch:'Parliamo dei tuoi numeri →', viewProfile:'Vedi profilo',
       outcome:'Guardo all\'intero quadro commerciale di un operatore — che sia short-term rental o full property management — ricavi, distribuzione, guest experience, retention dei proprietari, stack tecnologico, per trovare dove si trova la vera opportunità di crescita.',
+      engagement:'Gli incarichi sono a progetto: una revisione mirata su un\'area commerciale specifica, oppure supporto di consulenza continuativo secondo necessità. Nessun impegno fisso richiesto per iniziare.',
       methodMapTitle:'Map', methodLineMap:'tutto',
       methodIdentifyTitle:'Identify', methodLineIdentify:'l\'opportunità',
       methodQuantifyTitle:'Quantify', methodLineQuantify:'il suo valore',
@@ -1541,9 +1544,10 @@ const I18N = {
     canvas:{ toolLabel:'CHINA READINESS TOOL', readinessScore:'READINESS SCORE', headlinePrefix:'China Readiness',
       headlineGeneric:'China-Readiness-Check', marketDemand:'Marktnachfrageindex: {score}/100', footer:'Erstellt von Roger Bisschoff · linkedin.com/in/roger-bisschoff/',
       bmAbove:'{prepPct}% vs {median}% Durchschnitt, {diff} Punkte über {bmLabel}', bmBelow:'{prepPct}% vs {median}% Durchschnitt für {bmLabel}' },
-    about:{ role:'Vertriebs- und Revenue-Beratung für Short-Term-Rental-, Vacation-Rental- und Serviced-Apartment-Betreiber',
+    about:{ role:'Beratung für kommerzielles Wachstum für STR-, Ferienwohnungs- und Serviced-Apartment-Betreiber',
       getInTouch:'Sprechen wir über Ihre Zahlen →', viewProfile:'Profil ansehen',
       outcome:'Ich betrachte das gesamte kommerzielle Bild eines Betreibers — ob Short-Term-Rental oder volles Property Management — Umsatz, Distribution, Gästeerlebnis, Owner Retention, Tech-Stack, um herauszufinden, wo die eigentliche Wachstumschance liegt.',
+      engagement:'Engagements sind projektbasiert: eine gezielte Prüfung eines einzelnen kommerziellen Bereichs oder laufende Beratungsunterstützung nach Bedarf. Kein fester Vertrag nötig, um zu starten.',
       methodMapTitle:'Map', methodLineMap:'alles',
       methodIdentifyTitle:'Identify', methodLineIdentify:'die Chance',
       methodQuantifyTitle:'Quantify', methodLineQuantify:'ihren Wert',
